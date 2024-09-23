@@ -4,7 +4,7 @@ title: Title of the post
 menu_order: 1
 post_status: publish
 post_excerpt: This is a post excerpt
-featured_image: _images/8dd203f717c974dd2f675ef202c5af05.jpg
+featured_image: _images/image.png
 taxonomy:
     category:
         - category-slug-1
