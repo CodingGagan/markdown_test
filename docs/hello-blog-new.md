@@ -4,7 +4,7 @@ title: Title of the post
 menu_order: 1
 post_status: publish
 post_excerpt: This is a post excerpt
-featured_image: _images/image.png
+featured_image: wp-content/uploads/2024/09/pic1.jpg
 taxonomy:
     category:
         - category-slug-1
@@ -25,7 +25,7 @@ Nunc sodales massa enim, nec consectetur orci tempus ac.
 
 ### Section with image
 
-![alt text for the image](/_images/image.png)
+![alt text for the image](/_wp-content/uploads/2024/09/pic1.jpg)
 
 Nam rutrum ultricies sapien id rhoncus. In pellentesque efficitur suscipit.
 Aliquam vel est consectetur lectus malesuada mollis sit amet non neque. 
