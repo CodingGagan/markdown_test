@@ -25,7 +25,7 @@ Nunc sodales massa enim, nec consectetur orci tempus ac.
 
 ### Section with image
 
-![alt text for the image](/_images/image.png "Caption for the image")
+![alt text for the image](/_images/image.png)
 
 Nam rutrum ultricies sapien id rhoncus. In pellentesque efficitur suscipit.
 Aliquam vel est consectetur lectus malesuada mollis sit amet non neque. 
