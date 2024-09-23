@@ -39,7 +39,7 @@ This is an [absolute link](/folder1/sub-dir1/post3.md) which links to another po
 
 <section id="home">
     <h2>Welcome to Our Website!</h2>
-    <img height="300px" width="300px" src="docs/8dd203f717c974dd2f675ef202c5af05.jpg" />
+    <img height="300px" width="300px" src="docs/_images/8dd203f717c974dd2f675ef202c5af05.jpg" />
     <p>This is a sample HTML page with JavaScript and CSS styling.</p>
     <button type="button" onclick="showMessage()">Show message</button>
 </section>
