@@ -1,6 +1,6 @@
 ---
 
-title: Title of the post
+title: Demo POst datat
 menu_order: 1
 post_status: publish
 post_excerpt: This is a post excerpt
