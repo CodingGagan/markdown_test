@@ -25,7 +25,7 @@ Nunc sodales massa enim, nec consectetur orci tempus ac.
 
 ### Section with image
 
-![alt text for the image](/wp-content/uploads/2024/09/pic1.jpg)
+![pic1](/wp-content/uploads/2024/09/pic1.jpg)
 
 Nam rutrum ultricies sapien id rhoncus. In pellentesque efficitur suscipit.
 Aliquam vel est consectetur lectus malesuada mollis sit amet non neque. 
