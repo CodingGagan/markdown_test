@@ -1,5 +1,5 @@
 {
-  "docsPath": "/",
+  "docsPath": "docs/",
   "structure": {
     "summary": "summary.md",
     "assets": "assets"
