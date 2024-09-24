@@ -4,7 +4,7 @@
 
 ## Install and Configure
 
-* <i class="fa fa-home"></i>[Installation](install-and-configure/install/install.md)
+* <i class="fa fa-home"></i>[Installation Icon](install-and-configure/install/install.md)
   * [First Time User Guide](install-and-configure/install/first-time-user-guide.md)
   * [Next Steps with nOps](install-and-configure/install/getting-started.md)
   * [Environment](install-and-configure/install/environment.md)
