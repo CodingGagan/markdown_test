@@ -1,3 +1,8 @@
+<style>
+    .text-primary {
+        color: red;
+    }
+</style>
 # nOps Documentation
 
 Welcome to the home of the official nOps documentation! This repository contains all the contents of the [nOps documentation](https://docs.nOps.com).
