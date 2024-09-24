@@ -1,11 +1,8 @@
-<style>
-    .text-primary {
-        color: red;
-    }
-</style>
-# nOps Documentation
+# Welcome to the Docs!
 
-Welcome to the home of the official nOps documentation! This repository contains all the contents of the [nOps documentation](https://docs.nOps.com).
+<figure><img src=".gitbook/assets/Background.png" alt=""><figcaption></figcaption></figure>
+
+Welcome to the home of the official nOps documentation! This repository contains all the contents of the [nOps documentation](https://docs.nops.com).
 
 ## Contributing
 
