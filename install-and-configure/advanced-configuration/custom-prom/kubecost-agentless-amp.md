@@ -1,21 +1,21 @@
-# Kubecost with AWS Managed Prometheus Agentless Monitoring
+# nOps with AWS Managed Prometheus Agentless Monitoring
 
 ## See also
 
 * [AMP Overview](/install-and-configure/advanced-configuration/custom-prom/aws-amp-integration.md)
-* [AWS Distro for Open Telemetry](/install-and-configure/advanced-configuration/custom-prom/kubecost-aws-distro-open-telemetry.md)
-* [AMP with Kubecost Prometheus (`remote_write`)](/install-and-configure/advanced-configuration/custom-prom/amp-with-remote-write.md)
+* [AWS Distro for Open Telemetry](/install-and-configure/advanced-configuration/custom-prom/nOps-aws-distro-open-telemetry.md)
+* [AMP with nOps Prometheus (`remote_write`)](/install-and-configure/advanced-configuration/custom-prom/amp-with-remote-write.md)
 
 ## Overview
 
 {% hint style="info" %}
-Using AMP allows multi-cluster Kubecost with EKS-Optimized licenses.
+Using AMP allows multi-cluster nOps with EKS-Optimized licenses.
 {% endhint %}
 
-This guide will walk you through the steps to deploy Kubecost with AWS Agentless AMP to collect metrics from your Kubernetes cluster.
+This guide will walk you through the steps to deploy nOps with AWS Agentless AMP to collect metrics from your Kubernetes cluster.
 
 {% hint style="info" %}
-Keep in mind that "agentless" refers to the Prometheus scraper, not the Kubecost agent. The Kubecost agent is still required to collect metrics from the cluster.
+Keep in mind that "agentless" refers to the Prometheus scraper, not the nOps agent. The nOps agent is still required to collect metrics from the cluster.
 {% endhint %}
 
 The guide below assumes a multi-cluster setup will be used, which is supported with the EKS-Optimized license that is enabled by following the below guide.
@@ -24,20 +24,20 @@ The guide below assumes a multi-cluster setup will be used, which is supported w
 
 Follow this [Using an AWS managed collector](https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-collector-how-to.html) guide to enable the managed collector.
 
-This guide assumes that the Kubecost Helm release name and the Kubecost namespace are equal, which allows a global find-and-replace on `$KUBECOST_NAMESPACE`.
+This guide assumes that the nOps Helm release name and the nOps namespace are equal, which allows a global find-and-replace on `$nOps_NAMESPACE`.
 
 ## Architecture diagram
 
-![Agentless AMP Architecture](../../../images/diagrams/AMP-agentless-multi-cluster-Prometheus-kubecost-architecture.png)
+![Agentless AMP Architecture](../../../images/diagrams/AMP-agentless-multi-cluster-Prometheus-nOps-architecture.png)
 
 ## Agentless AMP Configuration
 
 ### AMP setup
 
-1. Clone this [poc-common-configurations](https://github.com/kubecost/poc-common-configurations) repository that contains all of the configuration files you will need to deploy Kubecost with AWS Agentless AMP.
+1. Clone this [poc-common-configurations](https://github.com/nOps/poc-common-configurations) repository that contains all of the configuration files you will need to deploy nOps with AWS Agentless AMP.
 
     ```sh
-    git clone https://github.com/kubecost/poc-common-configurations.git
+    git clone https://github.com/nOps/poc-common-configurations.git
     cd poc-common-configurations/aws/amp-agentless
     ```
 
@@ -48,7 +48,7 @@ This guide assumes that the Kubecost Helm release name and the Kubecost namespac
     ```sh
     CLUSTER_NAME=YOUR_CLUSTER_NAME_HERE
     CLUSTER_REGION=us-east-2
-    KUBECOST_NAMESPACE=kubecost
+    nOps_NAMESPACE=nOps
     WORKSPACE_ID=ws-YOUR_WORKSPACE_ID
     AWS_ACCOUNT_ID=11111111111
     WORKSPACE_ARN=$(aws amp describe-workspace --workspace-id $WORKSPACE_ID --output json | jq -r .workspace.arn)
@@ -58,25 +58,25 @@ This guide assumes that the Kubecost Helm release name and the Kubecost namespac
     SUBNET_IDS=$(echo $CLUSTER_JSON | jq -r '.cluster.resourcesVpcConfig.subnetIds | @csv')
     ```
 
-4. Create the Kubecost scraper:
+4. Create the nOps scraper:
 
     ```sh
-    KUBECOST_SCRAPER_OUTPUT=$(aws amp create-scraper --output json \
-        --alias kubecost-scraper \
+    nOps_SCRAPER_OUTPUT=$(aws amp create-scraper --output json \
+        --alias nOps-scraper \
         --source eksConfiguration="{clusterArn=$CLUSTER_ARN, securityGroupIds=[$SECURITY_GROUP_IDS],subnetIds=[$SUBNET_IDS]}" \
-        --scrape-configuration configurationBlob="$(base64 scraper-kubecost-with-networking.yaml|tr -d '\n')" \
+        --scrape-configuration configurationBlob="$(base64 scraper-nOps-with-networking.yaml|tr -d '\n')" \
         --destination ampConfiguration="{workspaceArn=$WORKSPACE_ARN}")
-    echo $KUBECOST_SCRAPER_OUTPUT
-    KUBECOST_SCRAPER_ID=$(echo $KUBECOST_SCRAPER_OUTPUT|jq -r .scraperId)
-    echo $KUBECOST_SCRAPER_ID
+    echo $nOps_SCRAPER_OUTPUT
+    nOps_SCRAPER_ID=$(echo $nOps_SCRAPER_OUTPUT|jq -r .scraperId)
+    echo $nOps_SCRAPER_ID
     ```
 
 5. Get the ARN of the scraper:
 
     ```sh
-    ARN_PART=$(aws amp describe-scraper --output json --region $CLUSTER_REGION --scraper-id $KUBECOST_SCRAPER_ID | jq -r .scraper.roleArn | cut -d'_' -f2)
-    ROLE_ARN_KUBECOST_SCRAPER="arn:aws:iam::$AWS_ACCOUNT_ID:role/AWSServiceRoleForAmazonPrometheusScraper_$ARN_PART"
-    echo $ROLE_ARN_KUBECOST_SCRAPER
+    ARN_PART=$(aws amp describe-scraper --output json --region $CLUSTER_REGION --scraper-id $nOps_SCRAPER_ID | jq -r .scraper.roleArn | cut -d'_' -f2)
+    ROLE_ARN_nOps_SCRAPER="arn:aws:iam::$AWS_ACCOUNT_ID:role/AWSServiceRoleForAmazonPrometheusScraper_$ARN_PART"
+    echo $ROLE_ARN_nOps_SCRAPER
     ```
 
 6. Add the ARN of the scraper to the `kube-system/aws-auth` configMap:
@@ -84,7 +84,7 @@ This guide assumes that the Kubecost Helm release name and the Kubecost namespac
     ```sh
     eksctl create iamidentitymapping \
         --cluster $CLUSTER_NAME --region $CLUSTER_REGION \
-        --arn $ROLE_ARN_KUBECOST_SCRAPER \
+        --arn $ROLE_ARN_nOps_SCRAPER \
         --username aps-collector-user
     ```
 
@@ -124,94 +124,94 @@ This guide assumes that the Kubecost Helm release name and the Kubecost namespac
     kubectl apply -f rbac.yaml
     ```
 
-### Kubecost primary cluster installation
+### nOps primary cluster installation
 
-1. Create the Kubecost namespace:
-
-    ```bash
-    kubectl create ns $KUBECOST_NAMESPACE
-    ```
-
-1. Create the AWS IAM policy to allow Kubecost to query metrics from AMP:
+1. Create the nOps namespace:
 
     ```bash
-    aws iam create-policy --policy-name kubecost-read-amp-metrics --policy-document file://iam-read-amp-metrics.json
+    kubectl create ns $nOps_NAMESPACE
     ```
 
-1. (Optional) Create the AWS IAM policy to allow Kubecost to find savings in the AWS Account:
+1. Create the AWS IAM policy to allow nOps to query metrics from AMP:
+
+    ```bash
+    aws iam create-policy --policy-name nOps-read-amp-metrics --policy-document file://iam-read-amp-metrics.json
+    ```
+
+1. (Optional) Create the AWS IAM policy to allow nOps to find savings in the AWS Account:
 
     ```bash
     aws iam create-policy --policy-name DescribeResources --policy-document file://iam-describeCloudResources.json
     ```
 
-1. (Optional) Create the AWS IAM policy to allow Kubecost to write to find account-level tags:
+1. (Optional) Create the AWS IAM policy to allow nOps to write to find account-level tags:
 
     ```bash
     aws iam create-policy --policy-name OrganizationListAccountTags --policy-document file://iam-listAccounts-tags.json
     ```
 
-1. Configure the Kubecost Service Account:
+1. Configure the nOps Service Account:
 
     * If the following fails, be sure that IRSA is enabled on your EKS cluster. <https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html>
 
     ```bash
     eksctl create iamserviceaccount \
-    --name kubecost-sa \
-    --namespace $KUBECOST_NAMESPACE \
+    --name nOps-sa \
+    --namespace $nOps_NAMESPACE \
     --cluster $CLUSTER_NAME --region $CLUSTER_REGION \
-    --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/kubecost-read-amp-metrics \
+    --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/nOps-read-amp-metrics \
     --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/OrganizationListAccountTags \
     --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/DescribeResources \
     --override-existing-serviceaccounts --approve
     ```
 
-1. Update the placeholder values such as `YOUR_CLUSTER_NAME_HERE` in *values-kubecost-primary.yaml*.
+1. Update the placeholder values such as `YOUR_CLUSTER_NAME_HERE` in *values-nOps-primary.yaml*.
 
-1. Install Kubecost on your primary:
+1. Install nOps on your primary:
 
     ```bash
     aws ecr-public get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin public.ecr.aws
-    helm install $KUBECOST_NAMESPACE -n $KUBECOST_NAMESPACE \
-        oci://public.ecr.aws/kubecost/cost-analyzer \
-        -f https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/develop/cost-analyzer/values-eks-cost-monitoring.yaml \
-        -f values-kubecost-primary.yaml
+    helm install $nOps_NAMESPACE -n $nOps_NAMESPACE \
+        oci://public.ecr.aws/nOps/cost-analyzer \
+        -f https://raw.githubusercontent.com/nOps/cost-analyzer-helm-chart/develop/cost-analyzer/values-eks-cost-monitoring.yaml \
+        -f values-nOps-primary.yaml
     ```
 
-### Kubecost agents installation
+### nOps agents installation
 
 Follow the above AMP setup section to configure the scraper(s) on each cluster.
 
 This assumes you have created the AWS IAM policies above. If using multiple AWS accounts, you will need to create the policies in each account.
 
-1. Update the placeholder values such as `YOUR_CLUSTER_NAME_HERE` in *values-kubecost-agent.yaml*.
+1. Update the placeholder values such as `YOUR_CLUSTER_NAME_HERE` in *values-nOps-agent.yaml*.
 
-1. Create the Kubecost namespace:
+1. Create the nOps namespace:
 
     ```bash
-    kubectl create ns $KUBECOST_NAMESPACE
+    kubectl create ns $nOps_NAMESPACE
     ```
 
-1. Configure the Kubecost Service Account:
+1. Configure the nOps Service Account:
 
     ```bash
     eksctl create iamserviceaccount \
-        --name kubecost-sa \
-        --namespace $KUBECOST_NAMESPACE \
+        --name nOps-sa \
+        --namespace $nOps_NAMESPACE \
         --cluster $CLUSTER_NAME --region $CLUSTER_REGION \
-        --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/kubecost-read-amp-metrics \
+        --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/nOps-read-amp-metrics \
         --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/OrganizationListAccountTags \
         --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/DescribeResources \
         --override-existing-serviceaccounts --approve
     ```
 
-1. Deploy the Kubecost agent:
+1. Deploy the nOps agent:
 
     ```bash
     aws ecr-public get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin public.ecr.aws
-    helm install $KUBECOST_NAMESPACE -n $KUBECOST_NAMESPACE \
-        oci://public.ecr.aws/kubecost/cost-analyzer \
-        -f https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/develop/cost-analyzer/values-eks-cost-monitoring.yaml \
-        -f values-kubecost-agent.yaml
+    helm install $nOps_NAMESPACE -n $nOps_NAMESPACE \
+        oci://public.ecr.aws/nOps/cost-analyzer \
+        -f https://raw.githubusercontent.com/nOps/cost-analyzer-helm-chart/develop/cost-analyzer/values-eks-cost-monitoring.yaml \
+        -f values-nOps-agent.yaml
     ```
 
 ## Troubleshooting

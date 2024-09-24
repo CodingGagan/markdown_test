@@ -1,7 +1,7 @@
-# Kubecost Cloud: Abandoned Workloads
+# nOps Cloud: Abandoned Workloads
 
 {% hint style="info" %}
-This documentation should only be consulted when using Kubecost Cloud! For information about the Abandoned Workloads for self-hosted Kubecost, see [here](/using-kubecost/navigating-the-kubecost-ui/savings/abandoned-workloads.md).
+This documentation should only be consulted when using nOps Cloud! For information about the Abandoned Workloads for self-hosted nOps, see [here](/using-nOps/navigating-the-nOps-ui/savings/abandoned-workloads.md).
 {% endhint %}
 
 The Abandoned Workloads page can detect workloads which have not sent or received a meaningful rate of traffic over a configurable duration.

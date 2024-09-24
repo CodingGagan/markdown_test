@@ -5,12 +5,12 @@ This feature is in a beta state. It has limitations. Please read the documentati
 {% endhint %}
 
 {% hint style="warning" %}
-This feature is only officially supported on Kubecost Enterprise plans.
+This feature is only officially supported on nOps Enterprise plans.
 {% endhint %}
 
 The Cost Events Audit API aims to offer improved visibility on recent changes at cluster level and their estimated cost impact.
 
-{% swagger method="get" path="/audit/events" baseUrl="http://<your-kubecost-address>/model" summary="Cost events Audit API" %}
+{% swagger method="get" path="/audit/events" baseUrl="http://<your-nOps-address>/model" summary="Cost events Audit API" %}
 {% swagger-description %}
 Accesses the most recent cluster events and their predicted cost impact
 {% endswagger-description %}
@@ -51,7 +51,7 @@ Floating-point value representing the upper bound for the total event cost.
             "properties": {
                 "cluster": "cluster-one",
                 "name": "sample-deployment",
-                "namespace": "kubecost"
+                "namespace": "nOps"
             },
             "totalRequests": {
                 "cpu": "100m",
@@ -90,7 +90,7 @@ You can also enable the Cost Events Audit API by setting the `COST_EVENTS_AUDIT_
 
 Changes at cluster level can range from actions triggered by declarative statements submitted by users (e.g. creation of a Deployment) to automated actions (e.g. cluster autoscaling) or performance events. We detect changes that would have an impact on the overall cluster cost using watchers on the Kubernetes API client.
 
-The watchers are tracking change events across all namespaces within the local/primary cluster (the cluster that the instance of Kubecost you are interacting with via HTTP is running on).
+The watchers are tracking change events across all namespaces within the local/primary cluster (the cluster that the instance of nOps you are interacting with via HTTP is running on).
 
 ### Supported events
 
@@ -101,10 +101,10 @@ The watchers are tracking change events across all namespaces within the local/p
 
 ## Estimated cost impact
 
-Cost implications of cluster events are handled by passing the Kubernetes spec inferred from the change event to the Kubecost [Predict API](spec-cost-prediction-api.md).
+Cost implications of cluster events are handled by passing the Kubernetes spec inferred from the change event to the nOps [Predict API](spec-cost-prediction-api.md).
 
 ## Current limitations
 
 * The Cost Events Audit API can return up to 1000 of the most recent cluster events. There is no time expiration limit on the events.
-* Events returned by the Cost Events Audit API are currently not persisted between Kubecost pod restarts.
+* Events returned by the Cost Events Audit API are currently not persisted between nOps pod restarts.
 * The Cost Events Audit API does not track events for clusters _other_ than the local/primary cluster.

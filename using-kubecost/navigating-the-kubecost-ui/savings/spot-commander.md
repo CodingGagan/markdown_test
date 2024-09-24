@@ -4,7 +4,7 @@ Spot Commander is a Savings feature which identifies workloads where it is avail
 
 ## Spot Cluster Sizing Recommendation
 
-The recommended Spot cluster configuration uses all of the data available to Kubecost to compute a "resizing" of your cluster's nodes into a set of on-demand (standard) nodes `O` and a set of spot (preemptible) nodes `S`. This configuration is produced from applying a scheduling heuristic to the usage data for all of your workloads. This recommendation offers a more accurate picture of the savings possible from implementing spot nodes because nodes are what the cost of a cluster is made up of; once `O` and `S` have been determined, the savings are the current cost of your nodes minus the estimated cost of `O` and `S`.
+The recommended Spot cluster configuration uses all of the data available to nOps to compute a "resizing" of your cluster's nodes into a set of on-demand (standard) nodes `O` and a set of spot (preemptible) nodes `S`. This configuration is produced from applying a scheduling heuristic to the usage data for all of your workloads. This recommendation offers a more accurate picture of the savings possible from implementing spot nodes because nodes are what the cost of a cluster is made up of; once `O` and `S` have been determined, the savings are the current cost of your nodes minus the estimated cost of `O` and `S`.
 
 ### Implementing the recommended configuration
 
@@ -16,11 +16,11 @@ The recommended configuration assumes that all workloads considered spot-ready b
 
 Different cloud providers have different guarantees on shutdown windows and automatic draining of spot nodes that are about to be removed. Consult your provider’s documentation before introducing spot nodes to your cluster.
 
-Kubecost marking a workload as spot ready is not a guarantee. A domain expert should always carefully consider the workload before approving it to run on spot nodes.
+nOps marking a workload as spot ready is not a guarantee. A domain expert should always carefully consider the workload before approving it to run on spot nodes.
 
 ### How the recommended cluster configuration is determined
 
-Determining `O` and `S` is achieved by first partitioning all workloads on the cluster (based on the results of the Checklist) into sets: spot-ready workloads `R` and non-spot-ready workloads `N`. Kubecost consults its maximum resource usage data (in each Allocation, Kubecost records the MAXIMUM CPU and RAM used in the window) and determines the following for each of `R` and `N`:
+Determining `O` and `S` is achieved by first partitioning all workloads on the cluster (based on the results of the Checklist) into sets: spot-ready workloads `R` and non-spot-ready workloads `N`. nOps consults its maximum resource usage data (in each Allocation, nOps records the MAXIMUM CPU and RAM used in the window) and determines the following for each of `R` and `N`:
 
 * The maximum CPU used by any workload
 * The maximum RAM used by any workload
@@ -29,7 +29,7 @@ Determining `O` and `S` is achieved by first partitioning all workloads on the c
 * The total CPU (sum of all individual maximums) required by DaemonSet workloads
 * The total RAM (sum of all individual maximums) required by DaemonSet workloads
 
-Kubecost uses this data with a configurable target utilization (e.g., 90%) for `R` and `N` to create `O` and `S`:
+nOps uses this data with a configurable target utilization (e.g., 90%) for `R` and `N` to create `O` and `S`:
 
 * Every node in `O` and `S` must reserve `100% - target utilization` (e.g., `100% - 90% = 10%`) of its CPU and RAM
 * Every node in `O` must be able to schedule the DaemonSet requirements in `R` and `N`
@@ -48,4 +48,4 @@ Kubecost uses this data with a configurable target utilization (e.g., 90%) for `
 
 It is recommended to set the target utilization at or below 95% to allow resources for the operating system and the kubelet.
 
-The configuration currently only recommends one node type for `O` and one node type for `S` but we are considering adding multiple node type support. If your cluster requires specific node types for certain workloads, consider using Kubecost's recommendation as a launching point for a cluster configuration that supports your specific needs.
+The configuration currently only recommends one node type for `O` and one node type for `S` but we are considering adding multiple node type support. If your cluster requires specific node types for certain workloads, consider using nOps's recommendation as a launching point for a cluster configuration that supports your specific needs.

@@ -1,28 +1,28 @@
 # Actions
 
-The Actions page is where you can create scheduled savings actions that Kubecost will execute for you. The Actions page supports creating actions for multiple turndown and right-sizing features.
+The Actions page is where you can create scheduled savings actions that nOps will execute for you. The Actions page supports creating actions for multiple turndown and right-sizing features.
 
 {% hint style="info" %}
 Actions are only able to be applied to your primary cluster. To use Actions on a secondary cluster (agents), you must login to the UI directly on that cluster.
 {% endhint %}
 
-## Enabling Kubecost Actions
+## Enabling nOps Actions
 
 ### Enable the Cluster Controller
 
-Before you can perform any Actions, you must deploy Kubecost's [Cluster Controller](/install-and-configure/advanced-configuration/controller/cluster-controller.md) to any cluster where Actions are desired. When enabled, Kubecost wil have administrative access to that cluster in order to perform Actions.
+Before you can perform any Actions, you must deploy nOps's [Cluster Controller](/install-and-configure/advanced-configuration/controller/cluster-controller.md) to any cluster where Actions are desired. When enabled, nOps wil have administrative access to that cluster in order to perform Actions.
 
 {% hint style="warning" %}
-Users should exercise caution when enabling this feature. Kubecost will have write access to your cluster (Kubecost is otherwise read-only). The controller can perform irreversible actions. Always ensure you have a backup of your data before enabling this feature.
+Users should exercise caution when enabling this feature. nOps will have write access to your cluster (nOps is otherwise read-only). The controller can perform irreversible actions. Always ensure you have a backup of your data before enabling this feature.
 {% endhint %}
 
 {% hint style="warning" %}
-Some features included in Kubecost Actions are only available in GKE/EKS environments. See the Cluster Controller doc for more clarity on which features you will have access to after enabling the Cluster Controller.
+Some features included in nOps Actions are only available in GKE/EKS environments. See the Cluster Controller doc for more clarity on which features you will have access to after enabling the Cluster Controller.
 {% endhint %}
 
 ### Enable experimental features
 
-In order to access experimental Kubecost Actions for Guided Container-Sizing and Cluster Sizing, you must manually enable them. These features are still considered alpha. To access them, you must first go to _Settings_, then toggle on 'Enable experimental features' at the bottom of the page. Select _Save_ to confirm.
+In order to access experimental nOps Actions for Guided Container-Sizing and Cluster Sizing, you must manually enable them. These features are still considered alpha. To access them, you must first go to _Settings_, then toggle on 'Enable experimental features' at the bottom of the page. Select _Save_ to confirm.
 
 ## Creating an Action
 
@@ -54,23 +54,23 @@ Learn more about cluster turndown's advanced functionality [here](/install-and-c
 
 ### Automated Request Sizing
 
-Kubecost offers a condensed version of [Automatic Request Right-Sizing](/using-kubecost/navigating-the-kubecost-ui/savings/container-request-right-sizing-recommendations.md) via Actions, which allows to right-size your deployments on a recurring schedule.
+nOps offers a condensed version of [Automatic Request Right-Sizing](/using-nOps/navigating-the-nOps-ui/savings/container-request-right-sizing-recommendations.md) via Actions, which allows to right-size your deployments on a recurring schedule.
 
 Selecting _Request Sizing_ from the 'Create New Action' window will open the Automated Request Sizing page. Here, you can immediately begin configuring your plan for right-sizing using a schedule and a filtering plan to determine the affected deployments.
 
 #### Schedule
 
-For 'Cadence', select your desired schedule (how often you want Kubecost to right-size your selected deployments), _Daily_, _Weekly_, _Monthly_, or _Quarterly_. Then, select the start date for when you wish your desired cadence to begin occurring.
+For 'Cadence', select your desired schedule (how often you want nOps to right-size your selected deployments), _Daily_, _Weekly_, _Monthly_, or _Quarterly_. Then, select the start date for when you wish your desired cadence to begin occurring.
 
 #### Deployments to right size
 
-Kubecost supports custom filtering for you to specify which deployments you wish to right-size.
+nOps supports custom filtering for you to specify which deployments you wish to right-size.
 
 Select _Preview_ to view a list of all requests that will be right-sized, and their estimated monthly costs. This list is configurable; you can manually remove individual requests you don't wish to right-size.
 
 #### Configuring recommendations
 
-Finally, you can provide Kubecost with more details about your ideal environment so Kubecost can estimate average resources needed to be allocated:
+Finally, you can provide nOps with more details about your ideal environment so nOps can estimate average resources needed to be allocated:
 
 * Window: Time duration of activity of your deployments to sample. Default is _Last 48h_.
 * Profile: Environment profile with preset CPU/RAM recommendations and target utilizations. Includes _Development_, _Production_, and _High Availability_ with preset options, or _Custom_ which will allow you configure subsequent fields manually.
@@ -91,19 +91,19 @@ Cluster Sizing is a beta feature.
 Cluster Sizing will provide right-sizing recommendations for your cluster by determining the cluster's needs based on the type of work running, and the resource requirements. You will receive a simple (uses one node type) and a complex (uses two or more node types) recommendation.
 
 {% hint style="info" %}
-Kubecost may hide the complex recommendation when it is more expensive than the simple recommendation, and present a single recommendation instead.
+nOps may hide the complex recommendation when it is more expensive than the simple recommendation, and present a single recommendation instead.
 {% endhint %}
 
 Visiting the Cluster Sizing Recommendations page from the Create New Action window will immediately prompt you with a suggested recommendation that will replace your current node pools with the displayed node pools. You can select _Adopt_ to immediately resize, or select _Cancel_ if you want to continue exploring.
 
-Learn more about cluster right-sizing functionality [here](/using-kubecost/navigating-the-kubecost-ui/savings/cluster-right-sizing-recommendations.md).
+Learn more about cluster right-sizing functionality [here](/using-nOps/navigating-the-nOps-ui/savings/cluster-right-sizing-recommendations.md).
 
 ### Namespace Turndown
 
-Namespace turndown allows you to take action to delete your abandoned workloads. Instead of requiring the user to manually size down or delete their unused workloads, Kubecost can delete namespaces full of idle pods in one moment or on a continual basis. This can be helpful for routine cleanup of neglected resources. Namespace turndown is supported on all cluster types.
+Namespace turndown allows you to take action to delete your abandoned workloads. Instead of requiring the user to manually size down or delete their unused workloads, nOps can delete namespaces full of idle pods in one moment or on a continual basis. This can be helpful for routine cleanup of neglected resources. Namespace turndown is supported on all cluster types.
 
 {% hint style="warning" %}
-When turning down namespaces, Kubecost will perform a `helm uninstall` command to remove the release(s) from the namespace before it is deleted. Take precaution when using this feature to avoid irreversible changes being made to your environment.
+When turning down namespaces, nOps will perform a `helm uninstall` command to remove the release(s) from the namespace before it is deleted. Take precaution when using this feature to avoid irreversible changes being made to your environment.
 {% endhint %}
 
 Selecting _Namespace Turndown_ from the 'Create New Action' window will open the Namespace Turndown page.
@@ -115,7 +115,7 @@ For 'Namespace turndown type', select _Scheduled_ or _Smart_ from the dropdown.
 * Scheduled turndown will delete all non-ignored namespaces.
 * Smart turndown will confirm that all workloads in the namespace are idle before deleting.
 
-'Schedule' determines how often Kubecost will check for unused workloads. It supports _Daily_, _Weekly_, or _Custom_, which will require you to provide a cron string that determines when the turndown occurs (leave this field as `0 0 * * *` by default to perform turndown every night at midnight). Namespaces can have multiple schedules applied to them (but will require separate Actions to be created for them).
+'Schedule' determines how often nOps will check for unused workloads. It supports _Daily_, _Weekly_, or _Custom_, which will require you to provide a cron string that determines when the turndown occurs (leave this field as `0 0 * * *` by default to perform turndown every night at midnight). Namespaces can have multiple schedules applied to them (but will require separate Actions to be created for them).
 
 Then you can provide optional values for the following fields:
 
@@ -132,7 +132,7 @@ Select _Create Action_ to finalize.
 Guided Sizing is a beta feature.
 {% endhint %}
 
-Guided Kubernetes Sizing provides a one-click or continuous right-sizing solution in two steps, request sizing and then cluster sizing. These implementations function exactly like Kubecost's existing [container](/using-kubecost/navigating-the-kubecost-ui/savings/container-request-right-sizing-recommendations.md) and [cluster right-sizing](/using-kubecost/navigating-the-kubecost-ui/savings/cluster-right-sizing-recommendations.md) features.
+Guided Kubernetes Sizing provides a one-click or continuous right-sizing solution in two steps, request sizing and then cluster sizing. These implementations function exactly like nOps's existing [container](/using-nOps/navigating-the-nOps-ui/savings/container-request-right-sizing-recommendations.md) and [cluster right-sizing](/using-nOps/navigating-the-nOps-ui/savings/cluster-right-sizing-recommendations.md) features.
 
 #### 1. Request Sizing
 
@@ -157,7 +157,7 @@ Select _Enable Auto-Resizing Now_ to finalize.
 
 ## Creating an action via Helm values
 
-You can also optionally configure Actions (except for Guided Sizing) via your Kubecost [values](/install-and-configure/install/helm-install-params.md) file. Configure the following section as needed for any actions you wish to set up (leave unconfigured actions as is). For more information of any action-specific field, see the individual UI configuration sections above for more information.
+You can also optionally configure Actions (except for Guided Sizing) via your nOps [values](/install-and-configure/install/helm-install-params.md) file. Configure the following section as needed for any actions you wish to set up (leave unconfigured actions as is). For more information of any action-specific field, see the individual UI configuration sections above for more information.
 
 ```yaml
 actionConfigs:

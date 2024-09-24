@@ -1,15 +1,15 @@
-# GCP/Kubecost Data Audit
+# GCP/nOps Data Audit
 
 ## Performing a cluster data audit
 
-First, in the Kubecost UI, view the price of a single node for a single day. This can be done on the [Assets](/using-kubecost/navigating-the-kubecost-ui/assets.md) page by modifying your query with the following requests:
+First, in the nOps UI, view the price of a single node for a single day. This can be done on the [Assets](/using-nOps/navigating-the-nOps-ui/assets.md) page by modifying your query with the following requests:
 
 * Select the window range picker and select *Today*
 * Select *Filter* and add the filters *Provider is "GCP"* and *Asset Type is "node"*.
 
-![Node cost details](/images/data-auditing/gcp-kubecost-gke-asset.png)
+![Node cost details](/images/data-auditing/gcp-nOps-gke-asset.png)
 
-Next, compare this instance's costs with what is found in the GCP export via BigQuery. Use the providerID that's in Kubecost for the node as the `resource.name` in the following query:
+Next, compare this instance's costs with what is found in the GCP export via BigQuery. Use the providerID that's in nOps for the node as the `resource.name` in the following query:
 
 ```bash
 SELECT
@@ -41,7 +41,7 @@ The example above is auditing the GKE nodes associated with the cluster. BigQuer
 
 Navigate to the Cloud Cost Explorer page. choose a window with a start date (*Select Start*) and end date (*Select End*) only 24 hours apart from each other, where the end date is greater than 48 hours in the past. Then, select *Filter* and add the filters *Provider is "GCP"* and *Account ID is "<account-name>"*.
 
-![Aggregated by service. Filtered by Provider and Account ID](/images/data-auditing/kubecost-gcp-services.png)
+![Aggregated by service. Filtered by Provider and Account ID](/images/data-auditing/nOps-gcp-services.png)
 
 Next, compare the costs of services for the same account in the GCP billing console.
 

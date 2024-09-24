@@ -2,11 +2,11 @@
 
 ## Overview
 
-The network costs DaemonSet is an optional utility that gives Kubecost more detail to attribute costs to the correct pods.
+The network costs DaemonSet is an optional utility that gives nOps more detail to attribute costs to the correct pods.
 
-When `networkCost` is enabled, Kubecost gathers pod-level network traffic metrics to allocate network transfer costs to the pod responsible for the traffic.
+When `networkCost` is enabled, nOps gathers pod-level network traffic metrics to allocate network transfer costs to the pod responsible for the traffic.
 
-See this doc for more detail on [network cost allocation methodology](/using-kubecost/navigating-the-kubecost-ui/cost-allocation/network-allocation.md).
+See this doc for more detail on [network cost allocation methodology](/using-nOps/navigating-the-nOps-ui/cost-allocation/network-allocation.md).
 
 The network costs metrics are collected using a DaemonSet (one pod per node) that uses source and destination detail to determine egress and ingress data transfers by pod and are classified as internet, cross-region and cross-zone.
 
@@ -20,17 +20,17 @@ For an in-depth cost breakdown of your network costs, you can scroll down on the
 
 ![Network Costs Breakdown](/images/networkcostbreakdown.png)
 
-Selecting a namespace or adding `/network` to your Kubecost address will open the 'Allocation / Network costs' page, lists key metrics such as egress and cross-zone costs.
+Selecting a namespace or adding `/network` to your nOps address will open the 'Allocation / Network costs' page, lists key metrics such as egress and cross-zone costs.
 
 ![Network Costs page](/images/networkcostpage.png)
 
 ### Grafana dashboard
 
-There are Grafana dashboards that are included with the Kubecost installation, but you can also find them in our [cost-analyzer-helm-chart repository](https://github.com/kubecost/cost-analyzer-helm-chart/blob/develop/cost-analyzer/grafana-dashboards/grafana-templates/).
+There are Grafana dashboards that are included with the nOps installation, but you can also find them in our [cost-analyzer-helm-chart repository](https://github.com/nOps/cost-analyzer-helm-chart/blob/develop/cost-analyzer/grafana-dashboards/grafana-templates/).
 
 ## Enabling network costs
 
-To enable this feature, set the following parameters in your values file following the [Helm installation](https://kubecost.com/install) guide:
+To enable this feature, set the following parameters in your values file following the [Helm installation](https://nOps.com/install) guide:
 
 ```yaml
 networkCosts:
@@ -40,25 +40,25 @@ networkCosts:
 
 ## Additional configuration
 
-You can view a list of common config options in this [_values.yaml_](https://github.com/kubecost/cost-analyzer-helm-chart/blob/8f0a12126330bcdfed467c2cf90fcd5c4834edae/cost-analyzer/values.yaml#L2237) template.
+You can view a list of common config options in this [_values.yaml_](https://github.com/nOps/cost-analyzer-helm-chart/blob/8f0a12126330bcdfed467c2cf90fcd5c4834edae/cost-analyzer/values.yaml#L2237) template.
 
 ### Prometheus
 
-* If using Kubecost-bundled Prometheus instance, the scrape is automatically configured.
+* If using nOps-bundled Prometheus instance, the scrape is automatically configured.
 * If you are integrating with an existing Prometheus, you can set `networkCosts.prometheusScrape=true` and the network costs service should be auto-discovered.
-* Alternatively, a serviceMonitor is also [available](https://github.com/kubecost/cost-analyzer-helm-chart/blob/700cfa306c8e78bc9a1039b584769b9a0e0757d0/cost-analyzer/values.yaml#L716).
+* Alternatively, a serviceMonitor is also [available](https://github.com/nOps/cost-analyzer-helm-chart/blob/700cfa306c8e78bc9a1039b584769b9a0e0757d0/cost-analyzer/values.yaml#L716).
 
 ## Cloud Provider Service Tagging
 
-Service tagging allows Kubecost to identify network activity between the pods and various cloud services (e.g. AWS S3, EC2, RDS, Azure Storage, Google Cloud Storage).
+Service tagging allows nOps to identify network activity between the pods and various cloud services (e.g. AWS S3, EC2, RDS, Azure Storage, Google Cloud Storage).
 
 ![network-services-card](/images/network-svc-card.png)
 
 To enable this, set the following Helm values:
 
-* AWS [`networkCosts.config.services.amazon-web-services=true`](https://github.com/kubecost/cost-analyzer-helm-chart/blob/5787607bf307379363715a220a271e203f0207b4/cost-analyzer/values.yaml#L582)
-* Azure [`networkCosts.config.services.azure-cloud-services=true`](https://github.com/kubecost/cost-analyzer-helm-chart/blob/5787607bf307379363715a220a271e203f0207b4/cost-analyzer/values.yaml#L585)
-* GCP [`networkCosts.config.services.google-cloud-services=true`](https://github.com/kubecost/cost-analyzer-helm-chart/blob/5787607bf307379363715a220a271e203f0207b4/cost-analyzer/values.yaml#L579)
+* AWS [`networkCosts.config.services.amazon-web-services=true`](https://github.com/nOps/cost-analyzer-helm-chart/blob/5787607bf307379363715a220a271e203f0207b4/cost-analyzer/values.yaml#L582)
+* Azure [`networkCosts.config.services.azure-cloud-services=true`](https://github.com/nOps/cost-analyzer-helm-chart/blob/5787607bf307379363715a220a271e203f0207b4/cost-analyzer/values.yaml#L585)
+* GCP [`networkCosts.config.services.google-cloud-services=true`](https://github.com/nOps/cost-analyzer-helm-chart/blob/5787607bf307379363715a220a271e203f0207b4/cost-analyzer/values.yaml#L579)
 
 {% code overflow="wrap" %}
 ```yaml
@@ -89,7 +89,7 @@ networkCosts:
 
 ## Resource limiting
 
-In order to reduce resource usage, Kubecost recommends setting a CPU limit on the network costs DaemonSet. This will cause a few seconds of delay during peak usage and does not affect overall accuracy. This is done by default in Kubecost 1.99+.
+In order to reduce resource usage, nOps recommends setting a CPU limit on the network costs DaemonSet. This will cause a few seconds of delay during peak usage and does not affect overall accuracy. This is done by default in nOps 1.99+.
 
 For existing deployments, these are the recommended values:
 
@@ -125,14 +125,14 @@ The primary source of network metrics is a DaemonSet Pod hosted on each of the n
 These classifications are important because they correlate with network costing models for most cloud providers. To see more detail on these metric classifications, you can view pod logs with the following command:
 
 ```
-kubectl logs kubecost-network-costs-<pod-identifier> -n kubecost
+kubectl logs nOps-network-costs-<pod-identifier> -n nOps
 ```
 
 This will show you the top source and destination IP addresses and bytes transferred on the node where this Pod is running. To disable logs, you can set the helm value `networkCosts.trafficLogging` to `false`.
 
 ## Overriding traffic classifications
 
-For traffic routed to addresses outside of your cluster but inside your VPC, Kubecost supports the ability to directly classify network traffic to a particular IP address or CIDR block. This feature can be configured in [_values.yaml_](https://github.com/kubecost/cost-analyzer-helm-chart/blob/v1.101/cost-analyzer/values.yaml#L669-L707) under `networkCosts.config`. Classifications are defined as follows:
+For traffic routed to addresses outside of your cluster but inside your VPC, nOps supports the ability to directly classify network traffic to a particular IP address or CIDR block. This feature can be configured in [_values.yaml_](https://github.com/nOps/cost-analyzer-helm-chart/blob/v1.101/cost-analyzer/values.yaml#L669-L707) under `networkCosts.config`. Classifications are defined as follows:
 
 {% hint style="info" %}
 Load Balancers that proxy traffic to the internet (ingresses and gateways) can be specifically classified.
@@ -200,15 +200,15 @@ Additionally, the network costs DaemonSet mounts to the following directories on
 
 To verify this feature is functioning properly, you can complete the following steps:
 
-1. Confirm the `kubecost-network-costs` pods are Running. If these Pods are not in a Running state, _kubectl describe_ them and/or view their logs for errors.
-2. Ensure `kubecost-networking` target is Up in your Prometheus Targets list. View any visible errors if this target is not Up. You can further verify data is being scrapped by the presence of the `kubecost_pod_network_egress_bytes_total` metric in Prometheus.
-3. Verify Network Costs are available in your Kubecost Allocation view. View your browser's Developer Console on this page for any access/permissions errors if costs are not shown.
+1. Confirm the `nOps-network-costs` pods are Running. If these Pods are not in a Running state, _kubectl describe_ them and/or view their logs for errors.
+2. Ensure `nOps-networking` target is Up in your Prometheus Targets list. View any visible errors if this target is not Up. You can further verify data is being scrapped by the presence of the `nOps_pod_network_egress_bytes_total` metric in Prometheus.
+3. Verify Network Costs are available in your nOps Allocation view. View your browser's Developer Console on this page for any access/permissions errors if costs are not shown.
 
 ### Common issues
 
-* Failed to locate network pods: Error message is displayed when the Kubecost app is unable to locate the network pods, which we search for by a label that includes our release name. In particular, we depend on the label `app=<release-name>-network-costs` to locate the pods. If the app has a blank release name this issue may happen.
+* Failed to locate network pods: Error message is displayed when the nOps app is unable to locate the network pods, which we search for by a label that includes our release name. In particular, we depend on the label `app=<release-name>-network-costs` to locate the pods. If the app has a blank release name this issue may happen.
 * Resource usage is a function of unique src and dest IP/port combinations. Most deployments use a small fraction of a CPU and it is also ok to have this Pod CPU throttled. Throttling should increase parse times but should not have other impacts. The following Prometheus metrics are available in v15.3 for determining the scale and the impact of throttling:
-  * `kubecost_network_costs_parsed_entries` is the last number of ConnTrack entries parsed `kubecost_network_costs_parse_time` is the last recorded parse time
+  * `nOps_network_costs_parsed_entries` is the last number of ConnTrack entries parsed `nOps_network_costs_parse_time` is the last recorded parse time
 
 ## Feature limitations
 

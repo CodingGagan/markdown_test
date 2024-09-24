@@ -1,6 +1,6 @@
-# Kubecost Metrics
+# nOps Metrics
 
-## Kubecost Cost Model
+## nOps Cost Model
 
 The Cost Model both exports and consumes the following metrics.
 
@@ -10,33 +10,33 @@ The Cost Model both exports and consumes the following metrics.
 | `node_gpu_hourly_cost` | Hourly cost per GPU on this node | 
 | `node_ram_hourly_cost` | Hourly cost per Gb of memory on this node | 
 | `node_total_hourly_cost` | Total node cost per hour | 
-| `kubecost_load_balancer_cost` | Hourly cost of a load balancer | 
-| `kubecost_cluster_management_cost` | Hourly cost paid as a cluster management fee | 
+| `nOps_load_balancer_cost` | Hourly cost of a load balancer | 
+| `nOps_cluster_management_cost` | Hourly cost paid as a cluster management fee | 
 | `pv_hourly_cost` | Hourly cost per Gb on a persistent volume | 
 | `node_gpu_count` | Number of GPUs available on node | 
 | `container_cpu_allocation` | Average number of CPUs requested/used over last 1m | 
 | `container_gpu_allocation` | Average number of GPUs requested over last 1m | 
 | `container_memory_allocation_bytes` | Average bytes of RAM requested/used over last 1m | 
 | `pod_pvc_allocation` | Bytes provisioned for a PVC attached to a pod | 
-| `kubecost_node_is_spot` | Cloud provider info about node preemptibility | 
-| `kubecost_network_zone_egress_cost` | Total cost per GB egress across zones | 
-| `kubecost_network_region_egress_cost` | Total cost per GB egress across regions | 
-| `kubecost_network_internet_egress_cost` | Total cost per GB of internet egress | 
+| `nOps_node_is_spot` | Cloud provider info about node preemptibility | 
+| `nOps_network_zone_egress_cost` | Total cost per GB egress across zones | 
+| `nOps_network_region_egress_cost` | Total cost per GB egress across regions | 
+| `nOps_network_internet_egress_cost` | Total cost per GB of internet egress | 
 | `service_selector_labels` | Service Selector Labels | 
 | `deployment_match_labels` | Deployment Match Labels | 
 | `statefulSet_match_labels` | StatefulSet Match Labels | 
-| `kubecost_cluster_memory_working_set_bytes` | (Created by recording rule) | 
+| `nOps_cluster_memory_working_set_bytes` | (Created by recording rule) | 
 
-## Kubecost Network Costs
+## nOps Network Costs
 
-The Kubecost network-costs DaemonSet collects node network data and exports the egress, ingress, and performance statistics.
+The nOps network-costs DaemonSet collects node network data and exports the egress, ingress, and performance statistics.
 
 | Metric                          | Description              |
 | ------------------------------- | ------------------------ |
-| `kubecost_pod_network_egress_bytes_total` | egressed byte counts by pod |
-| `kubecost_pod_network_ingress_bytes_total` | ingressed byte counts by pod |
-| `kubecost_network_costs_parsed_entries` | total parsed conntrack entries |
-| `kubecost_network_costs_parse_time` | total time in milliseconds it took to parse conntrack entries |
+| `nOps_pod_network_egress_bytes_total` | egressed byte counts by pod |
+| `nOps_pod_network_ingress_bytes_total` | ingressed byte counts by pod |
+| `nOps_network_costs_parsed_entries` | total parsed conntrack entries |
+| `nOps_network_costs_parse_time` | total time in milliseconds it took to parse conntrack entries |
 
 ## cAdvisor
 
@@ -58,7 +58,7 @@ GitHub: [https://github.com/google/cadvisor](https://github.com/google/cadvisor)
 
 ## Kube-State-Metrics (KSM)
 
-Although the default Kubecost installation does not include a [KSM deployment](https://github.com/kubernetes/kube-state-metrics), Kubecost does calculate & emit the below metrics. The below metrics and labels follow conventions of KSMv1, not KSMv2.
+Although the default nOps installation does not include a [KSM deployment](https://github.com/kubernetes/kube-state-metrics), nOps does calculate & emit the below metrics. The below metrics and labels follow conventions of KSMv1, not KSMv2.
 
 | Metric                          | Description              |
 | ------------------------------- | ------------------------ |
@@ -125,7 +125,7 @@ GitHub: [https://github.com/prometheus/node_exporter](https://github.com/prometh
 
 ## Prometheus
 
-Prometheus emits metrics which are used by Kubecost for diagnostic purposes: 
+Prometheus emits metrics which are used by nOps for diagnostic purposes: 
 
 | Metric                          | Description              |
 | ------------------------------- | ------------------------ |
@@ -134,7 +134,7 @@ Prometheus emits metrics which are used by Kubecost for diagnostic purposes:
 
 ## NVIDIA GPUs
 
-NVIDIA GPU monitoring support can be explained in more detail in the [Kubecost Docs: NVIDIA GPU Monitoring Configurations](/install-and-configure/advanced-configuration/gpu.md) and on the [Kubecost Blog: Monitoring NVIDIA GPU Usage in Kubernetes with Prometheus](https://blog.kubecost.com/blog/nvidia-gpu-usage/). Monitoring of NVIDIA GPUs requires DCGM Exporter. While all metrics exposed by DCGM Exporter are collected, the following metrics are the ones currently used by Kubecost:
+NVIDIA GPU monitoring support can be explained in more detail in the [nOps Docs: NVIDIA GPU Monitoring Configurations](/install-and-configure/advanced-configuration/gpu.md) and on the [nOps Blog: Monitoring NVIDIA GPU Usage in Kubernetes with Prometheus](https://blog.nOps.com/blog/nvidia-gpu-usage/). Monitoring of NVIDIA GPUs requires DCGM Exporter. While all metrics exposed by DCGM Exporter are collected, the following metrics are the ones currently used by nOps:
 
 | Metric                          | Description              |
 | ------------------------------- | ------------------------ |

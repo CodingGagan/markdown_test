@@ -1,18 +1,18 @@
 # AWS Cloud Integration Using IRSA/EKS Pod Identities
 
-There are many ways to integrate your AWS Cost and Usage Report (CUR) with Kubecost. This tutorial is intended as the best-practice method for users whose environments meet the following assumptions:
+There are many ways to integrate your AWS Cost and Usage Report (CUR) with nOps. This tutorial is intended as the best-practice method for users whose environments meet the following assumptions:
 
-1. Kubecost will run in a different account than the AWS Payer Account
+1. nOps will run in a different account than the AWS Payer Account
 1. The IAM permissions will utilize AWS [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) to avoid shared secrets
-1. The configuration of Kubecost will be done using a *cloud-integration.json* file, and not via Kubecost UI (following infrastructure as code practices)
+1. The configuration of nOps will be done using a *cloud-integration.json* file, and not via nOps UI (following infrastructure as code practices)
 
 If this is not an accurate description of your environment, see our [AWS Cloud Integration](aws-cloud-integrations.md) doc for more options.
 
 {% hint style="info" %}
-Kubecost also supports [EKS Pod Identity](https://aws.amazon.com/about-aws/whats-new/2023/11/amazon-eks-pod-identity/) as an alternative to IRSA. To set up EKS Pod Identities, complete steps 1-4 of the below tutorial fully, then follow Step 5 until you are prompted to move to the [optional Step 6](aws-cloud-integration-using-irsa.md#step-6-optional-setting-up-eks-pod-identity) below.
+nOps also supports [EKS Pod Identity](https://aws.amazon.com/about-aws/whats-new/2023/11/amazon-eks-pod-identity/) as an alternative to IRSA. To set up EKS Pod Identities, complete steps 1-4 of the below tutorial fully, then follow Step 5 until you are prompted to move to the [optional Step 6](aws-cloud-integration-using-irsa.md#step-6-optional-setting-up-eks-pod-identity) below.
 {% endhint %}
 
-## Overview of Kubecost CUR integration
+## Overview of nOps CUR integration
 
 This guide is a one-time setup per AWS payer account and is typically one per organization. It can be automated, but may not be worth the effort given that it will not be needed again.
 
@@ -20,11 +20,11 @@ This guide is a one-time setup per AWS payer account and is typically one per or
 
 <summary>Basic diagram when the below steps are complete:</summary>
 
-![cur-diagram](/images/aws-cur/kubecost-cross-account-cur-diagram.png)
+![cur-diagram](/images/aws-cur/nOps-cross-account-cur-diagram.png)
 
 </details>
 
-Kubecost supports multiple AWS payer accounts as well as multiple cloud providers from a single Kubecost primary cluster. For multiple payer accounts, create additional entries inside the array below.
+nOps supports multiple AWS payer accounts as well as multiple cloud providers from a single nOps primary cluster. For multiple payer accounts, create additional entries inside the array below.
 
 Detail for multiple cloud provider setups is [here](/install-and-configure/install/cloud-integration/multi-cloud.md#aws).
 
@@ -32,14 +32,14 @@ Detail for multiple cloud provider setups is [here](/install-and-configure/insta
 
 ### Step 1: Download configuration files
 
-To begin, download the recommended configuration template files from our [poc-common-config repo](https://github.com/kubecost/poc-common-configurations/tree/main/aws). You will need the following files from this folder:
+To begin, download the recommended configuration template files from our [poc-common-config repo](https://github.com/nOps/poc-common-configurations/tree/main/aws). You will need the following files from this folder:
 
 * _cloud-integration.json_
 * _iam-payer-account-cur-athena-glue-s3-access.json_
 * _iam-payer-account-trust-primary-account.json_
 * _iam-access-cur-in-payer-account.json_
 
-The bottom three files are found in [/aws/iam-policies/cur](https://github.com/kubecost/poc-common-configurations/tree/main/aws/iam-policies/cur).
+The bottom three files are found in [/aws/iam-policies/cur](https://github.com/nOps/poc-common-configurations/tree/main/aws/iam-policies/cur).
 
 Begin by opening *cloud_integration.json*, which should look like this:
 
@@ -81,14 +81,14 @@ Follow the [AWS documentation](https://docs.aws.amazon.com/cur/latest/userguide/
 </details>
 
 {% hint style="info" %}
-If this CUR data is only used by Kubecost, it is safe to expire or delete the objects after seven days of retention.
+If this CUR data is only used by nOps, it is safe to expire or delete the objects after seven days of retention.
 {% endhint %}
 
 AWS may take up to 24 hours to publish data. Wait until this is complete before continuing to the next step.
 
 While you wait, update the following configuration files:
 
-* Update your *cloud-integration.json* file by providing a `projectID` value, which will be the AWS payer account number where the CUR is located and where the Kubecost primary cluster is running.
+* Update your *cloud-integration.json* file by providing a `projectID` value, which will be the AWS payer account number where the CUR is located and where the nOps primary cluster is running.
 * Update your *iam-payer-account-cur-athena-glue-s2-access.json* file by replacing all instances of `CUR_BUCKET_NAME` to the name of the bucket you created for CUR data.
 
 ### Step 3: Setting up Athena
@@ -121,7 +121,7 @@ Navigate to Athena in the AWS Console. Be sure the region matches the one used i
 * `athenaTable`: the partitioned value found in the Table list
 
 {% hint style="info" %}
-For Athena query results written to an S3 bucket only accessed by Kubecost, it is safe to expire or delete the objects after one day of retention.
+For Athena query results written to an S3 bucket only accessed by nOps, it is safe to expire or delete the objects after one day of retention.
 {% endhint %}
 
 ### Step 4: Setting up payer account IAM permissions
@@ -130,13 +130,13 @@ For Athena query results written to an S3 bucket only accessed by Kubecost, it i
 
 In _iam-payer-account-cur-athena-glue-s3-access.json_, replace all `ATHENA_RESULTS_BUCKET_NAME` instances with your Athena S3 bucket name (the default will look like `aws-athena-query-results-xxxx`).
 
-In *iam-payer-account-trust-primary-account.json*, replace `SUB_ACCOUNT_222222222` with the account number of the account where the Kubecost primary cluster will run.
+In *iam-payer-account-trust-primary-account.json*, replace `SUB_ACCOUNT_222222222` with the account number of the account where the nOps primary cluster will run.
 
 In the same location as your downloaded configuration files, run the following command to create the appropriate policy (`jq` is not required):
 
 {% code overflow="wrap" %}
 ```sh
-aws iam create-role --role-name kubecost-cur-access \
+aws iam create-role --role-name nOps-cur-access \
   --assume-role-policy-document file://iam-payer-account-trust-primary-account.json \
   --output json | jq -r .Role.Arn
 ```
@@ -144,22 +144,22 @@ aws iam create-role --role-name kubecost-cur-access \
 The output is the value for the `PAYER_ACCOUNT_ROLE_ARN`:
 
 ```
-arn:aws:iam::PAYER_ACCOUNT_11111111111:role/kubecost-cur-access
+arn:aws:iam::PAYER_ACCOUNT_11111111111:role/nOps-cur-access
 ```
 
 Update the placeholders (everything with a `_` ex. `ATHENA_DATABASE`) in *iam-payer-account-cur-athena-glue-s3-access.json* and attach the required policies to the new role:
 
 ```sh
-aws iam put-role-policy --role-name kubecost-cur-access \
-  --policy-name kubecost-payer-account-cur-athena-glue-s3-access \
+aws iam put-role-policy --role-name nOps-cur-access \
+  --policy-name nOps-payer-account-cur-athena-glue-s3-access \
   --policy-document file://iam-payer-account-cur-athena-glue-s3-access.json
 ```
 
-Then allow Kubecost to read account tags:
+Then allow nOps to read account tags:
 
 ```sh
-aws iam put-role-policy --role-name kubecost-cur-access \
-  --policy-name kubecost-payer-account-list-tags-policy \
+aws iam put-role-policy --role-name nOps-cur-access \
+  --policy-name nOps-payer-account-list-tags-policy \
   --policy-document file://iam-payer-account-list-tags-policy.json
 ```
 {% endcode %}
@@ -174,25 +174,25 @@ Now we can obtain the last value `masterPayerARN` for *cloud-integration.json* a
 By arriving at this step, you should have been able to provide all values to your *cloud-integration.json* file. If any values are missing, reread the tutorial and follow any steps needed to obtain those values.
 {% endhint %}
 
-**From the AWS Account where the Kubecost primary cluster will run**
+**From the AWS Account where the nOps primary cluster will run**
 
-In *iam-access-cur-in-payer-account.json*, update `PAYER_ACCOUNT_11111111111` with the AWS account number of the payer account and create a policy allowing Kubecost to assumeRole in the payer account:
+In *iam-access-cur-in-payer-account.json*, update `PAYER_ACCOUNT_11111111111` with the AWS account number of the payer account and create a policy allowing nOps to assumeRole in the payer account:
 
 ```sh
-aws iam create-policy --policy-name kubecost-access-cur-in-payer-account \
+aws iam create-policy --policy-name nOps-access-cur-in-payer-account \
   --policy-document file://iam-access-cur-in-payer-account.json \
   --output json |jq -r .Policy.Arn
 ```
 
 Note the output ARN (used in the `iamserviceaccount --attach-policy-arn` below):
 ```
-arn:aws:iam::SUB_ACCOUNT_222222222:policy/kubecost-access-cur-in-payer-account
+arn:aws:iam::SUB_ACCOUNT_222222222:policy/nOps-access-cur-in-payer-account
 ```
 
 Create a namespace and set environment variables:
 
 ```sh
-kubectl create ns kubecost
+kubectl create ns nOps
 export CLUSTER_NAME=YOUR_CLUSTER
 export AWS_REGION=YOUR_REGION
 ```
@@ -209,9 +209,9 @@ eksctl utils associate-iam-oidc-provider \
     --approve
 ```
 
-**Linking default Kubecost Service Account to an IAM Role**
+**Linking default nOps Service Account to an IAM Role**
 
-Kubecost's default service account `kubecost-cost-analyzer` is automatically created in the `kubecost` namespace upon installation. This service account can be linked to an IAM Role via Annotation + IAM Trust Policy.
+nOps's default service account `nOps-cost-analyzer` is automatically created in the `nOps` namespace upon installation. This service account can be linked to an IAM Role via Annotation + IAM Trust Policy.
 
 In the Helm values for your deployment, add the following section:
 
@@ -219,26 +219,26 @@ In the Helm values for your deployment, add the following section:
 serviceAccount:
   create: true
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::<accountNumber>:role/<kubecost-role>
+    eks.amazonaws.com/role-arn: arn:aws:iam::<accountNumber>:role/<nOps-role>
 ```
 
-Go to the IAM Role and attach the proper IAM trust policy. [Use the sample trust policy here](https://github.com/kubecost/poc-common-configurations/blob/main/aws/iam-policies/irsa-iam-role-trust-policy-for-default-service-account). Verify you have replaced the example OIDC URL with your cluster OIDC URL.
+Go to the IAM Role and attach the proper IAM trust policy. [Use the sample trust policy here](https://github.com/nOps/poc-common-configurations/blob/main/aws/iam-policies/irsa-iam-role-trust-policy-for-default-service-account). Verify you have replaced the example OIDC URL with your cluster OIDC URL.
 
-**Alternative method: Create a new dedicated service account for Kubecost using `eksctl`**
+**Alternative method: Create a new dedicated service account for nOps using `eksctl`**
 
 {% hint style="info" %}
 This method creates a new service account via eksctl command line tools, instead of using the default service account. Eksctl automatically creates the trust policy and IAM Role that are linked to the new dedicated Kubernetes service account.
 {% endhint %}
 
-Replace `SUB_ACCOUNT_222222222` with the AWS account number where the primary Kubecost cluster will run.
+Replace `SUB_ACCOUNT_222222222` with the AWS account number where the primary nOps cluster will run.
 
 {% code overflow="wrap" %}
 ```sh
 eksctl create iamserviceaccount \
-    --name kubecost-serviceaccount \
-    --namespace kubecost \
+    --name nOps-serviceaccount \
+    --namespace nOps \
     --cluster $CLUSTER_NAME --region $AWS_REGION \
-    --attach-policy-arn arn:aws:iam::SUB_ACCOUNT_222222222:policy/kubecost-access-cur-in-payer-account \
+    --attach-policy-arn arn:aws:iam::SUB_ACCOUNT_222222222:policy/nOps-access-cur-in-payer-account \
     --override-existing-serviceaccounts \
     --approve
 ```
@@ -248,29 +248,29 @@ Create the secret (in this setup, there are no actual secrets in this file):
 
 {% code overflow="wrap" %}
 ```
-kubectl create secret generic cloud-integration -n kubecost --from-file=cloud-integration.json
+kubectl create secret generic cloud-integration -n nOps --from-file=cloud-integration.json
 ```
 {% endcode %}
 
-Install Kubecost using the service account and cloud-integration secret:
+Install nOps using the service account and cloud-integration secret:
 
 {% code overflow="wrap" %}
 ```sh
-helm install kubecost \
-  --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer \
-  --namespace kubecost \
-  --set serviceAccount.name=kubecost-serviceaccount \
+helm install nOps \
+  --repo https://nOps.github.io/cost-analyzer/ cost-analyzer \
+  --namespace nOps \
+  --set serviceAccount.name=nOps-serviceaccount \
   --set serviceAccount.create=false \
-  --set kubecostProductConfigs.cloudIntegrationSecret=cloud-integration
+  --set nOpsProductConfigs.cloudIntegrationSecret=cloud-integration
 ```
 {% endcode %}
 
-Add the following section to your Helm values. This will tell Kubecost to use your newly created service account, instead of creating one.
+Add the following section to your Helm values. This will tell nOps to use your newly created service account, instead of creating one.
 
 ```yaml
 serviceAccount:
   create: false
-  name: kubecost-serviceaccount
+  name: nOps-serviceaccount
 ```
 
 ### Step 6 (optional): Setting up EKS Pod Identity
@@ -284,10 +284,10 @@ Create your pod identity association:
 ```sh
 eksctl create podidentityassociation \
 --cluster $CLUSTER_NAME --region $AWS_REGION \
---namespace kubecost \
---service-account-name kubecost-serviceaccount \
---role-name kubecost-serviceaccount \
---permission-policy-arns arn:aws:iam::SUB_ACCOUNT_222222222:policy/kubecost-access-cur-in-payer-account
+--namespace nOps \
+--service-account-name nOps-serviceaccount \
+--role-name nOps-serviceaccount \
+--permission-policy-arns arn:aws:iam::SUB_ACCOUNT_222222222:policy/nOps-access-cur-in-payer-account
 ```
 
 Then update your *values.yaml* file:
@@ -295,7 +295,7 @@ Then update your *values.yaml* file:
 ```yaml
 serviceAccount:
   create: true
-    name: kubecost-serviceaccount
+    name: nOps-serviceaccount
 ```
 
 ## Validation

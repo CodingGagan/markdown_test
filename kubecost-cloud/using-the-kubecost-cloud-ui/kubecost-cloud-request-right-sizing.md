@@ -1,10 +1,10 @@
-# Kubecost Cloud: Request Right-Sizing Recommendations
+# nOps Cloud: Request Right-Sizing Recommendations
 
 {% hint style="info" %}
-This documentation should only be consulted when using Kubecost Cloud! For information about request right-sizing recommendations for self-hosted Kubecost, see [here](/using-kubecost/navigating-the-kubecost-ui/savings/container-request-right-sizing-recommendations.md).
+This documentation should only be consulted when using nOps Cloud! For information about request right-sizing recommendations for self-hosted nOps, see [here](/using-nOps/navigating-the-nOps-ui/savings/container-request-right-sizing-recommendations.md).
 {% endhint %}
 
-Kubecost Cloud is able to provide recommendations for right-sizing your container requests to ensure they are as cost-effective as possible. Recommendations are provided for all namespaces within your cluster.
+nOps Cloud is able to provide recommendations for right-sizing your container requests to ensure they are as cost-effective as possible. Recommendations are provided for all namespaces within your cluster.
 
 ## Viewing request recommendations
 
@@ -15,7 +15,7 @@ On the Container Request Right-sizing Recommendations page, you will see a table
 ### Configuring your recommendations
 
 The displayed right-sizing recommendations are calculated by taking into account your environment profile. You can optionally configure this for more optimal results by selecting _Customize_ above the table.
-* Window: The range of time Kubecost will read for resource activity to determine its recommendations.
+* Window: The range of time nOps will read for resource activity to determine its recommendations.
 * Profile: Refers to the type of environment. The selected value for Profile may restrict you from customizing certain other values.
   * Production: Stable container activity, will provide some extra space for potential spikes in activity.
   * Development: Container can tolerate small amount of instability, will run somewhat close to capacity.

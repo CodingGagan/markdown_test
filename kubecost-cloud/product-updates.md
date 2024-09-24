@@ -1,9 +1,9 @@
-# Kubecost Cloud Product Updates
+# nOps Cloud Product Updates
 
 ## 12/21/23
 
 ### New Features:
-* Cluster Status Alerts: get notified when a Kubecost Cloud agent stops reporting
+* Cluster Status Alerts: get notified when a nOps Cloud agent stops reporting
 * New filtering options added on the Allocations page: Department/Environment/Owner/Product/Team. Filtering by any of the properties listed above is equivalent to filtering by the following allocation label names: “department”, “env”, “owner”, “app”, “team”. The label names are not customizable at the moment.
 
 ### Bug Fixes:

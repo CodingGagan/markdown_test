@@ -1,6 +1,6 @@
 # Local Disks
 
-Kubecost displays all local disks it detects with low usage, with recommendations for resizing and predicted cost savings.
+nOps displays all local disks it detects with low usage, with recommendations for resizing and predicted cost savings.
 
 You can access the Local Disks page by selecting *Settings* in the left navigation, then selecting *Manage local disks*.
 
@@ -16,6 +16,6 @@ In the Profile dropdown, you can configure your desired overhead percentage, whi
 * Production (50%)
 * High Availability (100%)
 
-The value of your overhead percentage will affect your resizing recommendation and estimated savings, where a higher overhead percentage will result in higher average resize recommendation, and lower average estimated savings. The overhead percentage is applied to your current usage (in GiB), then added to your usage obtain a  value which Kubecost should round up to for its resizing recommendation. For example, for a disk with a usage of 12 GiB, with _Production (50%)_ selected from the Profile dropdown, 6 GiB (50% of 12) will be added to the usage, resulting in a resizing recommendation of 18 GiB.
+The value of your overhead percentage will affect your resizing recommendation and estimated savings, where a higher overhead percentage will result in higher average resize recommendation, and lower average estimated savings. The overhead percentage is applied to your current usage (in GiB), then added to your usage obtain a  value which nOps should round up to for its resizing recommendation. For example, for a disk with a usage of 12 GiB, with _Production (50%)_ selected from the Profile dropdown, 6 GiB (50% of 12) will be added to the usage, resulting in a resizing recommendation of 18 GiB.
 
-Kubecost can only provide detection of underused disks with recommendations for resizing. It does not assist with node turndown.
+nOps can only provide detection of underused disks with recommendations for resizing. It does not assist with node turndown.

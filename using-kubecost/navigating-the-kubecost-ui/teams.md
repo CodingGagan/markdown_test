@@ -1,20 +1,20 @@
 # Teams
 
 {% hint style="info" %}
-RBAC is only officially supported on Kubecost Enterprise plans.
+RBAC is only officially supported on nOps Enterprise plans.
 {% endhint %}
 
-Teams allows basic RBAC functionality using Kubecost's UI.
+Teams allows basic RBAC functionality using nOps's UI.
 
 ## Prerequisites
 
-Before using the Teams page, make sure you have configured [SAML](/install-and-configure/advanced-configuration/user-management-saml/README.md) with a provider of your choice. Kubecost provides tutorials for configuring SAML RBAC with [Okta](/install-and-configure/advanced-configuration/user-management-saml/okta-saml-integration.md) and [Microsoft Entra](/install-and-configure/advanced-configuration/user-management-saml/microsoft-entra-id-saml-integration-for-kubecost.md).
+Before using the Teams page, make sure you have configured [SAML](/install-and-configure/advanced-configuration/user-management-saml/README.md) with a provider of your choice. nOps provides tutorials for configuring SAML RBAC with [Okta](/install-and-configure/advanced-configuration/user-management-saml/okta-saml-integration.md) and [Microsoft Entra](/install-and-configure/advanced-configuration/user-management-saml/microsoft-entra-id-saml-integration-for-nOps.md).
 
 {% hint style="warning" %}
 Teams is currently *not* compatible with [OIDC](/install-and-configure/advanced-configuration/user-management-oidc/user-management-oidc.md).
 {% endhint %}
 
-Users must also have the persistent volumes Helm flag enabled. This is enabled in Kubecost by default, and no action is needed unless you have previously disabled it. PV is enabled via:
+Users must also have the persistent volumes Helm flag enabled. This is enabled in nOps by default, and no action is needed unless you have previously disabled it. PV is enabled via:
 
 ```yaml
 persistentVolume:
@@ -25,7 +25,7 @@ If this is your first time using Teams, consult the [Getting started](teams.md#g
 
 ## Getting started
 
-To manage teams via the Kubecost UI, you must take special measures while creating an initial admin team. Additional teams can then be created by users in this group. There are three methods available for getting started:
+To manage teams via the nOps UI, you must take special measures while creating an initial admin team. Additional teams can then be created by users in this group. There are three methods available for getting started:
 
 ### Method 1: Disabling SAML
 
@@ -85,7 +85,7 @@ Admins can edit existing teams by selecting them from the Teams page. Teams can 
 
 User roles can always be optionally configured using the UI or by adjusting the Helm flags in your *values.yaml*. There is no reequirement to choose one or the other.
 
-Kubecost RBAC follows the principle of most privilege. If a user is added to multiple teams with different roles, they will assume the role with the highest authority unless Allocation Filters are used to limit role functions.
+nOps RBAC follows the principle of most privilege. If a user is added to multiple teams with different roles, they will assume the role with the highest authority unless Allocation Filters are used to limit role functions.
 
 Authentication is handled by the cost-model and Aggregator pods.
 
@@ -98,4 +98,4 @@ For help with troubleshooting, follow this guide for diagnostic assistance:
 3. Look for the `token` cookie.
 4. Copy and paste the token value into jwt.io.
 5. The last group is the username.
-6. Omit `group:` to find the username Kubecost requires for teams.
+6. Omit `group:` to find the username nOps requires for teams.

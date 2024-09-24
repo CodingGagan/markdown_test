@@ -1,6 +1,6 @@
 # Allocation Trends API
 
-{% swagger method="get" path="/allocation/trends" baseUrl="http://<your-kubecost-address>/model" summary="Allocation Trends API" %} {% swagger-description %} Analyzes change in allocated costs relative to a previous window of the same size.
+{% swagger method="get" path="/allocation/trends" baseUrl="http://<your-nOps-address>/model" summary="Allocation Trends API" %} {% swagger-description %} Analyzes change in allocated costs relative to a previous window of the same size.
 
 {% swagger-parameter in="path" name="window" required="true" type="string" %}
 Duration of time over which to query. Compares cost usage of window to cost usage window of equal size directly preceding it. Accepts multiple different formats of time (see this [Using the `window` parameter](/apis/apis-overview.md#using-the-window-parameter) section for more info)).
@@ -34,7 +34,7 @@ If true, idle cost is allocated proportionally across all non-idle allocations, 
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="shareNamespaces" type="string" required="false" %}
-Comma-separated list of namespaces to share; e.g. `kube-system, kubecost` will share the costs of those two namespaces with the remaining non-idle, unshared allocations.
+Comma-separated list of namespaces to share; e.g. `kube-system, nOps` will share the costs of those two namespaces with the remaining non-idle, unshared allocations.
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="shareLabels" type="string" required="false" %}
@@ -98,7 +98,7 @@ If `true`, pulls data from the Assets cache and corrects prices of Allocations a
 
 ## Calculating trend value
 
-The Allocation Trends API determines changes in resource cost usage over time based on the interval set `window` parameter and provides that information via the schema field `value`. Cost usage for the current window sampled will be compared with the previous window, the window directly before the current window of the same size interval. For example, for `window=3d`, Kubecost will output cost usage for the past three days compared to cost usage of the three days before the start of the window. This means a total of six days of allocation data must be available and sampled in order to provide an accurate value.
+The Allocation Trends API determines changes in resource cost usage over time based on the interval set `window` parameter and provides that information via the schema field `value`. Cost usage for the current window sampled will be compared with the previous window, the window directly before the current window of the same size interval. For example, for `window=3d`, nOps will output cost usage for the past three days compared to cost usage of the three days before the start of the window. This means a total of six days of allocation data must be available and sampled in order to provide an accurate value.
 
 The equation for calculating `value` is: `value=current/previous - 1`
 
@@ -129,11 +129,11 @@ In the example output below, `value` is expressed as `-0.27...`, meaning spendin
 
 ## Using the `names` parameter
 
-`names` is a mandatory parameter which determines the sequence of items returned, based on whatever the query is aggregating by. For example, when using `aggregate=namespace`, the user should provide a comma-separated list of all namespaces they wish to see trend values for in this category. In this case, they should provide `names=kubecost,aggregator,kube-system...` to receive a list of trend values for all provided namespaces as ordered. If the user does not provide a value for `aggregate`, they must still use the names parameter to list all line items requested.
+`names` is a mandatory parameter which determines the sequence of items returned, based on whatever the query is aggregating by. For example, when using `aggregate=namespace`, the user should provide a comma-separated list of all namespaces they wish to see trend values for in this category. In this case, they should provide `names=nOps,aggregator,kube-system...` to receive a list of trend values for all provided namespaces as ordered. If the user does not provide a value for `aggregate`, they must still use the names parameter to list all line items requested.
 
 ## Viewing trend percentages in the UI
 
-Trend values are converted into percentages in the Kubecost Allocations page, calculated based on your current query. Trends will be presented in the rightmost column, next to your Total cost. The `window` parameter is determined by your selected date range in the top right of the page. The default is Last 7 days (`window=7d`). The equation `value*100` is used to provide percentages.
+Trend values are converted into percentages in the nOps Allocations page, calculated based on your current query. Trends will be presented in the rightmost column, next to your Total cost. The `window` parameter is determined by your selected date range in the top right of the page. The default is Last 7 days (`window=7d`). The equation `value*100` is used to provide percentages.
 
 ![Total cost column](/.gitbook/assets/total-cost.png)
 

@@ -4,14 +4,14 @@
 This feature is currently in beta. It is enabled by default.
 {% endhint %}
 
-Multi-Cluster Diagnostics offers a single view into the health of all the clusters you currently monitor with Kubecost.
+Multi-Cluster Diagnostics offers a single view into the health of all the clusters you currently monitor with nOps.
 
 Health checks include, but are not limited to:
 
-1. Whether Kubecost is correctly emitting metrics
-2. Whether Kubecost is being scraped by Prometheus
+1. Whether nOps is correctly emitting metrics
+2. Whether nOps is being scraped by Prometheus
 3. Whether Prometheus has scraped the required metrics
-4. Whether Kubecost's ETL files are healthy
+4. Whether nOps's ETL files are healthy
 
 ## Configuration
 
@@ -20,7 +20,7 @@ Health checks include, but are not limited to:
 diagnostics:
   enabled: true
   primary:
-    enabled: true  # Only enable this on your primary Kubecost cluster
+    enabled: true  # Only enable this on your primary nOps cluster
 
 # Ensure you have configured a unique CLUSTER_ID.
 prometheus:
@@ -28,23 +28,23 @@ prometheus:
     global:
       external_labels:
         cluster_id: YOUR_CLUSTER_ID
-kubecostProductConfigs:
+nOpsProductConfigs:
   clusterName: YOUR_CLUSTER_ID
 
 # Ensure you have configured a storage config secret.
-kubecostModel:
+nOpsModel:
   federatedStorageConfigSecret: federated-store
 ```
 
-Additional configuration options can found in the [*values.yaml*](https://github.com/kubecost/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values.yaml) under `diagnostics:`.
+Additional configuration options can found in the [*values.yaml*](https://github.com/nOps/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values.yaml) under `diagnostics:`.
 
 ## Architecture
 
-The Multi-Cluster Diagnostics feature is a process run within the `kubecost-cost-analyzer` deployment. It has the option to be run as an independent deployment for higher availability via `.Values.diagnostics.deployment.enabled`.
+The Multi-Cluster Diagnostics feature is a process run within the `nOps-cost-analyzer` deployment. It has the option to be run as an independent deployment for higher availability via `.Values.diagnostics.deployment.enabled`.
 
-When run in each Kubecost deployment, it monitors the health of Kubecost and sends that health data to the central object store at the `/diagnostics` filepath. The below diagram depicts these interactions. This diagram is specific to the requests required for diagnostics only. For additional diagrams, see our [multi-cluster guide](multi-cluster.md).
+When run in each nOps deployment, it monitors the health of nOps and sends that health data to the central object store at the `/diagnostics` filepath. The below diagram depicts these interactions. This diagram is specific to the requests required for diagnostics only. For additional diagrams, see our [multi-cluster guide](multi-cluster.md).
 
-![Kubecost-Agent-Diagnostics](/images/diagrams/Agent-Diagnostics-Architecture.png)
+![nOps-Agent-Diagnostics](/images/diagrams/Agent-Diagnostics-Architecture.png)
 
 ## API usage
 
@@ -52,9 +52,9 @@ The diagnostics API can be accessed on the `primary` via `/model/diagnostics/mul
 
 The `window` query parameter is required, which will return all diagnostics within the specified time window.
 
-{% swagger method="get" path="/multi-cluster-diagnostics" baseUrl="http://<your-kubecost-address>/model" summary="Multi-cluster Diagnostics API" %}
+{% swagger method="get" path="/multi-cluster-diagnostics" baseUrl="http://<your-nOps-address>/model" summary="Multi-cluster Diagnostics API" %}
 {% swagger-description %}
-The Multi-cluster Diagnostics API provides a single view into the health of all the clusters you currently monitor with Kubecost.
+The Multi-cluster Diagnostics API provides a single view into the health of all the clusters you currently monitor with nOps.
 {% endswagger-description %}
 
 {% swagger-parameter in="path" name="window" type="string" required="true" %}
@@ -67,27 +67,27 @@ Duration of time over which to query. Accepts words like `today`, `week`, `month
     "code": 200,
     "data": {
         "overview": {
-            "kubecostEmittingMetricDiagnosticPassed": true,
-            "prometheusHasKubecostMetricDiagnosticPassed": true,
+            "nOpsEmittingMetricDiagnosticPassed": true,
+            "prometheusHasnOpsMetricDiagnosticPassed": true,
             "prometheusHasCadvisorMetricDiagnosticPassed": true,
             "prometheusHasKSMMetricDiagnosticPassed": true,
             "dailyAllocationEtlHealthyDiagnosticPassed": true,
             "dailyAssetEtlHealthyDiagnosticPassed": true,
-            "kubecostPodsNotOOMKilledDiagnosticPassed": true,
-            "kubecostPodsNotPendingDiagnosticPassed": false
+            "nOpsPodsNotOOMKilledDiagnosticPassed": true,
+            "nOpsPodsNotPendingDiagnosticPassed": false
         },
         "clusters": [
             {
                 "clusterId": "cluster_one",
                 "latestRun": "2024-03-01T22:42:32Z",
-                "kubecostVersion": "v2.1",
-                "kubecostEmittingMetric": {
+                "nOpsVersion": "v2.1",
+                "nOpsEmittingMetric": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "prometheusHasKubecostMetric": {
+                "prometheusHasnOpsMetric": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
@@ -117,13 +117,13 @@ Duration of time over which to query. Accepts words like `today`, `week`, `month
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "kubecostPodsNotOOMKilled": {
+                "nOpsPodsNotOOMKilled": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "kubecostPodsNotPending": {
+                "nOpsPodsNotPending": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
@@ -133,14 +133,14 @@ Duration of time over which to query. Accepts words like `today`, `week`, `month
             {
                 "clusterId": "cluster_two",
                 "latestRun": "2024-03-01T22:40:17Z",
-                "kubecostVersion": "v2.1",
-                "kubecostEmittingMetric": {
+                "nOpsVersion": "v2.1",
+                "nOpsEmittingMetric": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "prometheusHasKubecostMetric": {
+                "prometheusHasnOpsMetric": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
@@ -170,30 +170,30 @@ Duration of time over which to query. Accepts words like `today`, `week`, `month
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "kubecostPodsNotOOMKilled": {
+                "nOpsPodsNotOOMKilled": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "kubecostPodsNotPending": {
+                "nOpsPodsNotPending": {
                     "diagnosticPassed": false,
                     "numFailures": 52,
                     "firstFailureDate": "2024-03-01T18:25:09Z",
-                    "diagnosticOutput": "RunDiagnostic: checkKubecostPodsNotPending: queryPrometheusCheckResultEmpty: the following query returned a non-empty result sum(kube_pod_status_phase{namespace='kubecost-etl-fed', phase='Pending'}) by (pod,namespace) > 0"
+                    "diagnosticOutput": "RunDiagnostic: checknOpsPodsNotPending: queryPrometheusCheckResultEmpty: the following query returned a non-empty result sum(kube_pod_status_phase{namespace='nOps-etl-fed', phase='Pending'}) by (pod,namespace) > 0"
                 }
             },
             {
                 "clusterId": "cluster_three",
                 "latestRun": "2024-03-01T22:42:32Z",
-                "kubecostVersion": "v2.1",
-                "kubecostEmittingMetric": {
+                "nOpsVersion": "v2.1",
+                "nOpsEmittingMetric": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "prometheusHasKubecostMetric": {
+                "prometheusHasnOpsMetric": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
@@ -223,17 +223,17 @@ Duration of time over which to query. Accepts words like `today`, `week`, `month
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "kubecostPodsNotOOMKilled": {
+                "nOpsPodsNotOOMKilled": {
                     "diagnosticPassed": true,
                     "numFailures": 0,
                     "firstFailureDate": "",
                     "diagnosticOutput": ""
                 },
-                "kubecostPodsNotPending": {
+                "nOpsPodsNotPending": {
                     "diagnosticPassed": false,
                     "numFailures": 52,
                     "firstFailureDate": "2024-03-01T18:24:42Z",
-                    "diagnosticOutput": "RunDiagnostic: checkKubecostPodsNotPending: queryPrometheusCheckResultEmpty: the following query returned a non-empty result sum(kube_pod_status_phase{namespace='kubecost-etl-fed', phase='Pending'}) by (pod,namespace) > 0"
+                    "diagnosticOutput": "RunDiagnostic: checknOpsPodsNotPending: queryPrometheusCheckResultEmpty: the following query returned a non-empty result sum(kube_pod_status_phase{namespace='nOps-etl-fed', phase='Pending'}) by (pod,namespace) > 0"
                 }
             }
         ]

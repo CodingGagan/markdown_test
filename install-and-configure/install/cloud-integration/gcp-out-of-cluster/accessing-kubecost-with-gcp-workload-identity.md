@@ -1,6 +1,6 @@
-# Accessing Kubecost with GCP Workload Identity
+# Accessing nOps with GCP Workload Identity
 
-Certain features of Kubecost, including Savings Insights like Orphaned Resources and Reserved Instances, require access to the cluster's GCP account. This is usually indicated by a 403 error from Google APIs which is due to 'insufficient authentication scopes'. Viewing this error in the Kubecost UI will display the cause of the error as `"ACCESS_TOKEN_SCOPE_INSUFFICIENT"`.
+Certain features of nOps, including Savings Insights like Orphaned Resources and Reserved Instances, require access to the cluster's GCP account. This is usually indicated by a 403 error from Google APIs which is due to 'insufficient authentication scopes'. Viewing this error in the nOps UI will display the cause of the error as `"ACCESS_TOKEN_SCOPE_INSUFFICIENT"`.
 
 To obtain access to these features, follow this tutorial which will show you how to configure your Google IAM Service Account and Workload Identity for your application.
 
@@ -61,4 +61,4 @@ gcloud projects add-iam-policy-binding --member=serviceAccount:<your-iam-service
 {% endtab %}
 {% endtabs %}
 
-From here, restart the pod(s) to confirm your changes. You should now have access to all expected Kubecost functionality through your service account with Identity Workload.
+From here, restart the pod(s) to confirm your changes. You should now have access to all expected nOps functionality through your service account with Identity Workload.

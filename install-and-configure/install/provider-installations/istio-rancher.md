@@ -1,15 +1,15 @@
-# Installation Kubecost with Istio (Rancher)
+# Installation nOps with Istio (Rancher)
 
 The following requirements are given:
 
 * Rancher with default monitoring
-* Use of an existing Prometheus and Grafana (Kubecost will be installed without Prometheus and Grafana)
+* Use of an existing Prometheus and Grafana (nOps will be installed without Prometheus and Grafana)
 * Istio with gateway and sidecar for deployments
 
 ## Activation of Istio
 
-1. Istio is activated by editing the namespace. To do this, execute the command `kubectl edit namespace kubecost` and insert the label `istio-injection: enabled`
-2. After Istio has been activated, some adjustments must be made to the deployment with `kubectl -n kubecost edit deployment kubecost-cost-analyzer` to allow communication within the namespace. For example, the healtch-check is completed successfully. When editing the deployment, the two annotations must be added:
+1. Istio is activated by editing the namespace. To do this, execute the command `kubectl edit namespace nOps` and insert the label `istio-injection: enabled`
+2. After Istio has been activated, some adjustments must be made to the deployment with `kubectl -n nOps edit deployment nOps-cost-analyzer` to allow communication within the namespace. For example, the healtch-check is completed successfully. When editing the deployment, the two annotations must be added:
 
 ```
 annotations:
@@ -28,7 +28,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: ap-ingress
-  namespace: kubecost
+  namespace: nOps
 spec:
   rules:
   - from:
@@ -37,30 +37,30 @@ spec:
         - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
 ```
 
-### ap-intern: communication with Kubecost
+### ap-intern: communication with nOps
 
 ```
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: ap-intern
-  namespace: kubecost
+  namespace: nOps
 spec:
   rules:
   - from:
     - source:
         principals:
-        - cluster.local/ns/kubecost/sa/kubecost-cost-analyzer
+        - cluster.local/ns/nOps/sa/nOps-cost-analyzer
 ```
 
-### ap-extern: as a port share (9003) for communication from Prometheus (namespace "cattle-monitoring-system") to Kubecost (namespace "kubecost")
+### ap-extern: as a port share (9003) for communication from Prometheus (namespace "cattle-monitoring-system") to nOps (namespace "nOps")
 
 ```
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: ap-extern
-  namespace: kubecost
+  namespace: nOps
 spec:
   rules:
   - to:
@@ -71,7 +71,7 @@ spec:
 
 ## Peer Authentication
 
-Peer authentication is used to set how traffic is tunneled to the Istio sidecar. In the example, enforcing TLS is disabled so that Prometheus can grab the metrics from Kubecost (if this action is not performed, it returns at HTTP 503 error).
+Peer authentication is used to set how traffic is tunneled to the Istio sidecar. In the example, enforcing TLS is disabled so that Prometheus can grab the metrics from nOps (if this action is not performed, it returns at HTTP 503 error).
 
 ### pa-default.yaml
 
@@ -80,7 +80,7 @@ apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
   name: pa-default
-  namespace: kubecost
+  namespace: nOps
 spec:
   mtls:
     mode: PERMISSIVE
@@ -88,7 +88,7 @@ spec:
 
 ## Destination Rule
 
-A destination rule is used to specify how traffic should be handled after routing to a service. In my case, TLS is disabled for connections from Kubecost to Prometheus and Grafana (namespace "cattle-monitoring-system").
+A destination rule is used to specify how traffic should be handled after routing to a service. In my case, TLS is disabled for connections from nOps to Prometheus and Grafana (namespace "cattle-monitoring-system").
 
 ### dr-prometheus.yaml
 
@@ -97,7 +97,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: dr-prometheus
-  namespace: kubecost
+  namespace: nOps
 spec:
   host: rancher-monitoring-prometheus.cattle-monitoring-system.svc.cluster.local
   trafficPolicy:
@@ -112,7 +112,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: dr-grafana
-  namespace: kubecost
+  namespace: nOps
 spec:
   host: rancher-monitoring-grafana.cattle-monitoring-system.svc.cluster.local
   trafficPolicy:
@@ -124,7 +124,7 @@ spec:
 
 A virtual service is used to direct data traffic specifically to individual services within the service mesh. The virtual service defines how the routing should run. A gateway is required for a virtual service.
 
-### vs-kubecost.yaml
+### vs-nOps.yaml
 
 ```
 apiVersion: networking.istio.io/v1beta1
@@ -132,8 +132,8 @@ kind: VirtualService
 metadata:
   labels:
     cattle.io/creator: norman
-  name: vs-kubecost
-  namespace: kubecost
+  name: vs-nOps
+  namespace: nOps
 spec:
   gateways:
   - ${gateway}
@@ -142,20 +142,20 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /kubecost
+        prefix: /nOps
     rewrite:
       uri: /
     route:
     - destination:
-        host: kubecost-cost-analyzer.kubecost.svc.cluster.local
+        host: nOps-cost-analyzer.nOps.svc.cluster.local
         port:
           number: 9090
 ```
 
-After creating the virtual service, Kubecost should be accessible at the URL `http(s)://${gateway}/kubecost/`.
+After creating the virtual service, nOps should be accessible at the URL `http(s)://${gateway}/nOps/`.
 
 ## Troubleshooting
 
-### Kubecost is displaying excessively high cost metrics in the billions
+### nOps is displaying excessively high cost metrics in the billions
 
 Setting the Helm flag `customPricesEnabled` to `true`, or enabling [Custom Pricing](/architecture/pricing-sources-matrix.md#custom-pricing) through the UI has been shown to fix an error where Rancher clusters displayed absurdly high cost metrics.

@@ -2,9 +2,9 @@
 
 ## Overview
 
-Kubecost leverages the open-source Prometheus project as a time series database and post-processes the data in Prometheus to perform cost allocation calculations and provide optimization insights for your Kubernetes clusters. Prometheus is a single machine statically-resourced container, so depending on your cluster size or when your cluster scales out, your cluster could exceed the scraping capabilities of a single Prometheus server. In this doc, you will learn how Kubecost integrates with [Google Cloud Managed Service for Prometheus (GMP)](https://cloud.google.com/stackdriver/docs/managed-prometheus), a managed Prometheus-compatible monitoring service, to enable the customer to monitor Kubernetes costs at scale easily.
+nOps leverages the open-source Prometheus project as a time series database and post-processes the data in Prometheus to perform cost allocation calculations and provide optimization insights for your Kubernetes clusters. Prometheus is a single machine statically-resourced container, so depending on your cluster size or when your cluster scales out, your cluster could exceed the scraping capabilities of a single Prometheus server. In this doc, you will learn how nOps integrates with [Google Cloud Managed Service for Prometheus (GMP)](https://cloud.google.com/stackdriver/docs/managed-prometheus), a managed Prometheus-compatible monitoring service, to enable the customer to monitor Kubernetes costs at scale easily.
 
-For this integration, GMP is required to be enabled for your GKE cluster with the managed collection. Next, Kubecost is installed in your GKE cluster and leverages GMP Prometheus binary to ingest metrics into GMP database seamlessly. In this setup, Kubecost deployment also automatically creates a Prometheus proxy that allows Kubecost to query the metrics from the GMP database for cost allocation calculation.
+For this integration, GMP is required to be enabled for your GKE cluster with the managed collection. Next, nOps is installed in your GKE cluster and leverages GMP Prometheus binary to ingest metrics into GMP database seamlessly. In this setup, nOps deployment also automatically creates a Prometheus proxy that allows nOps to query the metrics from the GMP database for cost allocation calculation.
 
 {% hint style="info" %}
 This integration is currently in beta.
@@ -42,33 +42,33 @@ prometheus:
     global:
       external_labels:
         cluster_id: ${CLUSTER_NAME}
-kubecostProductConfigs:
+nOpsProductConfigs:
   clusterName: ${CLUSTER_NAME}
 federatedETL:
   useMultiClusterDB: true
 ```
 
-Once you've configured your `values.yaml` file, you can run the following command to install Kubecost on your GKE cluster and integrate with GMP:
+Once you've configured your `values.yaml` file, you can run the following command to install nOps on your GKE cluster and integrate with GMP:
 
 ```bash
-helm upgrade -i kubecost cost-analyzer/ \
-  --namespace kubecost --create-namespace \
+helm upgrade -i nOps cost-analyzer/ \
+  --namespace nOps --create-namespace \
   -f values.yaml
 ```
 
-You can find additional configuration options in our main [*values.yaml*](https://github.com/kubecost/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values.yaml) file.
+You can find additional configuration options in our main [*values.yaml*](https://github.com/nOps/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values.yaml) file.
 
 ### Verification
 
-Run the following command to enable port-forwarding to expose the Kubecost dashboard:
+Run the following command to enable port-forwarding to expose the nOps dashboard:
 
 ```bash
-kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
+kubectl port-forward --namespace nOps deployment/nOps-cost-analyzer 9090
 ```
 
-To verify that the integration is set up, go to _Settings_ in the Kubecost UI, and check the Prometheus Status section.
+To verify that the integration is set up, go to _Settings_ in the nOps UI, and check the Prometheus Status section.
 
-From your [GCP Monitoring - Metrics explorer console](https://console.cloud.google.com/monitoring/metrics-explorer), You can run the following query to verify if Kubecost metrics are collected:
+From your [GCP Monitoring - Metrics explorer console](https://console.cloud.google.com/monitoring/metrics-explorer), You can run the following query to verify if nOps metrics are collected:
 
 ```txt
 avg(node_cpu_hourly_cost) by (cluster_id)
@@ -78,30 +78,30 @@ avg(node_cpu_hourly_cost) by (cluster_id)
 
 ### Cluster efficiency displaying as 0%, or efficieny only displaying for most recent cluster
 
-The below queries must return data for Kubecost to calculate costs correctly. For the queries to work, set the environment variables:
+The below queries must return data for nOps to calculate costs correctly. For the queries to work, set the environment variables:
 
 ```bash
-KUBECOST_NAMESPACE=kubecost
-KUBECOST_DEPLOYMENT=kubecost-cost-analyzer
+nOps_NAMESPACE=nOps
+nOps_DEPLOYMENT=nOps-cost-analyzer
 CLUSTER_ID=YOUR_CLUSTER_NAME
 ```
 
 1. Verify connection to GMP and that the metric for `container_memory_working_set_bytes` is available:
 
-If you have set `kubecostModel.promClusterIDLabel` in the Helm chart, you will need to change the query (`CLUSTER_ID`) to match the label.
+If you have set `nOpsModel.promClusterIDLabel` in the Helm chart, you will need to change the query (`CLUSTER_ID`) to match the label.
 
 ```bash
-kubectl exec -it -n $KUBECOST_NAMESPACE \
-  deployments/$KUBECOST_DEPLOYMENT -c cost-analyzer-frontend \
+kubectl exec -it -n $nOps_NAMESPACE \
+  deployments/$nOps_DEPLOYMENT -c cost-analyzer-frontend \
   -- curl "0:9090/model/prometheusQuery?query=container_memory_working_set_bytes\{CLUSTER_ID=\"$CLUSTER_ID\"\}" \
  | jq
 ```
 
-2. Verify Kubecost metrics are available in GMP:
+2. Verify nOps metrics are available in GMP:
 
 ```bash
-kubectl exec -it -n $KUBECOST_NAMESPACE \
-  deployments/$KUBECOST_DEPLOYMENT -c cost-analyzer-frontend \
+kubectl exec -it -n $nOps_NAMESPACE \
+  deployments/$nOps_DEPLOYMENT -c cost-analyzer-frontend \
   -- curl "0:9090/model/prometheusQuery?query=node_total_hourly_cost\{CLUSTER_ID=\"$CLUSTER_ID\"\}" \
  | jq
 ```
@@ -136,17 +136,17 @@ You should receive an output similar to:
 If `id` returns as a blank value, you can set the following Helm value to force set `cluster` as the Prometheus cluster ID label:
 
 ```yaml
-kubecostModel:
+nOpsModel:
   promClusterIDLabel: cluster
 ```
 {% endhint %}
 
 If the above queries fail, check the following:
 
-1. Check logs of the `sigv4proxy` container (may be the Kubecost deployment or Prometheus Server deployment depending on your setup):
+1. Check logs of the `sigv4proxy` container (may be the nOps deployment or Prometheus Server deployment depending on your setup):
 
 ```bash
-kubectl logs deployments/$KUBECOST_DEPLOYMENT -c sigv4proxy --tail -1
+kubectl logs deployments/$nOps_DEPLOYMENT -c sigv4proxy --tail -1
 ```
 
 In a working `sigv4proxy`, there will be very few logs.
@@ -161,7 +161,7 @@ time="2023-09-21T17:40:15Z" level=info msg="Listening on :8005" port=":8005"
 2. Check logs in the `cost-model` container for Prometheus connection issues:
 
 ```bash
-kubectl logs deployments/$KUBECOST_DEPLOYMENT -c cost-model --tail -1 | grep -i err
+kubectl logs deployments/$nOps_DEPLOYMENT -c cost-model --tail -1 | grep -i err
 ```
 
 Example errors:

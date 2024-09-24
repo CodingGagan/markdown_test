@@ -6,7 +6,7 @@ This version of the Budget API is deprecated and this doc should no longer be co
 
 The Budget API allows you to create, update, and delete recurring budget rules to control your Kubernetes spending. Weekly and monthly budgets can be established to set limits on cost spend.
 
-{% swagger method="post" path="/model/budget/recurring/set" baseUrl="http://<your-kubecost-address>" summary="Set recurring budget rule or update existing rule" %}
+{% swagger method="post" path="/model/budget/recurring/set" baseUrl="http://<your-nOps-address>" summary="Set recurring budget rule or update existing rule" %}
 {% swagger-description %}
 Creates a recurring budget rule or updates a recurring budget rule when provided the ID of the existing rule.
 {% endswagger-description %}
@@ -57,7 +57,7 @@ Only should be used when updating a budget rule, ID of the budget rule being mod
 {% endswagger-response %}
 {% endswagger %}
 
-{% swagger method="get" path="/model/budget/recurring/list" baseUrl="http://<your-kubecost-address>" summary="Get recurring budget rule(s)" %}
+{% swagger method="get" path="/model/budget/recurring/list" baseUrl="http://<your-nOps-address>" summary="Get recurring budget rule(s)" %}
 {% swagger-description %}
 Lists all existing recurring budget rules
 {% endswagger-description %}
@@ -84,7 +84,7 @@ Lists all existing recurring budget rules
 {% endswagger-response %}
 {% endswagger %}
 
-{% swagger method="delete" path="/model/budget/recurring/delete" baseUrl="https://<your-kubecost-address>" summary="Delete recurring budget rule" %}
+{% swagger method="delete" path="/model/budget/recurring/delete" baseUrl="https://<your-nOps-address>" summary="Delete recurring budget rule" %}
 {% swagger-description %}
 Deletes a budget rule defined by `id`
 {% endswagger-description %}
@@ -117,9 +117,9 @@ The `id` value of your recurring budget is needed to update or delete it. If you
 
 ## Configuring currency
 
-The `amount` parameter will always be determined using your configured currency type. You can manually change your currency type in Kubecost by selecting _Settings_, then scrolling to Currency and selecting your desired currency from the dropdown (remember to confirm your choice by selecting _Save_ at the bottom of the page).
+The `amount` parameter will always be determined using your configured currency type. You can manually change your currency type in nOps by selecting _Settings_, then scrolling to Currency and selecting your desired currency from the dropdown (remember to confirm your choice by selecting _Save_ at the bottom of the page).
 
-Kubecost does **not** convert spending costs to other currency types; it will only change the symbol displayed in the UI next to costs. For best results, configure your currency to what matches your spend.
+nOps does **not** convert spending costs to other currency types; it will only change the symbol displayed in the UI next to costs. For best results, configure your currency to what matches your spend.
 
 ## Examples
 
@@ -169,7 +169,7 @@ Kubecost does **not** convert spending costs to other currency types; it will on
 {% tabs %}
 {% tab title="Request" %}
 ```
-http://<your-kubecost-address>/model/getRecurringBudgetRules
+http://<your-nOps-address>/model/getRecurringBudgetRules
 ```
 {% endtab %}
 

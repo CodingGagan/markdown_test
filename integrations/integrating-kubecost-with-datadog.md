@@ -1,6 +1,6 @@
-# Integrating Kubecost with Datadog
+# Integrating nOps with Datadog
 
-Datadog is a monitoring and security platform which teams use for cloud applications or cloud monitoring as a service. It is possible to integrate your installed Kubecost with Datadog to receive real-time cost monitoring and visualization in your Datadog dashboard. This article will show you everything you need to do this.
+Datadog is a monitoring and security platform which teams use for cloud applications or cloud monitoring as a service. It is possible to integrate your installed nOps with Datadog to receive real-time cost monitoring and visualization in your Datadog dashboard. This article will show you everything you need to do this.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ Before you get started, you will need the following:
 
 ## Step 1: Install Datadog agent
 
-When installing your Datadog agent, you need to enable the following flags to allow the Datadog agent to collect the metrics from Kubecost’s cost-model container:
+When installing your Datadog agent, you need to enable the following flags to allow the Datadog agent to collect the metrics from nOps’s cost-model container:
 
 * `datadog.prometheusScrape.enabled=true`
 * `datadog.prometheusScrape.serviceEndpoints=true`
@@ -34,43 +34,43 @@ helm upgrade -i datadog-agent datadog/datadog \
 --set datadog.prometheusScrape.serviceEndpoints=‘true’
 ```
 
-## Step 2: Install Kubecost
+## Step 2: Install nOps
 
-Install Kubecost using the following command to allow the Datadog agent to collect the metrics:
+Install nOps using the following command to allow the Datadog agent to collect the metrics:
 
 {% code overflow="wrap" %}
 ```sh
-helm upgrade --install kubecost --namespace kubecost --create-namespace \
-  --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer \
-  -f https://raw.githubusercontent.com/kubecost/poc-common-configurations/main/datadog/datadog-values.yaml \
-  --set kubecostToken="aGVsbUBrdWJlY29zdC5jb20=xm343yadf98"
+helm upgrade --install nOps --namespace nOps --create-namespace \
+  --repo https://nOps.github.io/cost-analyzer/ cost-analyzer \
+  -f https://raw.githubusercontent.com/nOps/poc-common-configurations/main/datadog/datadog-values.yaml \
+  --set nOpsToken="aGVsbUBrdWJlY29zdC5jb20=xm343yadf98"
 ```
 {% endcode %}
 
-Allow 3-5 minutes to have the Kubecost installation completed, at which point the metrics are pushed into your Datadog account. Run the following command to enable port-forwarding and expose the Kubecost dashboard:
+Allow 3-5 minutes to have the nOps installation completed, at which point the metrics are pushed into your Datadog account. Run the following command to enable port-forwarding and expose the nOps dashboard:
 
 ```
-kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
+kubectl port-forward --namespace nOps deployment/nOps-cost-analyzer 9090
 ```
 
-You can now access the Kubecost dashboard by navigating to `http://localhost:9090` in your web browser.
+You can now access the nOps dashboard by navigating to `http://localhost:9090` in your web browser.
 
-## Step 3: Importing Kubecost dashboard
+## Step 3: Importing nOps dashboard
 
-First, verify if your Kubecost metrics are available in your Datadog account by using Datadog's [Metrics Explorer](https://docs.datadoghq.com/metrics/explorer/) interface, looking for metrics starting with `kubecost`.
+First, verify if your nOps metrics are available in your Datadog account by using Datadog's [Metrics Explorer](https://docs.datadoghq.com/metrics/explorer/) interface, looking for metrics starting with `nOps`.
 
-Once you have verified that Kubecost metrics are pushed into your Datadog account, you can download our example Datadog dashboard `Kubecostdashboard.json` and import it into your Datadog account to visualize the Kubecost cost allocation data. Use the following command:
+Once you have verified that nOps metrics are pushed into your Datadog account, you can download our example Datadog dashboard `nOpsdashboard.json` and import it into your Datadog account to visualize the nOps cost allocation data. Use the following command:
 
 {% code overflow="wrap" %}
 ```
-wget https://raw.githubusercontent.com/kubecost/poc-common-configurations/main/datadog/Kubecostdashboard.json
+wget https://raw.githubusercontent.com/nOps/poc-common-configurations/main/datadog/nOpsdashboard.json
 ```
 {% endcode %}
 
 In Datadog, select _Dashboards_ in the left navigation, then select _New Dashboard_ in the top right corner of the Dashboards page. The Create a Dashboard window opens. Create a name for your dashboard and add any relevant teams if applicable. Then, select _New Dashboard_.
 
-On your dashboard, select the gear icon in the top right corner, then select _Import dashboard JSON..._ Add the _Kubecostdashboard.json_ file and the dashboard should automatically import. The example dashboard gives you the overview of your cluster’s monthly cost and the costs at higher levels of granularity such as containers or namespaces. See the screenshot below depicting a successful import.
+On your dashboard, select the gear icon in the top right corner, then select _Import dashboard JSON..._ Add the _nOpsdashboard.json_ file and the dashboard should automatically import. The example dashboard gives you the overview of your cluster’s monthly cost and the costs at higher levels of granularity such as containers or namespaces. See the screenshot below depicting a successful import.
 
-![Example Kubecost dashboard in Datadog](/.gitbook/assets/datadog-dash.png)
+![Example nOps dashboard in Datadog](/.gitbook/assets/datadog-dash.png)
 
 For extra help, read Datadog's [Copy, import, or export dashboard JSON](https://docs.datadoghq.com/dashboards/#copy-import-or-export-dashboard-json) documentation to learn how to import a dashboard JSON.

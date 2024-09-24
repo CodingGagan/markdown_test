@@ -2,7 +2,7 @@
 
 Reports are saved queries from your various Monitoring dashboards which can be referenced at a later date for convenience. Aggregation, filters, and other details of your query will be saved in the report, and the report can be opened at any time. Reports are currently supported by the Allocations, Assets, and Cloud Cost Explorer dashboards.
 
-Reports can be managed via [_values.yaml_](https://github.com/kubecost/cost-analyzer-helm-chart/blob/master/cost-analyzer/values.yaml) or the Kubecost UI. This reference outlines the process of configuring saved reports through a values file, and provides documentation on the required and optional parameters.
+Reports can be managed via [_values.yaml_](https://github.com/nOps/cost-analyzer-helm-chart/blob/master/cost-analyzer/values.yaml) or the nOps UI. This reference outlines the process of configuring saved reports through a values file, and provides documentation on the required and optional parameters.
 
 ![Reports page](/.gitbook/assets/savedreports.PNG)
 
@@ -10,10 +10,10 @@ Reports can be managed via [_values.yaml_](https://github.com/kubecost/cost-anal
 
 ### Creating a report
 
-Begin by selecting _Create a report_. There are five report types available. Three of these correspond to Kubecost's different monitoring dashboards.
+Begin by selecting _Create a report_. There are five report types available. Three of these correspond to nOps's different monitoring dashboards.
 
 {% hint style="warning" %}
-As of Kubecost v2, Advanced Reports and Cloud Cost Reports have been removed and replaced with [Collections](/using-kubecost/navigating-the-kubecost-ui/collections.md). See the documentation for more info.
+As of nOps v2, Advanced Reports and Cloud Cost Reports have been removed and replaced with [Collections](/using-nOps/navigating-the-nOps-ui/collections.md). See the documentation for more info.
 {% endhint %}
 
 * Allocation Report
@@ -42,7 +42,7 @@ Select _Apply_ to finalize. When you have created a schedule for your report, th
 
 The Allocation reports are saved under `global.savedReports`, accept two parameters:
 
-* `enabled` determines whether Kubecost will read saved reports configured via _values.yaml_; default value is `false`
+* `enabled` determines whether nOps will read saved reports configured via _values.yaml_; default value is `false`
 * `reports` is a list of allocation reports
 
 The following fields apply to each map item under the `reports` key:
@@ -57,7 +57,7 @@ The following fields apply to each map item under the `reports` key:
     * e.g. `1609459200,1609545600` for the single day of 1 January 2021
   * _Note: for all window options, if a window is requested that spans "partial" days, the window will be rounded up to include the nearest full date(s)._
     * e.g. `2021-01-01T15:04:05Z,2021-01-02T20:21:22Z` will return the two full days of 1 January 2021 and 2 January 2021
-* `aggregateBy` the desired aggregation parameter -- equivalent to _Breakdown_ in the Allocation Kubecost UI. Supports:
+* `aggregateBy` the desired aggregation parameter -- equivalent to _Breakdown_ in the Allocation nOps UI. Supports:
   * `cluster`
   * `container`
   * `controller`
@@ -76,7 +76,7 @@ The following fields apply to each map item under the `reports` key:
   * `service`
   * `statefulset`
   * `team`
-* `chartDisplay` -- Can be one of `category`, `series`, `efficiency`, `percentage`, or `treemap`. See [Cost Allocation Charts](/using-kubecost/navigating-the-kubecost-ui/cost-allocation/README.md/#chart) for more info.
+* `chartDisplay` -- Can be one of `category`, `series`, `efficiency`, `percentage`, or `treemap`. See [Cost Allocation Charts](/using-nOps/navigating-the-nOps-ui/cost-allocation/README.md/#chart) for more info.
 * `idle` idle cost allocation, supports `hide`, `shareByNode`, `shareByCluster`, and `separate`
 * `rate` -- Can be one of `cumulative`, `monthly`, `daily`, `hourly`
 * `accumulate` determines whether or not to sum Allocation costs across the entire window -- equivalent to _Resolution_ in the UI, supports `true` (Entire window resolution) and `false` (Daily resolution)
@@ -91,7 +91,7 @@ The following fields apply to each map item under the `reports` key:
 ## Managing Asset reports via _values.yaml_
 The Asset reports are saved under `global.assetReports`, it accept two parameters:
 
-* `enabled` determines whether Kubecost will read saved asset reports configured via _values.yaml_; default value is `false`
+* `enabled` determines whether nOps will read saved asset reports configured via _values.yaml_; default value is `false`
 * `reports` is a list of asset reports
 
 The following fields apply to each map item under the `reports` key of `global.assetReports`:
@@ -106,7 +106,7 @@ The following fields apply to each map item under the `reports` key of `global.a
     * e.g. `1609459200,1609545600` for the single day of 1 January 2021
   * _Note: for all window options, if a window is requested that spans "partial" days, the window will be rounded up to include the nearest full date(s)._
     * e.g. `2021-01-01T15:04:05Z,2021-01-02T20:21:22Z` will return the two full days of 1 January 2021 and 2 January 2021
-* `aggregateBy` the desired aggregation parameter -- equivalent to _Breakdown_ in the Kubecost Asset UI. Supports:
+* `aggregateBy` the desired aggregation parameter -- equivalent to _Breakdown_ in the nOps Asset UI. Supports:
   * `account`
   * `cluster`
   * `label` requires the following format: `label:<label_name>`
@@ -124,7 +124,7 @@ The following fields apply to each map item under the `reports` key of `global.a
 ## Managing Cloud Cost reports via _values.yaml_
 The Cloud cost reports are saved under `global.cloudCostReports`, it accept two parameters:
 
-* `enabled` determines whether Kubecost will read saved Cloud Cost reports configured via _values.yaml_; default value is `false`
+* `enabled` determines whether nOps will read saved Cloud Cost reports configured via _values.yaml_; default value is `false`
 * `reports` is a list of Cloud Cost reports
 
 The following fields apply to each map item under the `reports` key of `global.cloudCostReports`:
@@ -138,7 +138,7 @@ The following fields apply to each map item under the `reports` key of `global.c
     * e.g. `1609459200,1609545600` for the single day of 1 January 2021
   * _Note: for all window options, if a window is requested that spans "partial" days, the window will be rounded up to include the nearest full date(s)._
     * e.g. `2021-01-01T15:04:05Z,2021-01-02T20:21:22Z` will return the two full days of 1 January 2021 and 2 January 2021
-* `aggregateBy` the desired aggregation parameter -- equivalent to _Breakdown_ in the Kubecost Cloud Cost UI. Supports:
+* `aggregateBy` the desired aggregation parameter -- equivalent to _Breakdown_ in the nOps Cloud Cost UI. Supports:
   * `accountID`
   * `category`
   * `label` requires the following format: `label:<label_name>`
@@ -147,8 +147,8 @@ The following fields apply to each map item under the `reports` key of `global.c
   * `invoiceEntityID`
   * `service`
   * `item`
-* `accumulate` in cloud cost reports differ from asset and allocation report as it supports a string equal to `quarter`, `month`, `week`,`day`, `hour` and `true`. This is equal to the step size selection in Cloud Cost Kubecost UI. With `true` signifying entire window duration.
-* `costMetric` depicts the cloud cost metrics for the reports and takes value `listCost`, `netCost`, `amortizedNetCost`,`invoicedCost`, `amortizedCost`. This is equal to the cost metric size selection in Cloud Cost Kubecost UI.
+* `accumulate` in cloud cost reports differ from asset and allocation report as it supports a string equal to `quarter`, `month`, `week`,`day`, `hour` and `true`. This is equal to the step size selection in Cloud Cost nOps UI. With `true` signifying entire window duration.
+* `costMetric` depicts the cloud cost metrics for the reports and takes value `listCost`, `netCost`, `amortizedNetCost`,`invoicedCost`, `amortizedCost`. This is equal to the cost metric size selection in Cloud Cost nOps UI.
 * `filters` -- a list of maps consisting of a key, operator and value
   * `key` -- supports `accountID`, `invoiceEntityID`, `provider`, and others. Refer to the [v2 Filters Documentation](/apis/filters-api.md) for the complete list of supported keys.
   * `operator` -- supports operator such as `:`,`!:`,`~:`,`!~:` and others. Refer to the [v2 Filters Documentation](/apis/filters-api.md) for the complete list of operators.
@@ -182,7 +182,7 @@ The following fields apply to each map item under the `reports` key of `global.c
             value: "cluster"
           - key: "namespace"
             operator: ":"
-            value: "kubecost"
+            value: "nOps"
       - title: "Example Saved Report 1"
         window: "month"
         aggregateBy: "controllerKind"
@@ -199,7 +199,7 @@ The following fields apply to each map item under the `reports` key of `global.c
             value: "kube"
           - key: "namespace"
             operator: ":"
-            value: "kubecost"
+            value: "nOps"
       - title: "Example Saved Report 2"
         window: "2020-11-11T00:00:00Z,2020-12-09T23:59:59Z"
         aggregateBy: "service"
@@ -250,7 +250,7 @@ The following fields apply to each map item under the `reports` key of `global.c
 
 ## Combining UI report management with _values.yaml_
 
-When defining reports via _values.yaml_, by setting `global.savedReports.enabled = true` in the values file, the reports defined in _values.yaml_ are created when the Kubecost pod starts. Reports can still be freely created/deleted via the UI while the pod is running. However, when the pod restarts, whatever is defined the values file supersedes any UI changes.
+When defining reports via _values.yaml_, by setting `global.savedReports.enabled = true` in the values file, the reports defined in _values.yaml_ are created when the nOps pod starts. Reports can still be freely created/deleted via the UI while the pod is running. However, when the pod restarts, whatever is defined the values file supersedes any UI changes.
 
 Generally, the ConfigMap, if present, serves as the source of truth at startup.
 
@@ -258,13 +258,13 @@ If saved reports are _not_ provided via _values.yaml_, meaning `global.savedRepo
 
 ## Troubleshooting
 
-### Saved reports are not being passed to Kubecost correctly
+### Saved reports are not being passed to nOps correctly
 
-Review these steps to verify that saved reports are being passed to the Kubecost application correctly:
+Review these steps to verify that saved reports are being passed to the nOps application correctly:
 
 1. Confirm that `global.savedReports.enabled` is set to `true`
 2. Ensure that the Helm values are successfully read into the ConfigMap
-   * Run `helm template ./cost-analyzer -n kubecost > test-saved-reports-config.yaml`
+   * Run `helm template ./cost-analyzer -n nOps > test-saved-reports-config.yaml`
    * Open `test-saved-reports-config`
    * Find the section starting with `# Source: cost-analyzer/templates/cost-analyzer-saved-reports-configmap.yaml`
    * Ensure that the Helm values are successfully read into the ConfigMap under the `data` field. Example below.
@@ -285,15 +285,15 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app: cost-analyzer
 data:
-  saved-reports.json: '[{"accumulate":false,"aggregateBy":"namespace","filters":[{"property":"cluster","value":"cluster-one,cluster*"},{"property":"namespace","value":"kubecost"}],"idle":"separate","title":"Example Saved Report 0","window":"today"},{"accumulate":false,"aggregateBy":"controllerKind","filters":[{"property":"label","value":"app:cost*,environment:kube*"},{"property":"namespace","value":"kubecost"}],"idle":"shareByNode","title":"Example Saved Report 1","window":"month"},{"accumulate":true,"aggregateBy":"service","filters":[],"idle":"hide","title":"Example Saved Report 2","window":"2020-11-11T00:00:00Z,2020-12-09T23:59:59Z"}]'# Source: cost-analyzer/templates/cost-analyzer-alerts-configmap.yaml
+  saved-reports.json: '[{"accumulate":false,"aggregateBy":"namespace","filters":[{"property":"cluster","value":"cluster-one,cluster*"},{"property":"namespace","value":"nOps"}],"idle":"separate","title":"Example Saved Report 0","window":"today"},{"accumulate":false,"aggregateBy":"controllerKind","filters":[{"property":"label","value":"app:cost*,environment:kube*"},{"property":"namespace","value":"nOps"}],"idle":"shareByNode","title":"Example Saved Report 1","window":"month"},{"accumulate":true,"aggregateBy":"service","filters":[],"idle":"hide","title":"Example Saved Report 2","window":"2020-11-11T00:00:00Z,2020-12-09T23:59:59Z"}]'# Source: cost-analyzer/templates/cost-analyzer-alerts-configmap.yaml
 ```
 ````
 {% endcode %}
 
 3\. Ensure that the JSON string is successfully mapped to the appropriate configs
 
-Navigate to your Reports page in the Kubecost UI and ensure that the configured report parameters have been set by selecting the Report name.
+Navigate to your Reports page in the nOps UI and ensure that the configured report parameters have been set by selecting the Report name.
 
-### Saved reports not appearing in Kubecost UI after upgrading to v2
+### Saved reports not appearing in nOps UI after upgrading to v2
 
-After upgrading Kubecost to v2, saved reports may not properly display in the Kubecost UI. See the scripts available to migrate various settings in the [kubecost-utilities repo ](https://github.com/kubecost/kubecost-utilities/tree/main/settings-migration).
+After upgrading nOps to v2, saved reports may not properly display in the nOps UI. See the scripts available to migrate various settings in the [nOps-utilities repo ](https://github.com/nOps/nOps-utilities/tree/main/settings-migration).

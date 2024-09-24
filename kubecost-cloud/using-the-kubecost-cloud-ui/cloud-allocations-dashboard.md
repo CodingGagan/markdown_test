@@ -1,7 +1,7 @@
-# Kubecost Cloud: Allocations Dashboard
+# nOps Cloud: Allocations Dashboard
 
 {% hint style="info" %}
-This documentation should only be consulted when using Kubecost Cloud! For information about the Allocations dashboard for self-hosted Kubecost, see [here](/using-kubecost/navigating-the-kubecost-ui/cost-allocation/README.md).
+This documentation should only be consulted when using nOps Cloud! For information about the Allocations dashboard for self-hosted nOps, see [here](/using-nOps/navigating-the-nOps-ui/cost-allocation/README.md).
 {% endhint %}
 
 Here you can aggregate cost by namespace, deployment, service, and other native Kubernetes concepts. While selecting _Single Aggregation_, you will only be able to categorize by one concept at a time. While selecting _Multi Aggregation_, you will be able to filter for multiple concepts at the same time.
@@ -30,7 +30,7 @@ Selecting _Edit Report_ will provide more options of filtering and visualizing y
 
 #### Idle costs
 
-For an overview of what idle costs are and how they are calculated, see the [bottom of the page](/kubecost-cloud/using-the-kubecost-cloud-ui/cloud-allocations-dashboard.md#idle).
+For an overview of what idle costs are and how they are calculated, see the [bottom of the page](/nOps-cloud/using-the-nOps-cloud-ui/cloud-allocations-dashboard.md#idle).
 
 Customize how you wish idle costs to be displayed in your report chart:
 
@@ -53,7 +53,7 @@ While _Cost over time_ is selected, hover over any interval to receive a breakdo
 
 View either cumulative or run rate costs measured over the selected time window based on the resources allocated.
 
-* Cumulative Cost: represents the actual/historical spend captured by the Kubecost agent over the selected time window
+* Cumulative Cost: represents the actual/historical spend captured by the nOps agent over the selected time window
 * Rate metrics: Monthly, daily, or hourly "run rate" cost, also used for projected cost figures, based on samples in the selected time window
 
 Costs allocations are based on the following:
@@ -78,7 +78,7 @@ Filter resources by namespace, cluster, and/or Kubernetes label to more closely 
 | Controllerkind | Limit results to workloads based on Kubernetes controller (Daemonset, Deployment, Job, Statefulset, Replicaset, etc) type.                                         |
 | Pod            | Limit results to workloads where the Kubernetes pod name is filtered for.                                                                                          |
 
-Comma-separated lists are supported to filter by multiple categories, e.g. namespace filter equals `kube-system,kubecost`. Wild card filters are also supported, indicated by a `*` following the filter, e.g. `namespace=kube*` to return any namespace beginning with `kube`.
+Comma-separated lists are supported to filter by multiple categories, e.g. namespace filter equals `kube-system,nOps`. Wild card filters are also supported, indicated by a `*` following the filter, e.g. `namespace=kube*` to return any namespace beginning with `kube`.
 
 ### Additional options
 

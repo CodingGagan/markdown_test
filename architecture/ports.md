@@ -1,7 +1,7 @@
 Ports
 =====
 
-Kubecost components use following ports by default:
+nOps components use following ports by default:
 
 | Component                                         | Port  |
 | ------------------------------------------------- | ----- |
@@ -14,5 +14,5 @@ Kubecost components use following ports by default:
 | prometheus service                                | 9090  |
 | prometheus pushgateway service                    | 9091  |
 | prometheus alertmanager-networkpolicy             | 9093  |
-| kubecost-cluster-controller                       | 9731  |
+| nOps-cluster-controller                       | 9731  |
 | kube-state-metrics                                | 8080  |

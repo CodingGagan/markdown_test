@@ -1,20 +1,20 @@
-# Using Custom Webhook to Create a Kubecost Stage in Spinnaker
+# Using Custom Webhook to Create a nOps Stage in Spinnaker
 
-Adding the example webhook below to Spinnaker will enable a custom stage to query Kubecost for recommendations on a container. More info on [Spinnaker custom webhooks](https://spinnaker.io/guides/operator/custom-webhook-stages/#creating-a-custom-webhook-stage).
+Adding the example webhook below to Spinnaker will enable a custom stage to query nOps for recommendations on a container. More info on [Spinnaker custom webhooks](https://spinnaker.io/guides/operator/custom-webhook-stages/#creating-a-custom-webhook-stage).
 
 {% code overflow="wrap" %}
 ```
 webhook:
   preconfigured:
-  - label: "Kubecost: Get Sizing"
+  - label: "nOps: Get Sizing"
     type: getRequestSizing
     enabled: true
     description: Custom stage to get request sizing for a running container
     method: GET
-    url: "${parameterValues['kubecost_url']}//model/savings/requestSizing?algorithm=max-headroom&window=${parameterValues['time_window']}&targetCPUUtilization=${parameterValues['target_cpu_utilization']}&targetRAMUtilization=${parameterValues['target_ram_utilization']}&filterContainers=${parameterValues['container_name']}&filterControllers=${parameterValues['controller_name']}&filterNamespaces=${parameterValues['namespace']}"
+    url: "${parameterValues['nOps_url']}//model/savings/requestSizing?algorithm=max-headroom&window=${parameterValues['time_window']}&targetCPUUtilization=${parameterValues['target_cpu_utilization']}&targetRAMUtilization=${parameterValues['target_ram_utilization']}&filterContainers=${parameterValues['container_name']}&filterControllers=${parameterValues['controller_name']}&filterNamespaces=${parameterValues['namespace']}"
     parameters:
-      - label: "Kubecost API URL"
-        name: kubecost_url
+      - label: "nOps API URL"
+        name: nOps_url
         description: "Fully qualified Url to the requestSizing api"
         type: string
       - label: "Controller Name"

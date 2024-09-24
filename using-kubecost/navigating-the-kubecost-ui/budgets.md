@@ -15,7 +15,7 @@ Provide the following fields:
 * __Budget cap__: The allotted amount of your budget per interval
 
 {% hint style="info" %}
-The currency of your budget cannot be changed directly in the Budgets dashboard. To change currency type, go to _Settings >_ Currency. Then, select _Save_ at the bottom of the Settings page to apply changes. Changing currency type will affect cost displays across all of your Kubecost, not just the Budgets dashboard. Kubecost does **not** convert spending costs to other currency types; it will only change the symbol displayed next to the cost. For best results, configure your currency to what matches your spend.
+The currency of your budget cannot be changed directly in the Budgets dashboard. To change currency type, go to _Settings >_ Currency. Then, select _Save_ at the bottom of the Settings page to apply changes. Changing currency type will affect cost displays across all of your nOps, not just the Budgets dashboard. nOps does **not** convert spending costs to other currency types; it will only change the symbol displayed next to the cost. For best results, configure your currency to what matches your spend.
 {% endhint %}
 
 Determine the length of your budget and reset date using the two dropdowns under the Budget cap text box. Budgets can be either _Weekly_ or _Monthly_, and can reset on any day of the week/month. This means you don't need to recreate your budgets repeatedly and can align them with your schedules or processes.
@@ -23,7 +23,7 @@ Determine the length of your budget and reset date using the two dropdowns under
 ### Workloads
 
 You can configure one or more workload(s) to be targeted by the budget. From the first dropdown, select the desired workload category. Once the workload category has been selected, the dropdown menu should display all possible values for that category. Select 'Add Filter' to persist your choice. You can repeat for as many workload categories as you need to. 
-There are multiple workload properties available for the Allocation, Asset and Cloud budgets. For Collection budgets, you can select one collection from the dropdown displaying all available collections. At the moment, Kubecost can only track spend for a single collection per budget.
+There are multiple workload properties available for the Allocation, Asset and Cloud budgets. For Collection budgets, you can select one collection from the dropdown displaying all available collections. At the moment, nOps can only track spend for a single collection per budget.
 
 {% hint style="info" %}
 Labels need to be provided in a `key:value` format that describes the object that the budget applies to.
@@ -40,7 +40,7 @@ Budget Actions by default check against the limits every 8 hours.
 To begin, select _New Action_. Select your _Trigger percentage_ value (leaving your _Trigger percentage_ at _100_ will only alert you once the budget has been exceeded). Then, provide any emails or webhooks where you would like to receive your alerts. Select _Save_.
 
 {% hint style="info" %}
-If you are interested in implementing additional alerts to monitor further spending or Kubecost health, read our [Alerts](/using-kubecost/navigating-the-kubecost-ui/alerts.md) doc.
+If you are interested in implementing additional alerts to monitor further spending or nOps health, read our [Alerts](/using-nOps/navigating-the-nOps-ui/alerts.md) doc.
 {% endhint %}
 
 Finalize your budget by selecting _Save_. Your budget has been created and should appear on the dashboard.
@@ -65,4 +65,4 @@ Selecting _Delete_ will open the Delete Budget window. Confirm by selecting _Del
 
 ## Use cases
 
-[Enforce Kubecost Budgets to prevent overruns before they occur](/using-kubecost/proactive-cost-controls.md).
+[Enforce nOps Budgets to prevent overruns before they occur](/using-nOps/proactive-cost-controls.md).

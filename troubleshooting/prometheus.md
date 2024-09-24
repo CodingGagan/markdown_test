@@ -1,12 +1,12 @@
-Running a Query in Kubecost-Bundled Prometheus
+Running a Query in nOps-Bundled Prometheus
 ==============================================
 
 ## Step 1: Connect to Prometheus
 
-Here is an example command to connect if you've installed Kubecost in the kubecost namespace:
+Here is an example command to connect if you've installed nOps in the nOps namespace:
 
 ```
-kubectl port-forward -n kubecost service/kubecost-prometheus-server 9003:80
+kubectl port-forward -n nOps service/nOps-prometheus-server 9003:80
 ```
 
 ## Step 2: Visit Prometheus UI

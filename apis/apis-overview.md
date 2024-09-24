@@ -1,14 +1,14 @@
-# Kubecost API Directory
+# nOps API Directory
 
-Welcome to the Kubecost API library! This directory will show you how Kubecost APIs can assist in monitoring, maintaining, and optimizing your cloud spend. Learn also how Kubecost APIs power different features of the UI below.
+Welcome to the nOps API library! This directory will show you how nOps APIs can assist in monitoring, maintaining, and optimizing your cloud spend. Learn also how nOps APIs power different features of the UI below.
 
-## Kubecost APIs
+## nOps APIs
 
 ### Monitoring APIs
 
 #### [Allocation API](monitoring-apis/api-allocation.md)
 
-The Allocation API retrieves cost allocation information for any Kubernetes concept, e.g. cost by namespace, label, deployment, service, and more. This API is directly integrated with the Kubecost ETL caching layer and CSV pipeline so it can scale for large clusters.
+The Allocation API retrieves cost allocation information for any Kubernetes concept, e.g. cost by namespace, label, deployment, service, and more. This API is directly integrated with the nOps ETL caching layer and CSV pipeline so it can scale for large clusters.
 
 #### [Allocation Trends API](monitoring-apis/allocation-trends-api.md)
 
@@ -64,34 +64,34 @@ These diagnostic APIs for [Aggregator](/install-and-configure/install/multi-clus
 
 ### Savings APIs
 
-Savings endpoints provide cost optimization insights. The following savings endpoints are available at `http://<kubecost-address>/model/ENDPOINT`:
+Savings endpoints provide cost optimization insights. The following savings endpoints are available at `http://<nOps-address>/model/ENDPOINT`:
 
-<table><thead><tr><th width="342">Endpoint</th><th>Description</th></tr></thead><tbody><tr><td><code>/savings</code></td><td>Provides cluster-level potential savings estimates based on specific savings opportunities available in other endpoints.</td></tr><tr><td><a href="savings-apis/cluster-right-sizing-recommendation-api.md"><code>/savings/clusterSizingETL</code></a></td><td>Provides recommendations for sizing clusters (node types and quantities).</td></tr><tr><td><a href="savings-apis/api-request-right-sizing-v2.md"><code>/savings/requestSizingV2</code></a></td><td>Provides recommendations for setting container resource requests.</td></tr><tr><td><a href="savings-apis/api-abandoned-workloads.md"><code>/savings/abandonedWorkloads</code></a></td><td>List abandoned workloads based on network traffic.</td></tr><tr><td><a href="savings-apis/api-request-recommendation-apply.md"><code>/cluster/requestsizer/planV2</code></a></td><td>Applies Kubecost's container request recommendations to your cluster.</td></tr><tr><td><code>/projectDisks</code></td><td>List orphaned disks.</td></tr><tr><td><code>/projectAddresses</code></td><td>List orphaned IP addresses.</td></tr></tbody></table>
+<table><thead><tr><th width="342">Endpoint</th><th>Description</th></tr></thead><tbody><tr><td><code>/savings</code></td><td>Provides cluster-level potential savings estimates based on specific savings opportunities available in other endpoints.</td></tr><tr><td><a href="savings-apis/cluster-right-sizing-recommendation-api.md"><code>/savings/clusterSizingETL</code></a></td><td>Provides recommendations for sizing clusters (node types and quantities).</td></tr><tr><td><a href="savings-apis/api-request-right-sizing-v2.md"><code>/savings/requestSizingV2</code></a></td><td>Provides recommendations for setting container resource requests.</td></tr><tr><td><a href="savings-apis/api-abandoned-workloads.md"><code>/savings/abandonedWorkloads</code></a></td><td>List abandoned workloads based on network traffic.</td></tr><tr><td><a href="savings-apis/api-request-recommendation-apply.md"><code>/cluster/requestsizer/planV2</code></a></td><td>Applies nOps's container request recommendations to your cluster.</td></tr><tr><td><code>/projectDisks</code></td><td>List orphaned disks.</td></tr><tr><td><code>/projectAddresses</code></td><td>List orphaned IP addresses.</td></tr></tbody></table>
 
-## Kubecost UI counterparts
+## nOps UI counterparts
 
-Many, but not all, Kubecost APIs power different features in the Kubecost UI. The UI counterpart may not fully reflect all functionality of the corresponding API. Please consult the original API docs for complete details.
+Many, but not all, nOps APIs power different features in the nOps UI. The UI counterpart may not fully reflect all functionality of the corresponding API. Please consult the original API docs for complete details.
 
 | API Name                                          | UI Equivalent                                                                                                                                    |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Allocation API                                    | [Allocations dashboard](/using-kubecost/navigating-the-kubecost-ui/cost-allocation/README.md)                                                    |
+| Allocation API                                    | [Allocations dashboard](/using-nOps/navigating-the-nOps-ui/cost-allocation/README.md)                                                    |
 | Allocation/Cloud Cost Explorer Trends API         | Allocations/Cloud Cost Explorer dashboards, Total cost column percentage                                                                         |
-| Assets API                                        | [Assets dashboard](/using-kubecost/navigating-the-kubecost-ui/assets.md)                                                                         |
-| Cloud Cost API                                    | [Cloud Costs Explorer dashboard](/using-kubecost/navigating-the-kubecost-ui/cloud-costs-explorer/cloud-costs-explorer.md)                        |
-| External Costs API                                | [External Costs dashboard](/using-kubecost/navigating-the-kubecost-ui/external-costs.md)                                                         |
-| Budget API                                        | [Budgets dashboard](/using-kubecost/navigating-the-kubecost-ui/budgets.md)                                                                       |
-| Cost Events Audit API                             | [Audits dashboard](/using-kubecost/navigating-the-kubecost-ui/audits.md)                                                                         |
-| Predict API                                       | [Audits dashboard, Estimated monthly cost impact](/using-kubecost/navigating-the-kubecost-ui/audits.md#estimated-monthly-cost-impact)            |
-| Savings API                                       | [Savings dashboard](/using-kubecost/navigating-the-kubecost-ui/savings/savings.md)                                                               |
-| Cluster Right Sizing Recommendation API           | [Cluster Sizing Recommendations page](/using-kubecost/navigating-the-kubecost-ui/savings/cluster-right-sizing-recommendations.md)                |
-| Container Request Right Sizing Recommendation API | [Request right sizing recommendations page](/using-kubecost/navigating-the-kubecost-ui/savings/container-request-right-sizing-recommendations.md)|
-| Abandoned Workloads API                           | [Abandoned Workloads page](/using-kubecost/navigating-the-kubecost-ui/savings/abandoned-workloads.md)                                            |
+| Assets API                                        | [Assets dashboard](/using-nOps/navigating-the-nOps-ui/assets.md)                                                                         |
+| Cloud Cost API                                    | [Cloud Costs Explorer dashboard](/using-nOps/navigating-the-nOps-ui/cloud-costs-explorer/cloud-costs-explorer.md)                        |
+| External Costs API                                | [External Costs dashboard](/using-nOps/navigating-the-nOps-ui/external-costs.md)                                                         |
+| Budget API                                        | [Budgets dashboard](/using-nOps/navigating-the-nOps-ui/budgets.md)                                                                       |
+| Cost Events Audit API                             | [Audits dashboard](/using-nOps/navigating-the-nOps-ui/audits.md)                                                                         |
+| Predict API                                       | [Audits dashboard, Estimated monthly cost impact](/using-nOps/navigating-the-nOps-ui/audits.md#estimated-monthly-cost-impact)            |
+| Savings API                                       | [Savings dashboard](/using-nOps/navigating-the-nOps-ui/savings/savings.md)                                                               |
+| Cluster Right Sizing Recommendation API           | [Cluster Sizing Recommendations page](/using-nOps/navigating-the-nOps-ui/savings/cluster-right-sizing-recommendations.md)                |
+| Container Request Right Sizing Recommendation API | [Request right sizing recommendations page](/using-nOps/navigating-the-nOps-ui/savings/container-request-right-sizing-recommendations.md)|
+| Abandoned Workloads API                           | [Abandoned Workloads page](/using-nOps/navigating-the-nOps-ui/savings/abandoned-workloads.md)                                            |
 
 ## API usage
 
 ### Using the `window` parameter
 
-Several Kubecost APIs use the `window` parameter to establish the duration of time Kubecost should sample to provide cost metrics, right-sizing recommendations, or other savings information. The following APIs accept `window` as parameter:
+Several nOps APIs use the `window` parameter to establish the duration of time nOps should sample to provide cost metrics, right-sizing recommendations, or other savings information. The following APIs accept `window` as parameter:
 
 * Allocation API
 * Allocation Trends API
@@ -113,7 +113,7 @@ Acceptable formats for using `window` parameter include:
 
 ### Using the `/topline` endpoint to summarize costs
 
-Several Kubecost  APIs have an additional `/topline` endpoint which will accept all parameters for corresponding APIs, but will total all costs by category. These categories should mirror cost metric column totals found across various Kubecost UI dashboards. The following APIs accept `/topline` as an endpoint:
+Several nOps  APIs have an additional `/topline` endpoint which will accept all parameters for corresponding APIs, but will total all costs by category. These categories should mirror cost metric column totals found across various nOps UI dashboards. The following APIs accept `/topline` as an endpoint:
 
 * Allocation API
 * Assets API
@@ -124,15 +124,15 @@ You must still provide a value for `window` when querying a `/topline` endpoint.
 
 An example of using `/topline` to view total costs for Assets data would look like:
 
-`GET` `http://<your-kubecost-address>/model/assets/topline?window=...`
+`GET` `http://<your-nOps-address>/model/assets/topline?window=...`
 
 When querying for Allocation data, you must add a `/summary` before `topline`, and the query for that will look like:
 
-`GET` `http://<your-kubecost-address>/model/allocation/summary/topline?window=...`
+`GET` `http://<your-nOps-address>/model/allocation/summary/topline?window=...`
 
 ### Using `offset` and `limit` parameters to parse payload results
 
-The `offset` and `limit` parameters apply to multiple querying APIs to introduce pagination to your results in order to avoid lengthy payloads. Similar to how Kubecost's UI pages display your queried items in limited amounts per page across multiple pages, these two parameters allow your to filter your displayed results. These following APIs accept `offset` and `limit` as parameters:
+The `offset` and `limit` parameters apply to multiple querying APIs to introduce pagination to your results in order to avoid lengthy payloads. Similar to how nOps's UI pages display your queried items in limited amounts per page across multiple pages, these two parameters allow your to filter your displayed results. These following APIs accept `offset` and `limit` as parameters:
 
 * Allocation API
 * Assets API
@@ -142,4 +142,4 @@ The `offset` and `limit` parameters apply to multiple querying APIs to introduce
 
  An example of using these parameters in an Allocation query to see results starting from the third page of line items:
 
-`GET` `http://<your-kubecost-address>/model/allocation?window=3d&offset=20&limit=10&accumulate=true`
+`GET` `http://<your-nOps-address>/model/allocation?window=3d&offset=20&limit=10&accumulate=true`

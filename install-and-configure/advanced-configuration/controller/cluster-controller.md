@@ -4,14 +4,14 @@
 The Cluster Controller is currently in beta. Please read the documentation carefully.
 {% endhint %}
 
-Kubecost's Cluster Controller allows you to access additional Savings features through automated processes. To function, the Cluster Controller requires write permission to certain resources on your cluster, and for this reason, the Cluster Controller is disabled by default.
+nOps's Cluster Controller allows you to access additional Savings features through automated processes. To function, the Cluster Controller requires write permission to certain resources on your cluster, and for this reason, the Cluster Controller is disabled by default.
 
 The Cluster Controller enables features like:
 
 * [Automated cluster turndown](/install-and-configure/advanced-configuration/controller/cluster-turndown.md)
-* [Cluster right-sizing recommendations](/using-kubecost/navigating-the-kubecost-ui/savings/cluster-right-sizing-recommendations.md)
-* [Container request right-sizing (RRS) recommendations](/using-kubecost/navigating-the-kubecost-ui/savings/container-request-right-sizing-recommendations.md)
-* [Kubecost Actions](/using-kubecost/navigating-the-kubecost-ui/savings/savings-actions.md)
+* [Cluster right-sizing recommendations](/using-nOps/navigating-the-nOps-ui/savings/cluster-right-sizing-recommendations.md)
+* [Container request right-sizing (RRS) recommendations](/using-nOps/navigating-the-nOps-ui/savings/container-request-right-sizing-recommendations.md)
+* [nOps Actions](/using-nOps/navigating-the-nOps-ui/savings/savings-actions.md)
 
 ## Feature functionality
 
@@ -19,7 +19,7 @@ The Cluster Controller can be enabled on any cluster type, but certain functiona
 
 * The Cluster Controller can only be enabled on your primary cluster.
 * The Controller itself and container RRS are available for all cluster types and configurations.
-* Cluster turndown, cluster right-sizing, and Kubecost Actions are only available for GKE, EKS, and Kops-on-AWS clusters, after setting up a provider service key.
+* Cluster turndown, cluster right-sizing, and nOps Actions are only available for GKE, EKS, and Kops-on-AWS clusters, after setting up a provider service key.
 
 Therefore, the 'Provider service key setup' section below is optional depending on your cluster environment, but will limit functionality if you choose to skip it. Read the caution banner in the below section for more details.
 
@@ -33,20 +33,20 @@ If you are enabling the Cluster Controller for a GKE/EKS/Kops AWS cluster, follo
 
 <summary>GKE setup</summary>
 
-The following command performs the steps required to set up a service account. [More info](https://github.com/kubecost/cluster-turndown/blob/master/scripts/README.md).
+The following command performs the steps required to set up a service account. [More info](https://github.com/nOps/cluster-turndown/blob/master/scripts/README.md).
 
 {% code overflow="wrap" %}
 ```bash
-/bin/bash -c "$(curl -fsSL https://github.com/kubecost/cluster-turndown/releases/latest/download/gke-create-service-key.sh)" -- <Project ID> <Service Account Name> <Namespace> cluster-controller-service-key
+/bin/bash -c "$(curl -fsSL https://github.com/nOps/cluster-turndown/releases/latest/download/gke-create-service-key.sh)" -- <Project ID> <Service Account Name> <Namespace> cluster-controller-service-key
 ```
 {% endcode %}
 
-To use [this setup script](https://github.com/kubecost/cluster-turndown/blob/master/scripts/gke-create-service-key.sh), provide the following required parameters:
+To use [this setup script](https://github.com/nOps/cluster-turndown/blob/master/scripts/gke-create-service-key.sh), provide the following required parameters:
 
 * **Project ID**: The GCP project identifier. Can be found via: `gcloud config get-value project`
-* **Namespace**: The namespace which Kubecost will be installed, e.g `kubecost`
-* **Service Account Name**: The name of the service account to be created. Should be between 6 and 20 characters, e.g. `kubecost-controller`
-* **Secret Name**: The Kubecost will automatically look for a secret called `cluster-controller-service-key`. This can be changed by setting `.Values.clusterController.secretName`.
+* **Namespace**: The namespace which nOps will be installed, e.g `nOps`
+* **Service Account Name**: The name of the service account to be created. Should be between 6 and 20 characters, e.g. `nOps-controller`
+* **Secret Name**: The nOps will automatically look for a secret called `cluster-controller-service-key`. This can be changed by setting `.Values.clusterController.secretName`.
 
 </details>
 
@@ -164,7 +164,7 @@ AAKI="$(jq -r '.AccessKey.AccessKeyId' /tmp/aws-key.json)"
 ASAK="$(jq -r '.AccessKey.SecretAccessKey' /tmp/aws-key.json)"
 kubectl create secret generic \
     cluster-controller-service-key \
-    -n kubecost \
+    -n nOps \
     --from-literal="service-key.json={\"aws_access_key_id\": \"${AAKI}\", \"aws_secret_access_key\": \"${ASAK}\"}"
 
 ```
@@ -266,9 +266,9 @@ clusterController:
 You may also enable via `--set` when running Helm install:
 
 ```bash
-helm install kubecost cost-analyzer \
---repo https://kubecost.github.io/cost-analyzer/ \
---namespace kubecost --create-namespace \
+helm install nOps cost-analyzer \
+--repo https://nOps.github.io/cost-analyzer/ \
+--namespace nOps --create-namespace \
 --set clusterController.enabled=true
 ```
 
@@ -277,7 +277,7 @@ helm install kubecost cost-analyzer \
 You can verify that the Cluster Controller is running by issuing the following:
 
 ```
-kubectl get pods -n kubecost -l app=kubecost-cluster-controller
+kubectl get pods -n nOps -l app=nOps-cluster-controller
 ```
 
 Once the Cluster Controller has been enabled successfully, you should automatically have access to the listed Savings features.

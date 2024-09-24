@@ -1,6 +1,6 @@
 # Oracle Usage API Cloud Cost Integration
 
-This document describes how to integrate Kubecost with the Oracle Usage API to build Cloud Costs for your tenancy. This will largely be done via the OCI CLI which you will need admin privileges on.
+This document describes how to integrate nOps with the Oracle Usage API to build Cloud Costs for your tenancy. This will largely be done via the OCI CLI which you will need admin privileges on.
 
 ## Before Starting
 
@@ -10,7 +10,7 @@ You will also need the tenancy ID and region of the tenancy in which your cluste
 
 ## Authentication and Authorization
 
-Access to the Usage API is defined in a policy that applies to a group. Using credentials for a User that is a member of that group Kubecost can gain access to the API.
+Access to the Usage API is defined in a policy that applies to a group. Using credentials for a User that is a member of that group nOps can gain access to the API.
 
 ### Creating a User
 
@@ -18,8 +18,8 @@ Run the following command to create a user. You will need to provide an email ad
 
 ```sh
 oci iam user create \
---name kubecostUser \
---description="Access point for kubecost" \
+--name nOpsUser \
+--description="Access point for nOps" \
 --email <REQUIRED_EMAIL>
 ```
 
@@ -33,8 +33,8 @@ Next create a group which will have the policy attached to it.
 
 ```sh
 oci iam group create \
---name=kubecost \
---description="group for kubecost"
+--name=nOps \
+--description="group for nOps"
 ```
 
 Save the group ID found in the "id" property of the output.
@@ -52,9 +52,9 @@ Create a policy for group.
 ```sh
 oci iam policy create \
 --compartment-id $OCI_COMPARTMENT_ID \
---name kubecostUserPolicy \
---description="policy for kubecost" \
---statements='["ALLOW GROUP kubecost to read all-resources IN TENANCY"]'
+--name nOpsUserPolicy \
+--description="policy for nOps" \
+--statements='["ALLOW GROUP nOps to read all-resources IN TENANCY"]'
 ```
 
 ### Create and add an API key for the User
@@ -104,17 +104,17 @@ Create a JSON file name `cloud-integration.json` using the above values.
 }
 ```
 
-Create a Kubernetes secret in the same namespace as your Kubecost deployment with this JSON file.
+Create a Kubernetes secret in the same namespace as your nOps deployment with this JSON file.
 
 ```sh
 kubectl create secret generic cloud-integration \
--n kubecost \
+-n nOps \
 --from-file=cloud-integration.json
 ```
 
 Update the Helm values to mount the secret with the configuration.
 
 ```yaml
-kubecostProductConfigs:
+nOpsProductConfigs:
   cloudIntegrationSecret: cloud-integration
 ```

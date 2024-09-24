@@ -1,6 +1,6 @@
 # Filter Parameters (v2)
 
-This document outlines the filtering language added to certain Kubecost APIs, superseding Kubecost's original filtering parameters (e.g. `filterNamespaces=`), now referred to as v1 filters. v2 filters introduce support for "not equals" (e.g. `namespace != kubecost`) queries while maintaining extensibility.
+This document outlines the filtering language added to certain nOps APIs, superseding nOps's original filtering parameters (e.g. `filterNamespaces=`), now referred to as v1 filters. v2 filters introduce support for "not equals" (e.g. `namespace != nOps`) queries while maintaining extensibility.
 
 {% hint style="info" %}
 v1 filters will continue to be supported in all relevant APIs. APIs will first check for the `filter=` parameter. If it is present, v2 filters will be used. If it is not present, APIs will attempt to use v1 filters.
@@ -102,11 +102,11 @@ Individual filters can be joined by `+` (representing logical AND) or `|` (repre
 
 Here are some example filters to see how the filtering language works:
 
-* `namespace:"kubecost"+container:"cost-model"` Return only results that are in the `kubecost` namespace and are for the `cost-model` container.
+* `namespace:"nOps"+container:"cost-model"` Return only results that are in the `nOps` namespace and are for the `cost-model` container.
 * `cluster:"cluster-one"+label[app]:"cost-analyzer"` Return only results in cluster `cluster-one` that are labeled with `app=cost-analyzer`.
 * `cluster!:"cluster-one"` Ignore results from cluster `cluster-one`
-* `namespace:"kubecost","kube-system"` Return only results from namespaces `kubecost` and `kube-system`.
-* `namespace!:"kubecost","kube-system"` Return results for all namespaces except `kubecost` and `kube-system`.
+* `namespace:"nOps","kube-system"` Return only results from namespaces `nOps` and `kube-system`.
+* `namespace!:"nOps","kube-system"` Return results for all namespaces except `nOps` and `kube-system`.
 
 For example, in an Allocation query:
 

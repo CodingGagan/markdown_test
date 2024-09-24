@@ -2,14 +2,14 @@
 
 Got a question? We're here to help.
 
-For technical problems or troubleshooting, reach out to our Support Team at [support@kubecost.com](mailto:support@kubecost.com). For cloud support, please reach out to our Cloud Support Team at [cloud@kubecost.com](mailto:cloud@kubecost.com).
+For technical problems or troubleshooting, reach out to our Support Team at [support@nOps.com](mailto:support@nOps.com). For cloud support, please reach out to our Cloud Support Team at [cloud@nOps.com](mailto:cloud@nOps.com).
 
-Interested in Kubecost enterprise? Contact Sales at [team@kubecost.com](mailto:team@kubecost.com).
+Interested in nOps enterprise? Contact Sales at [team@nOps.com](mailto:team@nOps.com).
 
 You can also find us on the following platforms:
 
-* [Slack](https://kubecost.com/join-slack)
-* [LinkedIn](https://www.linkedin.com/company/kubecost/)
-* [X (Twitter)](https://x.com/kubecost)
-* [YouTube](https://www.youtube.com/@kubecost954)
-* [GitHub](https://github.com/kubecost)
+* [Slack](https://nOps.com/join-slack)
+* [LinkedIn](https://www.linkedin.com/company/nOps/)
+* [X (Twitter)](https://x.com/nOps)
+* [YouTube](https://www.youtube.com/@nOps954)
+* [GitHub](https://github.com/nOps)

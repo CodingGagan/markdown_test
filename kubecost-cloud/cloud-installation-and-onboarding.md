@@ -1,12 +1,12 @@
 # Cloud Installation and Onboarding
 
-This doc will show you how to register for Kubecost Cloud, invite members to and manage your team(s), and create and remove clusters.
+This doc will show you how to register for nOps Cloud, invite members to and manage your team(s), and create and remove clusters.
 
-## Accessing Kubecost Cloud
+## Accessing nOps Cloud
 
 ### Creating a user account
 
-You can create a new user account in moments. On the [login page](http://app.kubecost.com), provide a Name, Email, and Password to register. You can also register using an active Google, Microsoft, Okta, or GitHub account via SSO.
+You can create a new user account in moments. On the [login page](http://app.nOps.com), provide a Name, Email, and Password to register. You can also register using an active Google, Microsoft, Okta, or GitHub account via SSO.
 
 ## **Managing teams**
 
@@ -22,7 +22,7 @@ There is currently no limit to the number of members that can be added to a team
 
 ### Accepting an invitation
 
-Invitations to join are sent out via email. To join a team, you must follow the invitation link and register for Kubecost Cloud (see above). Once logged in, you will see a banner at the top of your page which will allow you to officially join the team. You can also accept an invite on the Settings page under Manage Teams.
+Invitations to join are sent out via email. To join a team, you must follow the invitation link and register for nOps Cloud (see above). Once logged in, you will see a banner at the top of your page which will allow you to officially join the team. You can also accept an invite on the Settings page under Manage Teams.
 
 ### Editing your team
 
@@ -41,24 +41,24 @@ If you are a member of multiple teams, you will see a green checkmark icon next 
 
 #### Agent install
 
-If no clusters are currently under management, you will find instructions on the Allocations page for installing the Kubecost Agent on your cluster. You can also find these instructions in _Settings_ > _Add Cluster_.
+If no clusters are currently under management, you will find instructions on the Allocations page for installing the nOps Agent on your cluster. You can also find these instructions in _Settings_ > _Add Cluster_.
 
 Choose a unique ID for your cluster. This does not need to be the same name as your cluster, but it does need to be unique within your team.
 
-Execute the following command to install the Kubecost Cloud agent to your cluster. The agent key will be pre-populated in the install command in the Kubecost Cloud UI.
+Execute the following command to install the nOps Cloud agent to your cluster. The agent key will be pre-populated in the install command in the nOps Cloud UI.
 
 {% hint style="info" %} Using an existing Prometheus deployment is not currently supported. {% endhint %}
 
 {% code overflow="wrap" %}
 ```
-helm upgrade --install kubecost-cloud \
---repo https://kubecost.github.io/kubecost-cloud-agent/ kubecost-cloud-agent \
---namespace kubecost-cloud --create-namespace \
--f https://raw.githubusercontent.com/kubecost/kubecost-cloud-agent/main/values-cloud-agent.yaml \
+helm upgrade --install nOps-cloud \
+--repo https://nOps.github.io/nOps-cloud-agent/ nOps-cloud-agent \
+--namespace nOps-cloud --create-namespace \
+-f https://raw.githubusercontent.com/nOps/nOps-cloud-agent/main/values-cloud-agent.yaml \
 --set imageVersion="lunar-sandwich.v0.1.2" \
 --set cloudAgentKey="AGENTKEY" \
 --set cloudAgentClusterId="cluster-1" \
---set cloudReportingServer="collector.app.kubecost.com:31357" \
+--set cloudReportingServer="collector.app.nOps.com:31357" \
 --set networkCosts.enabled=true
 ```
 {% endcode %}
@@ -69,13 +69,13 @@ You can view your connected clusters in the Settings page under Manage Clusters,
 
 ### Removing a cluster
 
-Remove the agent from the cluster to stop reporting new metrics to Kubecost Cloud.&#x20;
+Remove the agent from the cluster to stop reporting new metrics to nOps Cloud.&#x20;
 
 Example based on default Helm install command:
 
 ```
-export release=kubecost-cloud
-export namespace=kubecost-cloud
+export release=nOps-cloud
+export namespace=nOps-cloud
 helm uninstall ${release} --namespace ${namespace}
 ```
 
@@ -85,9 +85,9 @@ After five minutes of no longer receiving data, the cluster will disappear from 
 
 ## Troubleshooting
 
-### GKE Autopilot rejects Kubecost Cloud agent
+### GKE Autopilot rejects nOps Cloud agent
 
-When attempting to install the Kubecost Cloud agent on a [GKE Autopilot](https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview) cluster, you may receive an error related to the network costs daemonSet:
+When attempting to install the nOps Cloud agent on a [GKE Autopilot](https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview) cluster, you may receive an error related to the network costs daemonSet:
 
 {% code overflow="wrap" %}
 ```
@@ -103,4 +103,4 @@ To work around this problem, modify your install command to disable the network 
 --set networkCosts.enabled=false
 ```
 
-Without network costs installed, you will be missing visibility into the networking layer in your environment. Kubecost is actively working with GCP to get our agent added to [this list of autopilot partner workloads](https://cloud.google.com/kubernetes-engine/docs/resources/autopilot-partners).
+Without network costs installed, you will be missing visibility into the networking layer in your environment. nOps is actively working with GCP to get our agent added to [this list of autopilot partner workloads](https://cloud.google.com/kubernetes-engine/docs/resources/autopilot-partners).

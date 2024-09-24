@@ -1,10 +1,10 @@
-# Kubecost Postgres Integration
+# nOps Postgres Integration
 
 {% hint style="info" %}
-This feature is only supported for Kubecost Enterprise.
+This feature is only supported for nOps Enterprise.
 {% endhint %}
 
-The Postgres Integration feature enables users to periodically query and export their Kubecost data to a central Postgres database.
+The Postgres Integration feature enables users to periodically query and export their nOps data to a central Postgres database.
 
 ## Example use cases
 
@@ -16,7 +16,7 @@ The Postgres Integration feature enables users to periodically query and export 
 
 Prerequisites:
 
-- A running Postgres instance that is reachable by Kubecost.
+- A running Postgres instance that is reachable by nOps.
 - Credentials for a Postgres user which has `CREATE`, `INSERT`, and `UPDATE` permissions on the database.
 
 ### Step 1: Configure Helm values
@@ -38,14 +38,14 @@ global:
 
       queryConfigs:
         allocations:
-          - databaseTable: "kubecost_allocation_data"
+          - databaseTable: "nOps_allocation_data"
             window: "7d"
             aggregate: "namespace"
             idle: "true"
             shareIdle: "true"
-            shareNamespaces: "kubecost,kube-system"
+            shareNamespaces: "nOps,kube-system"
             shareLabels: ""
-          - databaseTable: "kubecost_allocation_data_by_cluster"
+          - databaseTable: "nOps_allocation_data_by_cluster"
             window: "10d"
             aggregate: "cluster"
             idle: "true"
@@ -53,18 +53,18 @@ global:
             shareNamespaces: ""
             shareLabels: ""
         assets:
-          - databaseTable: "kubecost_assets_data"
+          - databaseTable: "nOps_assets_data"
             window: "7d"
             aggregate: "cluster"
         cloudCosts:
-          - databaseTable: "kubecost_cloudcosts_data"
+          - databaseTable: "nOps_cloudcosts_data"
             window: "7d"
             aggregate: "service"
 
 # REQUIRED. Aggregator must be enabled and running as a statefulset.
-kubecostAggregator:
+nOpsAggregator:
   deployMethod: "statefulset"
-kubecostModel:
+nOpsModel:
   federatedStorageConfigSecret: "federated-store"
 prometheus:
   server:
@@ -72,8 +72,8 @@ prometheus:
       external_labels:
         cluster_id: "primary-cluster-1"
 
-# REQUIRED. A Kubecost Enterprise license key.
-kubecostProductConfigs:
+# REQUIRED. A nOps Enterprise license key.
+nOpsProductConfigs:
   productKey:
     enabled: true
     key: "my-enterprise-key-here"
@@ -110,22 +110,22 @@ stringData:
 If deploying changes via Helm, you will be able to run a command similar to:
 
 ```sh
-helm upgrade -i kubecost cost-analyzer \
-  --repo https://kubecost.github.io/cost-analyzer/ \
-  --namespace kubecost \
+helm upgrade -i nOps cost-analyzer \
+  --repo https://nOps.github.io/cost-analyzer/ \
+  --namespace nOps \
   -f values.yaml
 ```
 
 Once you've applied your changes, validate that the integration is successful by checking the Aggregator pod logs. You should see logs similar to the following:
 
 ```sh
-kubectl logs statefulset/kubecost-aggregator -n kubecost | grep -i "Integrations"
+kubectl logs statefulset/nOps-aggregator -n nOps | grep -i "Integrations"
 ```
 
 ```txt
 INF Integrations: Postgres: initializing cronjob
-INF Integrations: Postgres: Allocations: successfully queried http://localhost:9004/allocation?aggregate=namespace&idle=true&shareIdle=false&shareLabels=&shareNamespaces=&window=7d and inserted into REDACTED:kubecost_allocation_data
-INF Integrations: Postgres: Allocations: successfully queried http://localhost:9004/allocation?aggregate=cluster&idle=true&shareIdle=false&shareLabels=&shareNamespaces=&window=10d and inserted into REDACTED:kubecost_allocation_data2
-INF Integrations: Postgres: Assets: successfully queried http://localhost:9004/assets?aggregate=cluster&window=7d and inserted into REDACTED:kubecost_assets_data
-INF Integrations: Postgres: CloudCosts: successfully queried http://localhost:9004/cloudCost?aggregate=service&window=7d and inserted into REDACTED:kubecost_cloud_costs
+INF Integrations: Postgres: Allocations: successfully queried http://localhost:9004/allocation?aggregate=namespace&idle=true&shareIdle=false&shareLabels=&shareNamespaces=&window=7d and inserted into REDACTED:nOps_allocation_data
+INF Integrations: Postgres: Allocations: successfully queried http://localhost:9004/allocation?aggregate=cluster&idle=true&shareIdle=false&shareLabels=&shareNamespaces=&window=10d and inserted into REDACTED:nOps_allocation_data2
+INF Integrations: Postgres: Assets: successfully queried http://localhost:9004/assets?aggregate=cluster&window=7d and inserted into REDACTED:nOps_assets_data
+INF Integrations: Postgres: CloudCosts: successfully queried http://localhost:9004/cloudCost?aggregate=service&window=7d and inserted into REDACTED:nOps_cloud_costs
 ```

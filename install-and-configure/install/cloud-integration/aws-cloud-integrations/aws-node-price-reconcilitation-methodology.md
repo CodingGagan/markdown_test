@@ -1,6 +1,6 @@
 # AWS Node Price Reconciliation Methodology
 
-Kubecost is capable of aggregating the costs of EC2 compute resources over a given timeframe with a specified duration step size. To achieve this, Kubecost uses Athena queries to gather usage data points with differing price models. The result of this process is a list of resources with their cost by timeframe.
+nOps is capable of aggregating the costs of EC2 compute resources over a given timeframe with a specified duration step size. To achieve this, nOps uses Athena queries to gather usage data points with differing price models. The result of this process is a list of resources with their cost by timeframe.
 
 ## Athena queries
 
@@ -66,4 +66,4 @@ When _Amortized costs_ is selected, the price jumps to $1.50/day
 
 This should closely match our data on the Assets page, for days where we have adjustments come in from the pricing CUR.
 
-![Kubecost Assets dashboard](/images/aws-node-price-assets.png)
+![nOps Assets dashboard](/images/aws-node-price-assets.png)

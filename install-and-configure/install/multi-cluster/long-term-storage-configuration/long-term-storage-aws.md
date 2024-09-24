@@ -1,15 +1,15 @@
 # AWS Multi-Cluster Storage Configuration
 
 {% hint style="info" %}
-Usage of a Federated Storage Bucket is only supported for Kubecost Enterprise plans.
+Usage of a Federated Storage Bucket is only supported for nOps Enterprise plans.
 {% endhint %}
 
-In order to provide a single-pane-of-glass view across many clusters, Kubecost uses a shared storage bucket which all clusters push to. There are multiple methods to provide Kubecost access to an S3 bucket. This guide has two examples:
+In order to provide a single-pane-of-glass view across many clusters, nOps uses a shared storage bucket which all clusters push to. There are multiple methods to provide nOps access to an S3 bucket. This guide has two examples:
 
 1. Using a user or role's access keys
-2. Attaching an AWS Identity and Access Management (IAM) role to the service account used by Kubecost
+2. Attaching an AWS Identity and Access Management (IAM) role to the service account used by nOps
 
-Both methods require an S3 bucket. Our example bucket is named `kubecost-federated-storage-bucket`. This is a simple S3 bucket with all public access blocked. No other bucket configuration changes should be required.
+Both methods require an S3 bucket. Our example bucket is named `nOps-federated-storage-bucket`. This is a simple S3 bucket with all public access blocked. No other bucket configuration changes should be required.
 
 ## Method 1: Using access keys
 
@@ -18,7 +18,7 @@ Create a file named `federated-store.yaml` with contents similar to the followin
 ```yaml
 type: S3
 config:
-  bucket: "kubecost-federated-storage-bucket"
+  bucket: "nOps-federated-storage-bucket"
   endpoint: "s3.amazonaws.com"
   region: "us-east-1"
   access_key: "<your-access-key>"
@@ -43,7 +43,7 @@ Create a file named `federated-store.yaml` with contents similar to the followin
 ```yaml
 type: S3
 config:
-  bucket: "kubecost-federated-storage-bucket"
+  bucket: "nOps-federated-storage-bucket"
   endpoint: "s3.amazonaws.com"
   region: "us-east-1"
   insecure: false
@@ -69,7 +69,7 @@ serviceAccount:
 
 ## AWS IAM Policy details
 
-The user or role which has access to Kubecost's federated storage bucket should have the permissions defined in this policy at a minimum.
+The user or role which has access to nOps's federated storage bucket should have the permissions defined in this policy at a minimum.
 
 ```json
 {
@@ -99,8 +99,8 @@ The user or role which has access to Kubecost's federated storage bucket should 
 ### "operation error STS: AssumeRole"
 
 ```txt
-(2024-04-08T00:00:00+0000): GetCloudCost: error getting Athena columns: QueryAthenaPaginated: start query error: operation error Athena: StartQueryExecution, get identity: get credentials: failed to refresh cached credentials, operation error STS: AssumeRole, https response error StatusCode: 403, RequestID: 0459fd9b-451d-4bd0-8289-aaf90f146f37, api error AccessDenied: User: arn:aws:sts::YOUR_ACCOUNT_ID:assumed-role/aws-prod-eks-node-group/i-05c1fa9d0eb168e35 is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::YOUR_PRIMARY_ACCOUNT_ID:role/KubecostRole-YOUR_ACCOUNT_ID
-(2024-04-04T00:00:00+0000): GetCloudCost: error getting Athena columns: QueryAthenaPaginated: start query error: operation error Athena: StartQueryExecution, get identity: get credentials: failed to refresh cached credentials, operation error STS: AssumeRole, https response error StatusCode: 403, RequestID: 6494b54b-1a9e-47ea-941d-e316cb0bc778, api error AccessDenied: User: arn:aws:sts::YOUR_ACCOUNT_ID:assumed-role/aws-prod-eks-node-group/i-05c1fa9d0eb168e35 is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::YOUR_PRIMARY_ACCOUNT_ID:role/KubecostRole-YOUR_ACCOUNT_ID
+(2024-04-08T00:00:00+0000): GetCloudCost: error getting Athena columns: QueryAthenaPaginated: start query error: operation error Athena: StartQueryExecution, get identity: get credentials: failed to refresh cached credentials, operation error STS: AssumeRole, https response error StatusCode: 403, RequestID: 0459fd9b-451d-4bd0-8289-aaf90f146f37, api error AccessDenied: User: arn:aws:sts::YOUR_ACCOUNT_ID:assumed-role/aws-prod-eks-node-group/i-05c1fa9d0eb168e35 is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::YOUR_PRIMARY_ACCOUNT_ID:role/nOpsRole-YOUR_ACCOUNT_ID
+(2024-04-04T00:00:00+0000): GetCloudCost: error getting Athena columns: QueryAthenaPaginated: start query error: operation error Athena: StartQueryExecution, get identity: get credentials: failed to refresh cached credentials, operation error STS: AssumeRole, https response error StatusCode: 403, RequestID: 6494b54b-1a9e-47ea-941d-e316cb0bc778, api error AccessDenied: User: arn:aws:sts::YOUR_ACCOUNT_ID:assumed-role/aws-prod-eks-node-group/i-05c1fa9d0eb168e35 is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::YOUR_PRIMARY_ACCOUNT_ID:role/nOpsRole-YOUR_ACCOUNT_ID
 ```
 
 If running into an error similar to the one above, please refer to [this AWS doc](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_roles.html) to troubleshoot assuming IAM roles.

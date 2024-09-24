@@ -1,6 +1,6 @@
 # Aggregator Diagnostic APIs
 
-Below are APIs exposed by Kubecost Aggregator for troubleshooting without inspecting the PV directly.
+Below are APIs exposed by nOps Aggregator for troubleshooting without inspecting the PV directly.
 
 #### `/model/debug/orchestrator`
 

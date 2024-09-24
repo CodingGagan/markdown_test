@@ -29,10 +29,10 @@ Whenever there exists at least one NodePool with the `cluster-autoscaler` enable
 
 There are four annotations that can be applied for this process:
 
-* `kubecost.kubernetes.io/job-suspend`: Stores a bool containing the previous paused state of a kubernetes CronJob.
-* `kubecost.kubernetes.io/turn-down-replicas`: Stores the previous number of replicas set on the deployment.
-* `kubecost.kubernetes.io/turn-down-rollout`: Stores the previous maxUnavailable for the deployment rollout.
-* `kubecost.kubernetes.io/safe-evict`: Uses the `cluster-autoscaler.kubernetes.io/safe-to-evict` for autoscaling clusters to have the autoscaler preserve any deployments that previously had this annotation set, so scale up occurs, this value isn't unintentionally reset.
+* `nOps.kubernetes.io/job-suspend`: Stores a bool containing the previous paused state of a kubernetes CronJob.
+* `nOps.kubernetes.io/turn-down-replicas`: Stores the previous number of replicas set on the deployment.
+* `nOps.kubernetes.io/turn-down-rollout`: Stores the previous maxUnavailable for the deployment rollout.
+* `nOps.kubernetes.io/safe-evict`: Uses the `cluster-autoscaler.kubernetes.io/safe-to-evict` for autoscaling clusters to have the autoscaler preserve any deployments that previously had this annotation set, so scale up occurs, this value isn't unintentionally reset.
 
 </details>
 
@@ -66,12 +66,12 @@ $ kubectl get pods -l app=cluster-turndown -n turndown
 Turndown uses a Kubernetes Custom Resource Definition to create schedules. Here is an example resource located at _artifacts/example-schedule.yaml_:
 
 ```
-apiVersion: kubecost.com/v1alpha1
+apiVersion: nOps.com/v1alpha1
 kind: TurndownSchedule
 metadata:
   name: example-schedule
   finalizers:
-  - "finalizer.kubecost.com"
+  - "finalizer.nOps.com"
 spec:
   start: 2020-03-12T00:00:00Z
   end: 2020-03-12T12:00:00Z
@@ -120,19 +120,19 @@ $ kubectl get tds example-schedule -o yaml
 
 {% code overflow="wrap" %}
 ```
-apiVersion: kubecost.com/v1alpha1
+apiVersion: nOps.com/v1alpha1
 kind: TurndownSchedule
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"kubecost.com/v1alpha1","kind":"TurndownSchedule","metadata":{"annotations":{},"finalizers":["finalizer.kubecost.com"],"name":"example-schedule"},"spec":{"end":"2020-03-17T00:35:00Z","repeat":"daily","start":"2020-03-17T00:20:00Z"}}
+      {"apiVersion":"nOps.com/v1alpha1","kind":"TurndownSchedule","metadata":{"annotations":{},"finalizers":["finalizer.nOps.com"],"name":"example-schedule"},"spec":{"end":"2020-03-17T00:35:00Z","repeat":"daily","start":"2020-03-17T00:20:00Z"}}
   creationTimestamp: "2020-03-17T00:18:39Z"
   finalizers:
-  - finalizer.kubecost.com
+  - finalizer.nOps.com
   generation: 1
   name: example-schedule
   resourceVersion: "33573"
-  selfLink: /apis/kubecost.com/v1alpha1/turndownschedules/example-schedule
+  selfLink: /apis/nOps.com/v1alpha1/turndownschedules/example-schedule
   uid: d9b16aed-67e4-11ea-b591-42010a8e0075
 spec:
   end: "2020-03-17T00:35:00Z"
@@ -184,7 +184,7 @@ If the turndown schedule is canceled between a turndown and turn up, the turn up
 
 ## Using cluster turndown via UI
 
-Cluster turndown has limited functionality via the Kubecost UI. To access cluster turndown in the UI, you must first enable [Kubecost Actions](/using-kubecost/navigating-the-kubecost-ui/savings/savings-actions.md#enabling-kubecost-actions). Once this is completed, you will be able to create and delete turndown schedules instantaneously for your supported clusters. Read more about turndown's UI functionality in [this section](/using-kubecost/navigating-the-kubecost-ui/savings/savings-actions.md#cluster-turndown) of the above Kubecost Actions doc. Review the entire doc for more information on Kubecost Actions functionality and limitations.
+Cluster turndown has limited functionality via the nOps UI. To access cluster turndown in the UI, you must first enable [nOps Actions](/using-nOps/navigating-the-nOps-ui/savings/savings-actions.md#enabling-nOps-actions). Once this is completed, you will be able to create and delete turndown schedules instantaneously for your supported clusters. Read more about turndown's UI functionality in [this section](/using-nOps/navigating-the-nOps-ui/savings/savings-actions.md#cluster-turndown) of the above nOps Actions doc. Review the entire doc for more information on nOps Actions functionality and limitations.
 
 ## Limitations
 

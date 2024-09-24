@@ -1,6 +1,6 @@
 # Abandoned Workloads
 
-{% swagger method="get" path="abandonedWorkloads" baseUrl="http://<kubecost-address>/model/savings/" summary="Abandoned Workloads API" %}
+{% swagger method="get" path="abandonedWorkloads" baseUrl="http://<nOps-address>/model/savings/" summary="Abandoned Workloads API" %}
 {% swagger-description %}
 The abandoned workloads API suggests cluster workloads that have been abandoned based on network traffic levels.
 {% endswagger-description %}

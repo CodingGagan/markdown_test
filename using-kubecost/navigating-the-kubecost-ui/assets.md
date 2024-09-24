@@ -1,6 +1,6 @@
 # Assets Dashboard
 
-The Kubecost Assets dashboard shows Kubernetes cluster costs broken down by the individual backing assets in your cluster (e.g. cost by node, disk, and other assets). It’s used to identify spend drivers over time and to audit Allocation data. This view can also optionally show out-of-cluster assets by service, tag/label, etc.
+The nOps Assets dashboard shows Kubernetes cluster costs broken down by the individual backing assets in your cluster (e.g. cost by node, disk, and other assets). It’s used to identify spend drivers over time and to audit Allocation data. This view can also optionally show out-of-cluster assets by service, tag/label, etc.
 
 {% hint style="info" %}
 Similar to our Allocation API, the Assets API uses our ETL pipeline which aggregates data daily. This allows for enterprise-scale with much higher performance.
@@ -10,7 +10,7 @@ Similar to our Allocation API, the Assets API uses our ETL pipeline which aggreg
 
 ## Configuring your query
 
-Kubecost provides a variety of options for configuring your assets queries to view the information you need. Below is a table of the major configuration options, with in-depth explanations in this article for how they work.
+nOps provides a variety of options for configuring your assets queries to view the information you need. Below is a table of the major configuration options, with in-depth explanations in this article for how they work.
 
 | Element                  | Description                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------- |
@@ -48,7 +48,7 @@ Change the display of assets window. _Daily_ provides a day-by-day breakdown of 
 
 View either cumulative or run rate costs measured over the selected time window based on the assets being filtered for.
 
-* Cumulative Cost: represents the actual/historical spend captured by the Kubecost agent over the selected time window
+* Cumulative Cost: represents the actual/historical spend captured by the nOps agent over the selected time window
 * Rate metrics: Monthly, daily, or hourly “run rate” cost, also used for projected cost figures, based on samples in the selected time window
 
 #### Chart
@@ -56,7 +56,7 @@ View either cumulative or run rate costs measured over the selected time window 
 View Assets data in the following formats:
 
 1. Cost over time: Cost per aggregation broken down over days or hours depending on date range
-2. [Cost forecast](/using-kubecost/forecasting.md): Cost over time with additional projected spend
+2. [Cost forecast](/using-nOps/forecasting.md): Cost over time with additional projected spend
 
 
 ### Additional options
@@ -83,7 +83,7 @@ You can select an aggregate asset to view all individual assets comprising it. E
 
 ## Cloud cost reconciliation
 
-After granting Kubecost permission to access cloud billing data, Kubecost adjusts its asset prices once cloud billing data becomes available, e.g. AWS Cost and Usage Report and the spot data feed. Until this data is available from cloud providers, Kubecost uses data from public cloud APIs to determine cost, or alternatively custom pricing sheets. This allows teams to have highly accurate estimates of asset prices in real-time and then become even more precise once cloud billing data becomes available, which is often 1-2 hours for spot nodes and up to a day for reserved instances/savings plans.
+After granting nOps permission to access cloud billing data, nOps adjusts its asset prices once cloud billing data becomes available, e.g. AWS Cost and Usage Report and the spot data feed. Until this data is available from cloud providers, nOps uses data from public cloud APIs to determine cost, or alternatively custom pricing sheets. This allows teams to have highly accurate estimates of asset prices in real-time and then become even more precise once cloud billing data becomes available, which is often 1-2 hours for spot nodes and up to a day for reserved instances/savings plans.
 
 While cloud adjustments typically lag by roughly a day, there are certain adjustments, e.g. credits, that may continue to come in over the course of the month, and in some cases at the very end of the month, so reconciliation adjustments may continue to update over time.
 
@@ -93,4 +93,4 @@ The Assets page allows you to view a dedicated breakdown of node costs. To do so
 
 ![Node Costs](/images/nodecosts.png)
 
-Overhead costs refer to the capacity costs minus allocatable costs. This includes Kubelet, container runtime, and node operating systems and software. It does not include Prometheus, DNS, cert-manager, kube-system, or pods running with Kubernetes. To learn more about overhead costs, watch [Node Size Matters](https://www.youtube.com/watch?v=6vNI_O6sdvY), a presentation by Kubecost engineers from KubeCon 2023.
+Overhead costs refer to the capacity costs minus allocatable costs. This includes Kubelet, container runtime, and node operating systems and software. It does not include Prometheus, DNS, cert-manager, kube-system, or pods running with Kubernetes. To learn more about overhead costs, watch [Node Size Matters](https://www.youtube.com/watch?v=6vNI_O6sdvY), a presentation by nOps engineers from KubeCon 2023.

@@ -1,17 +1,17 @@
-# Microsoft Entra ID OIDC Integration for Kubecost
+# Microsoft Entra ID OIDC Integration for nOps
 
 {% hint style="info" %}
-OIDC is only officially supported on Kubecost Enterprise plans.
+OIDC is only officially supported on nOps Enterprise plans.
 {% endhint %}
 
-This guide will take you through configuring OIDC for Kubecost using a Microsoft Entra ID (formerly Azure AD) integration for SSO and RBAC.
+This guide will take you through configuring OIDC for nOps using a Microsoft Entra ID (formerly Azure AD) integration for SSO and RBAC.
 
 ## Prerequisites
 
 Before following this guide, ensure that:
 
-* Kubecost is already installed
-* Kubecost is accessible via a TLS-enabled ingress
+* nOps is already installed
+* nOps is accessible via a TLS-enabled ingress
 * You are established as a [Cloud Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#cloud-application-administrator) in Microsoft. This may otherwise prevent you from accessing certain features required in this tutorial.
 
 ## Entra ID OIDC configuration
@@ -21,7 +21,7 @@ Before following this guide, ensure that:
 1. In the [Microsoft Entra admin center](https://entra.microsoft.com/#home), select _Microsoft Entra ID (Azure AD)_.
 2. In the left navigation, select _Applications_ > _App registrations_. Then, on the App registrations page, select _New registration_.
 3. Select an appropriate name, and provide supported account types for your app.
-4. To configure `Redirect URI`, select _Web_ from the dropdown, then provide the URI as _https://{your-kubecost-address}/model/oidc/authorize_.
+4. To configure `Redirect URI`, select _Web_ from the dropdown, then provide the URI as _https://{your-nOps-address}/model/oidc/authorize_.
 5. Select _Register_ at the bottom of the page to finalize your changes.
 
 ### Step 2: Configuring _values.yaml_
@@ -31,7 +31,7 @@ Before following this guide, ensure that:
 3. Next to 'Client credentials', select _Add a certificate or secret_. The 'Certificates & secrets' page opens.
 4. Select _New client secret_. Provide a description and expiration time, then select _Add_.
 5. Obtain the value created with your secret.
-6. Add the three saved values, as well as any other values required relating to your Kubecost/Microsoft account details, into the following _values.yaml_ template:
+6. Add the three saved values, as well as any other values required relating to your nOps/Microsoft account details, into the following _values.yaml_ template:
 
 ```yaml
 # values.yaml
@@ -40,18 +40,18 @@ oidc:
   useIDToken: true
   clientID: "{APPLICATION_CLIENT_ID}"
   clientSecret: "{CLIENT_CREDENTIALS} > {SECRET_VALUE}"
-  secretName: "kubecost-oidc-secret"
+  secretName: "nOps-oidc-secret"
   authURL: "https://login.microsoftonline.com/{YOUR_TENANT_ID}/oauth2/v2.0/authorize?client_id={YOUR_CLIENT_ID}&response_type=code&scope=openid&nonce=123456"
-  loginRedirectURL: "https://{YOUR_KUBECOST_DOMAIN}/model/oidc/authorize"
+  loginRedirectURL: "https://{YOUR_nOps_DOMAIN}/model/oidc/authorize"
   discoveryURL: "https://login.microsoftonline.com/{YOUR_TENANT_ID}/v2.0/.well-known/openid-configuration"
 ```
 
 {% hint style="info" %}
-If you are using one Entra ID app to authenticate multiple Kubecost endpoints, you must to pass an additional `redirect_uri` parameter in your `authURL`, which will include the URI you configured in Step 1.4. Otherwise, Entra ID may redirect to an incorrect endpoint. You can read more about this in Microsoft Entra ID's [troubleshooting docs](https://learn.microsoft.com/en-us/troubleshoot/azure/active-directory/reply-url-redirected-to-localhost). View the example below to see how you should format your URI:
+If you are using one Entra ID app to authenticate multiple nOps endpoints, you must to pass an additional `redirect_uri` parameter in your `authURL`, which will include the URI you configured in Step 1.4. Otherwise, Entra ID may redirect to an incorrect endpoint. You can read more about this in Microsoft Entra ID's [troubleshooting docs](https://learn.microsoft.com/en-us/troubleshoot/azure/active-directory/reply-url-redirected-to-localhost). View the example below to see how you should format your URI:
 {% endhint %}
 
 ```
-  authURL: "https://login.microsoftonline.com/{YOUR_TENANT_ID}/oauth2/v2.0/authorize?client_id={YOUR_CLIENT_ID}&response_type=code&scope=openid&nonce=123456&redirect_uri=https%3A%2F%2F{YOUR_KUBECOST_DOMAIN}/model/oidc/authorize"
+  authURL: "https://login.microsoftonline.com/{YOUR_TENANT_ID}/oauth2/v2.0/authorize?client_id={YOUR_CLIENT_ID}&response_type=code&scope=openid&nonce=123456&redirect_uri=https%3A%2F%2F{YOUR_nOps_DOMAIN}/model/oidc/authorize"
 ```
 
 ### Step 3 (optional): Configuring RBAC
@@ -63,7 +63,7 @@ First, you need to configure an admin role for your app. For more information on
   * Display name: _admin_
   * Allowed member types: _Users/Groups_
   * Value: _admins_
-  * Description: _Admins have read/write permissions via the Kubecost frontend_ (or provide a custom description as needed)
+  * Description: _Admins have read/write permissions via the nOps frontend_ (or provide a custom description as needed)
   * Do you want to enable this app role?: Select the checkbox
 3. Select _Apply_.
 
@@ -83,7 +83,7 @@ oidc:
     enabled: true
     groups:
       - name: admin
-        # If admin is disabled, all authenticated users will be able to make configuration changes to the kubecost frontend
+        # If admin is disabled, all authenticated users will be able to make configuration changes to the nOps frontend
         enabled: true
         # SET THIS EXACT VALUE FOR ENTRA ID. This is the string Entra ID uses in its OIDC tokens.
         claimName: "roles"
@@ -103,24 +103,24 @@ oidc:
 
 ### Option 1: Inspect all network requests made by browser
 
-Use your browser's [devtools](https://developer.chrome.com/docs/devtools/network/) to observe network requests made between you, your Identity Provider, and  Kubecost. Pay close attention to cookies and headers.
+Use your browser's [devtools](https://developer.chrome.com/docs/devtools/network/) to observe network requests made between you, your Identity Provider, and  nOps. Pay close attention to cookies and headers.
 
 ### Option 2: Review logs, and decode your JWT tokens
 
 Run the following command:
 
 ```sh
-kubectl logs deploy/kubecost-cost-analyzer
+kubectl logs deploy/nOps-cost-analyzer
 ```
 
 Search for `oidc` in your logs to follow events. Pay attention to any WRN related to OIDC. Search for Token Response, and try decoding both the `access_token` and `id_token` to ensure they are well formed. [Learn more about JSON web tokens](https://jwt.io/).
 
 ### Option 3: Enable debug logs for more granularity on what is failing
 
-You can find more details on these flags in Kubecost's [cost-analyzer-helm-chart repo README](https://github.com/kubecost/cost-analyzer-helm-chart/blob/v1.103/README.md?plain=1#L63-L75).
+You can find more details on these flags in nOps's [cost-analyzer-helm-chart repo README](https://github.com/nOps/cost-analyzer-helm-chart/blob/v1.103/README.md?plain=1#L63-L75).
 
 ```yaml
-kubecostModel:
+nOpsModel:
   extraEnv:
     - name: LOG_LEVEL
       value: debug

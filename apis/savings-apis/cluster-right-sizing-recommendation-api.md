@@ -1,8 +1,8 @@
 # Cluster Right-Sizing Recommendation API
 
-Kubecost's Cluster Right-Sizing Recommendation API can monitor the resource utilization of your clusters and offer cost-effective right-sizing solutions.
+nOps's Cluster Right-Sizing Recommendation API can monitor the resource utilization of your clusters and offer cost-effective right-sizing solutions.
 
-{% swagger method="get" path="/clusterSizingETL" baseUrl="http://<your-kubecost-address>/model/savings" summary="Cluster Right-Sizing Recommendation API" %}
+{% swagger method="get" path="/clusterSizingETL" baseUrl="http://<your-nOps-address>/model/savings" summary="Cluster Right-Sizing Recommendation API" %}
 {% swagger-description %}
 
 {% endswagger-description %}
@@ -178,7 +178,7 @@ Receive right-sizing recommendations taking into account cluster activity for th
 
 {% code overflow="wrap" %}
 ```
-http://<your-kubecost-address>/savings/clusterSizingETL?range=2w&targetUtilization=.5&minNodeCount=3&allowSharedCore=false&architecture=x86
+http://<your-nOps-address>/savings/clusterSizingETL?range=2w&targetUtilization=.5&minNodeCount=3&allowSharedCore=false&architecture=x86
 ```
 {% endcode %}
 
@@ -186,7 +186,7 @@ Receive recommendations taking into account AWS cluster activity for the past fi
 
 {% code overflow="wrap" %}
 ```
-http://<your-kubecost-address>/savings/clusterSizingETL?range=5d&targetUtilization=.65&minNodeCount=2&allowSharedCore=true&architecture=ARM
+http://<your-nOps-address>/savings/clusterSizingETL?range=5d&targetUtilization=.65&minNodeCount=2&allowSharedCore=true&architecture=ARM
 ```
 {% endcode %}
 

@@ -4,13 +4,13 @@
 These APIs are now deprecated. This page should not be consulted. Please reference the [Allocation API](/apis/monitoring-apis/api-allocation.md) doc for updated information.
 {% endhint %}
 
-Kubecost exposes multiple APIs to obtain cost, resource allocation, and utilization data. Below is documentation on two options: the cost model API and aggregated cost model API.
+nOps exposes multiple APIs to obtain cost, resource allocation, and utilization data. Below is documentation on two options: the cost model API and aggregated cost model API.
 
 ## Cost model API
 
 The full cost model API exposes pricing model inputs at the individual container/workload level and is available at:
 
-`http://<kubecost-address>/model/costDataModel`
+`http://<nOps-address>/model/costDataModel`
 
 Here's an example use:
 
@@ -36,7 +36,7 @@ This API returns a set of JSON elements in this format:
   node: {hourlyCost: "", CPU: "2", CPUHourlyCost: "0.031611", RAM: "13335256Ki",…}
   nodeName: "gke-kc-demo-highmem-pool-b1faa4fc-fs6g"
   podName: "cost-model-59cbdbf49c-rbr2t"
-  pvcData: [{class: "standard", claim: "kubecost-model", namespace: "kubecost",…}]
+  pvcData: [{class: "standard", claim: "nOps-model", namespace: "nOps",…}]
   ramallocated: [{timestamp: 1567531940, value: 55000000}]
   ramreq: [{timestamp: 1567531940, value: 55000000}]
   ramused: [{timestamp: 1567531940, value: 19463457.32}]
@@ -50,15 +50,15 @@ Optional request parameters include the following:
 | Field          | Description                                                                                                                                                    |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `filterFields` | Blacklist of fields to be filtered from the response. For example, appending `&filterFields=cpuused,cpureq,ramreq,ramused` will remove request and usage data. |
-| `namespace`    | Filter results by namespace. For example, appending `&namespace=kubecost` only returns data for the `kubecost` namespace                                       |
+| `namespace`    | Filter results by namespace. For example, appending `&namespace=nOps` only returns data for the `nOps` namespace                                       |
 
 ## Aggregated cost model API
 
 > NOTE: this API is actively being replaced by the [Allocation API](/apis/monitoring-apis/api-allocation.md). That is the recommended API for querying historical and run-rate cost allocation metrics.
 
-The aggregated cost model API retrieves data similar to the Kubecost Allocation frontend view (e.g. cost by namespace, label, deployment, and more) and is available at the following endpoint:
+The aggregated cost model API retrieves data similar to the nOps Allocation frontend view (e.g. cost by namespace, label, deployment, and more) and is available at the following endpoint:
 
-`http://<kubecost-address>/model/aggregatedCostModel`
+`http://<nOps-address>/model/aggregatedCostModel`
 
 Here are example uses:
 
@@ -90,7 +90,7 @@ Optional filter parameters include the following:
 | Filter      | Description                                                                                                                                                                                                               |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `cluster`   | Filter results by cluster ID. For example, appending `&cluster=cluster-one` will restrict data only to the `cluster-one` cluster. Note: cluster ID is generated from `cluster_id` provided during installation.           |
-| `namespace` | Filter results by namespace. For example, appending `&namespace=kubecost` only returns data for the `kubecost` namespace.                                                                                                 |
+| `namespace` | Filter results by namespace. For example, appending `&namespace=nOps` only returns data for the `nOps` namespace.                                                                                                 |
 | `labels`    | Filter results by label(s). For example, appending `&labels=app%3Dcost-analyzer` only returns data for pods with label `app=cost-analyzer`. CSV list of label values supported. Note that parameters must be URL encoded. |
 
 This API returns a set of JSON objects in this format:
@@ -118,12 +118,12 @@ This API returns a set of JSON objects in this format:
 
 #### Caching Overview
 
-Kubecost implements a two-layer caching system for cost allocation metrics.
+nOps implements a two-layer caching system for cost allocation metrics.
 
 First, the unaggregated cost model is pre-cached for commonly used time windows, 1 and 2 days by default. This data is refreshed every \~5 minutes.
 
-Longer time windows, 120 days by default, are part of an ETL pipeline that stores cost by day for each workload. This pipeline is updated approximately \~10 mins. On update, only the latest day is rebuilt to reduce the load on the underlying data store. Currently, this ETL pipeline is stored in memory and is built any time the pod restarts. ETL is built with daily granularity for UI improved performance. Daily aggregations default to `UTC` but timezones can be configured with the `utcOffset` within [values](https://github.com/kubecost/cost-analyzer-helm-chart/blob/master/cost-analyzer/values.yaml#L102).
+Longer time windows, 120 days by default, are part of an ETL pipeline that stores cost by day for each workload. This pipeline is updated approximately \~10 mins. On update, only the latest day is rebuilt to reduce the load on the underlying data store. Currently, this ETL pipeline is stored in memory and is built any time the pod restarts. ETL is built with daily granularity for UI improved performance. Daily aggregations default to `UTC` but timezones can be configured with the `utcOffset` within [values](https://github.com/nOps/cost-analyzer-helm-chart/blob/master/cost-analyzer/values.yaml#L102).
 
 Returning cached data from either caching layer typically takes < 300ms on medium-sized clusters. To guarantee you bypass both caches, you can set `etl=false` and `disableCache=false`.
 
-Have questions? Email us at [support@kubecost.com](mailto:support@kubecost.com).
+Have questions? Email us at [support@nOps.com](mailto:support@nOps.com).

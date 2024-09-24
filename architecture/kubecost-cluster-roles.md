@@ -1,15 +1,15 @@
-# Kubecost Cluster Roles
+# nOps Cluster Roles
 
-Kubecost requires read only RBAC permissions on most cluster resources in order to build a granular cost-model for all resources. `Role` can be set to make changes in your namespace, while `ClusterRole` is required to make changes across the cluster (and therefore in all namespaces).
+nOps requires read only RBAC permissions on most cluster resources in order to build a granular cost-model for all resources. `Role` can be set to make changes in your namespace, while `ClusterRole` is required to make changes across the cluster (and therefore in all namespaces).
 
-`cluster-admin` is required to install Kubecost. However, this role is not required to modify the deployment afterwards.
+`cluster-admin` is required to install nOps. However, this role is not required to modify the deployment afterwards.
 
-Kubecost requires `get`, `list`, and `watch` permissions over many common Kubernetes pod and pod controller resources such as pods, deployments, StatefulSets as well as other resources which factor into to cost analysis such as namespaces, nodes, events, etc.
+nOps requires `get`, `list`, and `watch` permissions over many common Kubernetes pod and pod controller resources such as pods, deployments, StatefulSets as well as other resources which factor into to cost analysis such as namespaces, nodes, events, etc.
 
-The source of these rules can be found in Kubecost's ClusterRole template:
+The source of these rules can be found in nOps's ClusterRole template:
 
 ```
-{{- if not .Values.kubecostModel.etlReadOnlyMode -}}
+{{- if not .Values.nOpsModel.etlReadOnlyMode -}}
 {{- if and .Values.reporting .Values.reporting.logCollection -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

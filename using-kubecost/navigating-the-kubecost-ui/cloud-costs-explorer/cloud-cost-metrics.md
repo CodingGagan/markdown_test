@@ -1,6 +1,6 @@
 # Cloud Cost Metrics
 
-When ingesting billing data from cloud service providers (CSP), Kubecost records multiple cost metrics for each item. These cost metrics represent different pricing models which may be useful depending on what needs to be accomplished. The cost metrics currently supported by Cloud Cost are:
+When ingesting billing data from cloud service providers (CSP), nOps records multiple cost metrics for each item. These cost metrics represent different pricing models which may be useful depending on what needs to be accomplished. The cost metrics currently supported by Cloud Cost are:
 
 * ListCost
 * NetCost
@@ -56,37 +56,37 @@ The current Cloud Cost schema is optimistic in that it provides space for cost m
 
 <summary>AWS cost metrics</summary>
 
-Of all billing exports and APIs, the Cost and Usage Report (CUR) has the most robust set of cost metrics, and currently has the best support. Depending on what kind of discounts or resources a user has, the schema changes, therefore many of these columns are populated dynamically to support all users. In particular, any `_net_` column will only be available if the user has a discount that causes it to exist. Additionally, Kubecost currently only considers line items that have a `line_item_line_item_type` of `Usage`, `DiscountUsage`, `SavingsPlanCoveredUsage`, `EdpDiscount`, or `PrivateRateDiscount`.
+Of all billing exports and APIs, the Cost and Usage Report (CUR) has the most robust set of cost metrics, and currently has the best support. Depending on what kind of discounts or resources a user has, the schema changes, therefore many of these columns are populated dynamically to support all users. In particular, any `_net_` column will only be available if the user has a discount that causes it to exist. Additionally, nOps currently only considers line items that have a `line_item_line_item_type` of `Usage`, `DiscountUsage`, `SavingsPlanCoveredUsage`, `EdpDiscount`, or `PrivateRateDiscount`.
 
 More information on the columns and their definitions can be found in AWS' [Line item details](https://docs.aws.amazon.com/cur/latest/userguide/Lineitem-columns.html) documentation.
 
 **List Cost**
 
-To populate list price, Kubecost uses `pricing_public_on_demand_cost`.
+To populate list price, nOps uses `pricing_public_on_demand_cost`.
 
 **Net Cost**
 
-Kubecost uses `line_item_net_unblended_cost` if available. If not, Kubecost uses `line_item_unblended_cost.`
+nOps uses `line_item_net_unblended_cost` if available. If not, nOps uses `line_item_unblended_cost.`
 
 **Amortized Net Cost**
 
-If `_net_` is not available, Kubecost uses Amortized Cost
+If `_net_` is not available, nOps uses Amortized Cost
 
-If `line_item_line_item_type` is `DiscountUsage`, Kubecost uses `reservation_net_effective_cost`.
+If `line_item_line_item_type` is `DiscountUsage`, nOps uses `reservation_net_effective_cost`.
 
-If `line_item_line_item_type` is `SavingsPlanCoveredUsage`, Kubecost uses `savings_plan_net_savings_plan_effective_cost`.
+If `line_item_line_item_type` is `SavingsPlanCoveredUsage`, nOps uses `savings_plan_net_savings_plan_effective_cost`.
 
 Default to `line_item_net_unblended_cost`.
 
 **Invoiced Cost**
 
-Kubecost uses Net Cost.
+nOps uses Net Cost.
 
 **Amortized Cost**
 
-If `line_item_line_item_type` is `DiscountUsage`, Kubecost uses `reservation_effective_cost`.
+If `line_item_line_item_type` is `DiscountUsage`, nOps uses `reservation_effective_cost`.
 
-If `line_item_line_item_type` is `SavingsPlanCoveredUsage`, Kubecost uses `savings_plan_savings_plan_effective_cost`.
+If `line_item_line_item_type` is `SavingsPlanCoveredUsage`, nOps uses `savings_plan_savings_plan_effective_cost`.
 
 Default to `line_item_unblended_cost`.
 
@@ -96,7 +96,7 @@ Default to `line_item_unblended_cost`.
 
 <summary>GCP cost metrics</summary>
 
-Cloud Cost uses a detailed billing export accessed via BigQuery to interface with GCP. This export provides Kubecost with a Cost column with a float value in addition to an array of credit objects per item. These credits are various discounts applied to the item being referenced.
+Cloud Cost uses a detailed billing export accessed via BigQuery to interface with GCP. This export provides nOps with a Cost column with a float value in addition to an array of credit objects per item. These credits are various discounts applied to the item being referenced.
 
 More details about the export can be found in GCP's [Structure of Detailed data export](https://cloud.google.com/billing/docs/how-to/export-data-bigquery-tables/detailed-usage).
 
@@ -115,7 +115,7 @@ Amortized Net Cost is Cost with all credits and amortized CUD payments
 
 **Invoiced Cost**
 
-Kubecost uses Net Cost.
+nOps uses Net Cost.
 
 **Amortized Cost**
 
@@ -132,37 +132,37 @@ The Azure billing export can be set to amortized or not amortized during creatio
 
 **List Cost**
 
-Kubecost uses`paygcostinbillingcurrency` if available, otherwise Kubecost uses Net Cost
+nOps uses`paygcostinbillingcurrency` if available, otherwise nOps uses Net Cost
 
 **Net Cost**
 
-Kubecost uses `costinbillingcurrency`. If not available, Kubecost uses `pretaxcost`, and if that isn't available, Kubecost uses `cost`.
+nOps uses `costinbillingcurrency`. If not available, nOps uses `pretaxcost`, and if that isn't available, nOps uses `cost`.
 
 **Amortized Net Cost**
 
-Kubecost uses Net Cost.
+nOps uses Net Cost.
 
 **Invoiced Cost**
 
-Kubecost uses Net Cost.
+nOps uses Net Cost.
 
 **Amortized Cost**
 
-Kubecost uses Net Cost.
+nOps uses Net Cost.
 
 </details>
 
 ## Kubernetes clusters
 
-To calculate the 'K8s Utilization', Kubecost must first determine if a resources is part of a Kubernetes cluster or not.
+To calculate the 'K8s Utilization', nOps must first determine if a resources is part of a Kubernetes cluster or not.
 
-If a tag or label in the list below is present on the billing export, Kubecost will consider those costs part of the 'K8s Utilization' calculation. This will not always be 100% accurate in all situations.
+If a tag or label in the list below is present on the billing export, nOps will consider those costs part of the 'K8s Utilization' calculation. This will not always be 100% accurate in all situations.
 
 <details>
 
 <summary>AWS</summary>
 
-In AWS, Kubecost will identify the line item in the bill as a Kubernetes resource if `line_item_product_code` is `AmazonEKS`, or one of the following label keys is present:
+In AWS, nOps will identify the line item in the bill as a Kubernetes resource if `line_item_product_code` is `AmazonEKS`, or one of the following label keys is present:
 
 * `resource_tags_aws_eks_cluster_name`
 * `resource_tags_user_eks_cluster_name`
@@ -177,7 +177,7 @@ In AWS, Kubecost will identify the line item in the bill as a Kubernetes resourc
 
 <summary>GCP</summary>
 
-The billing report has a Tags column which contains a Record of key values pairs. Kubecost checks for the presence of the following keys which may not have associated value:
+The billing report has a Tags column which contains a Record of key values pairs. nOps checks for the presence of the following keys which may not have associated value:
 
 * `goog-gke-volume`
 * `goog-gke-node`
@@ -189,7 +189,7 @@ The billing report has a Tags column which contains a Record of key values pairs
 
 <summary>Azure</summary>
 
-The billing export has a tags column with a JSON string of key values pairs. Kubecost checks for the presence of keys with the following prefixes:
+The billing export has a tags column with a JSON string of key values pairs. nOps checks for the presence of keys with the following prefixes:
 
 * `aks-managed`
 * `kubernetes.io-created`

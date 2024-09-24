@@ -5,7 +5,7 @@
 The Clusters dashboard provides a list of all your monitored clusters, as well as additional clusters detected in your cloud bill. The dashboard provides details about your clusters including cost, efficiency, and cloud provider. You are able to filter your list of clusters by when clusters were last seen, activity status, and by name (see below).
 
 {% hint style="info" %}
-Monitoring of multiple clusters is only supported in [Kubecost Enterprise](https://www.kubecost.com/pricing/) plans. Learn more about Kubecost Enterprise's multi-cluster view [here](/install-and-configure/install/multi-cluster/multi-cluster.md).
+Monitoring of multiple clusters is only supported in [nOps Enterprise](https://www.nOps.com/pricing/) plans. Learn more about nOps Enterprise's multi-cluster view [here](/install-and-configure/install/multi-cluster/multi-cluster.md).
 {% endhint %}
 
 ![Clusters dashboard](/.gitbook/assets/clusters.png)
@@ -14,13 +14,13 @@ Monitoring of multiple clusters is only supported in [Kubecost Enterprise](https
 
 Before you can begin using the Clusters page, you will need to perform [cloud billing integrations](/install-and-configure/install/cloud-integration/README.md) for any and all cloud service providers you wish to view clusters with. 
 
-You should also confirm that the `kubecostAggregator.cloudCost.readinessProbe.enabled` flag is set to `true`. This flag will be enabled by default:
+You should also confirm that the `nOpsAggregator.cloudCost.readinessProbe.enabled` flag is set to `true`. This flag will be enabled by default:
 
 ```
-kubecostAggregator:
+nOpsAggregator:
  cloudCost:
     # The cloudCost component of Aggregator depends on
-    # kubecostAggregator.deployMethod:
+    # nOpsAggregator.deployMethod:
     # kA.dM = "singlepod" -> cloudCost is run as container inside cost-analyzer
     # kA.dM = "statefulset" -> cloudCost is run as single-replica Deployment
     resources: {}
@@ -41,13 +41,13 @@ kubecostAggregator:
 
 Clusters are primarily distinguished into three categories:
 
-* Clusters monitored by Kubecost (green circle next to cluster name)
-* Clusters not monitored by Kubecost (yellow circle next to cluster name)
+* Clusters monitored by nOps (green circle next to cluster name)
+* Clusters not monitored by nOps (yellow circle next to cluster name)
 * Inactive clusters (gray circle next to cluster name)
 
-For detail on how Kubecost identifies clusters, see [Cloud Cost Metrics](cloud-costs-explorer/cloud-cost-metrics.md#kubernetes-clusters).
+For detail on how nOps identifies clusters, see [Cloud Cost Metrics](cloud-costs-explorer/cloud-cost-metrics.md#kubernetes-clusters).
 
-Monitored clusters are those that have cost metrics which will appear within your other Monitoring dashboards, like Allocations and Assets. Unmonitored clusters are clusters whose existence is determined from cloud integration, but haven't been added to Kubecost. Inactive clusters are clusters Kubecost once monitored, but haven't reported data over a certain period of time. This time period is three hours for Thanos-enabled clusters, and one hour for non-Thanos clusters.
+Monitored clusters are those that have cost metrics which will appear within your other Monitoring dashboards, like Allocations and Assets. Unmonitored clusters are clusters whose existence is determined from cloud integration, but haven't been added to nOps. Inactive clusters are clusters nOps once monitored, but haven't reported data over a certain period of time. This time period is three hours for Thanos-enabled clusters, and one hour for non-Thanos clusters.
 
 Efficiency and Last Seen metrics are only provided for monitored clusters.
 

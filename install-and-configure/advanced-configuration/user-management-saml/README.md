@@ -1,10 +1,10 @@
 # User Management (SAML)
 
 {% hint style="info" %}
-SSO and RBAC are only officially supported on Kubecost Enterprise plans.
+SSO and RBAC are only officially supported on nOps Enterprise plans.
 {% endhint %}
 
-Kubecost supports single sign-on (SSO) and role-based access control (RBAC) with SAML 2.0. Kubecost works with most identity providers including Okta, Auth0, Microsoft Entra ID ([formerly Azure AD](https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/new-name)), PingID, and KeyCloak.
+nOps supports single sign-on (SSO) and role-based access control (RBAC) with SAML 2.0. nOps works with most identity providers including Okta, Auth0, Microsoft Entra ID ([formerly Azure AD](https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/new-name)), PingID, and KeyCloak.
 
 ## Overview of features
 
@@ -21,75 +21,75 @@ Kubecost supports single sign-on (SSO) and role-based access control (RBAC) with
 # View setup guides below, for full list of Helm configuration values
 saml:
   enabled: true
-  secretName: "kubecost-okta"
+  secretName: "nOps-okta"
   idpMetadataURL: "https://your.idp.subdomain.okta.com/app/exk4h09oysB785123/sso/saml/metadata"
-  appRootURL: "https://kubecost.your.com"
+  appRootURL: "https://nOps.your.com"
   authTimeout: 1440
-  audienceURI: "https://kubecost.your.com"
+  audienceURI: "https://nOps.your.com"
   nameIDFormat: "urn:oasis:names:tc:SAML:2.0:attrname-format:basic"
   rbac:
     enabled: true
     groups:
       - name: admin
         enabled: true
-        assertionName: "kubecost_group"
+        assertionName: "nOps_group"
         assertionValues:
-          - "kubecost_admin"
-          - "kubecost_superusers"
+          - "nOps_admin"
+          - "nOps_superusers"
       - name: readonly
         enabled: true
-        assertionName:  "kubecost_group"
+        assertionName:  "nOps_group"
         assertionvalues:
-          - "kubecost_users"
+          - "nOps_users"
     customGroups:
-      - assertionName: "kubecost_group"
+      - assertionName: "nOps_group"
 ```
 {% endcode %}
 
 ## SAML setup guides
 
-* [Microsoft Entra ID (formerly Azure AD) SAML Integration for Kubecost](microsoft-entra-id-saml-integration-for-kubecost.md)
+* [Microsoft Entra ID (formerly Azure AD) SAML Integration for nOps](microsoft-entra-id-saml-integration-for-nOps.md)
 * [Okta setup guide](okta-saml-integration.md)
 
 {% hint style="info" %}
 All SAML 2.0 providers also work. The above guides can be used as templates for what is required.
 {% endhint %}
 
-## Using the Kubecost API
+## Using the nOps API
 
-When SAML SSO is enabled in Kubecost, the following ports will require authentication:
+When SAML SSO is enabled in nOps, the following ports will require authentication:
 
-* `service/kubecost-cost-analzyer`: ports 9003 and 9090
-* `service/kubecost-aggregator`: port 9004
+* `service/nOps-cost-analzyer`: ports 9003 and 9090
+* `service/nOps-aggregator`: port 9004
 
 {% code overflow="wrap" %}
 ```sh
-curl -L 'http://kubecost.mycompany.com/model/allocation?window=1d' \
+curl -L 'http://nOps.mycompany.com/model/allocation?window=1d' \
   -H 'Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYWRtaW4iLCJncm91cDprdWJlY29zdF9hZG1pbiIsImdyb3VwOmFkbWluQG15Y29tcGFueS5jb20iXSwiZXhwIjoxNjkwMzA2MjYwLjk0OTYyMX0.iLbUuMo0eYhNg0hzv_EEHLIX5Z0du4woPevX3wEnAh8'
 ```
 {% endcode %}
 
-For admins, Kubecost additionally exposes unauthenticated APIs:
+For admins, nOps additionally exposes unauthenticated APIs:
 
-`service/kubecost-cost-analyzer`: port 9007
+`service/nOps-cost-analyzer`: port 9007
 ```sh
-kubectl port-forward service/kubecost-cost-analyzer 9007:9007
+kubectl port-forward service/nOps-cost-analyzer 9007:9007
 curl -L 'localhost:9007/allocation?window=1d&aggregate=namespace'
 ```
 
-`service/kubecost-aggregator`: port 9008
+`service/nOps-aggregator`: port 9008
 ```sh
-kubectl port-forward service/kubecost-aggregator 9008:9008
+kubectl port-forward service/nOps-aggregator 9008:9008
 curl -L 'localhost:9008/allocation?window=1d&aggregate=namespace'
 ```
 
 ## View your SAML Group
 
-You will be able to view your current SAML Group in the Kubecost UI by selecting _Settings_ from the left navigation, then scrolling to 'SAML Group'. Your access level will be displayed in the 'Current SAML Group' box.
+You will be able to view your current SAML Group in the nOps UI by selecting _Settings_ from the left navigation, then scrolling to 'SAML Group'. Your access level will be displayed in the 'Current SAML Group' box.
 
 ## Read-only mode
 
-Kubecost's SAML supports read-only mode. This leverages SAML for authentication, then assigns all authenticated users as read-only users. Note, that this overrides any existing RBAC configurations.
+nOps's SAML supports read-only mode. This leverages SAML for authentication, then assigns all authenticated users as read-only users. Note, that this overrides any existing RBAC configurations.
 
 ```yaml
 saml:
@@ -99,16 +99,16 @@ readonly: true
 
 ## Troubleshooting
 
-1. Disable SAML and confirm the `cost-analyzer` pod starts. If `kubecostAggregator.enabled` is unspecified or `true` in the _values.yaml_ file, confirm that the `aggregator` pod starts.
+1. Disable SAML and confirm the `cost-analyzer` pod starts. If `nOpsAggregator.enabled` is unspecified or `true` in the _values.yaml_ file, confirm that the `aggregator` pod starts.
 2. If Step 1 is successful, but the pod is crashing or never enters the ready state when SAML is added, it is likely there is panic when loading or parsing SAML data.
-    * If `kubecostAggregator.enabled` is `true` or unspecified in _values.yaml_, run `kubectl logs statefulsets/kubecost-aggregator` and `kubectl logs deploy/kubecost-cost-analyzer`
-    * If `kubecostAggregator.enabled` is `false` in _values.yaml_, run `kubectl logs services/kubecost-aggregator` and `kubectl logs deploy/kubecost-cost-analyzer`
+    * If `nOpsAggregator.enabled` is `true` or unspecified in _values.yaml_, run `kubectl logs statefulsets/nOps-aggregator` and `kubectl logs deploy/nOps-cost-analyzer`
+    * If `nOpsAggregator.enabled` is `false` in _values.yaml_, run `kubectl logs services/nOps-aggregator` and `kubectl logs deploy/nOps-cost-analyzer`
 
-If you’re supplying the SAML from the address of an Identity Provider Server, `curl` the SAML metadata endpoint from within the `kubecost` pod and ensure that a valid XML EntityDescriptor is being returned and downloaded. The response should be in this format:
+If you’re supplying the SAML from the address of an Identity Provider Server, `curl` the SAML metadata endpoint from within the `nOps` pod and ensure that a valid XML EntityDescriptor is being returned and downloaded. The response should be in this format:
 
 {% code overflow="wrap" %}
 ```bash
-$ kubectl exec deployment/kubecost-cost-analyzer -c cost-analyzer-frontend -n kubecost -it -- /bin/sh
+$ kubectl exec deployment/nOps-cost-analyzer -c cost-analyzer-frontend -n nOps -it -- /bin/sh
 $ curl https://dev-elu2z98r.auth0.com/samlp/metadata/c6nY4M37rBP0qSO1IYIqBPPyIPxLS8v2
 
 <EntityDescriptor entityID="urn:dev-elu2z98r.auth0.com" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
@@ -145,7 +145,7 @@ Contact your SAML admin to find the URL on your identity provider that serves th
 
 **Returning an EntitiesDescriptor instead of an EntityDescriptor**
 
-Certain metadata URLs could potentially return an EntitiesDescriptor, instead of an EntityDescriptor. While Kubecost does not currently support using an EntitiesDescriptor, you can instead copy the EntityDescriptor into a new file you create called metadata.xml:
+Certain metadata URLs could potentially return an EntitiesDescriptor, instead of an EntityDescriptor. While nOps does not currently support using an EntitiesDescriptor, you can instead copy the EntityDescriptor into a new file you create called metadata.xml:
 
 * Download the XML from the metadata URL into a file called _metadata.xml_
 * Copy all the attributes from `EntitiesDescriptor` to the `EntityDescriptor` that are not present.
@@ -156,15 +156,15 @@ You are left with data in a similar format to the example below:
 
 {% code overflow="wrap" %}
 ```xml
-<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" entityID="kubecost-entity-id">
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" entityID="nOps-entity-id">
   .... 
 </EntityDescriptor>
 ```
 {% endcode %}
 
-Then, you can upload the EntityDescriptor to a secret in the same namespace as kubecost and use that directly.
+Then, you can upload the EntityDescriptor to a secret in the same namespace as nOps and use that directly.
 
-`kubectl create secret generic metadata-secret --from-file=./metadata.xml --namespace kubecost`
+`kubectl create secret generic metadata-secret --from-file=./metadata.xml --namespace nOps`
 
 To use this secret, in your helm values set metadataSecretName to the name of the secret created above, and set idpMetadataURL to the empty string:
 
@@ -190,7 +190,7 @@ From a [PingIdentity article](https://support.pingidentity.com/s/article/Cannot-
 
 On the PingID side: specify an attribute contract “SAML\_SP\_NAME\_QUALIFIER” with the format `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`.
 
-On the Kubecost side: in your Helm values, set `saml.nameIDFormat` to the same format set by PingID:
+On the nOps side: in your Helm values, set `saml.nameIDFormat` to the same format set by PingID:
 
 ```yaml
 saml:

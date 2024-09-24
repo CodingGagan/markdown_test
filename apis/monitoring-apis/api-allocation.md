@@ -1,10 +1,10 @@
 # Allocation API
 
 {% hint style="info" %}
-Throughout our API documentation, we use `localhost:9090` as the default Kubecost URL, but your Kubecost instance may be exposed by a service or ingress. To reach Kubecost at port 9090, run: `kubectl port-forward deployment/kubecost-cost-analyzer -n kubecost 9090`. When querying the cost-model container directly (ex. localhost:9003), the `/model` part of the URI should be removed.
+Throughout our API documentation, we use `localhost:9090` as the default nOps URL, but your nOps instance may be exposed by a service or ingress. To reach nOps at port 9090, run: `kubectl port-forward deployment/nOps-cost-analyzer -n nOps 9090`. When querying the cost-model container directly (ex. localhost:9003), the `/model` part of the URI should be removed.
 {% endhint %}
 
-{% swagger method="get" path="/allocation" baseUrl="http://<your-kubecost-address>/model" summary="Allocation API" %}
+{% swagger method="get" path="/allocation" baseUrl="http://<your-nOps-address>/model" summary="Allocation API" %}
 {% swagger-description %}
 The Allocation API is the preferred way to query for costs and resources allocated to Kubernetes workloads and optionally aggregated by Kubernetes concepts like `namespace`, `controller`, and `label`.
 
@@ -47,7 +47,7 @@ Set to `csv` to download an accumulated version of the allocation results in CSV
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="costMetric" type="string" required="false" %}
-Cost metric format. Learn about cost metric calculations in our [Allocations Dashboard](/using-kubecost/navigating-the-kubecost-ui/cost-allocation/README.md) doc. Supports `cumulative`, `hourly`, `daily`, and `monthly`. Default is `cumulative`.
+Cost metric format. Learn about cost metric calculations in our [Allocations Dashboard](/using-nOps/navigating-the-nOps-ui/cost-allocation/README.md) doc. Supports `cumulative`, `hourly`, `daily`, and `monthly`. Default is `cumulative`.
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="shareIdle" type="boolean" required="false" %}
@@ -75,7 +75,7 @@ If `true`, share the cost of cluster overhead assets such as cluster management 
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="shareNamespaces" type="string" required="false" %}
-Comma-separated list of namespaces to share; e.g. `kube-system, kubecost` will share the costs of those two namespaces with the remaining non-idle, unshared allocations.
+Comma-separated list of namespaces to share; e.g. `kube-system, nOps` will share the costs of those two namespaces with the remaining non-idle, unshared allocations.
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="shareLabels" type="string" required="false" %}
@@ -96,26 +96,26 @@ Determines how to split shared costs among non-idle, unshared allocations. By de
     "code": 200,
     "data": [
         {
-            "aws-dev-1-niko/ip-192-168-12-152.us-east-2.compute.internal/kubecost/kubecost-cost-analyzer-5b84f94b7f-9lxx5/cost-model": {
-                "name": "aws-dev-1-niko/ip-192-168-12-152.us-east-2.compute.internal/kubecost/kubecost-cost-analyzer-5b84f94b7f-9lxx5/cost-model",
+            "aws-dev-1-niko/ip-192-168-12-152.us-east-2.compute.internal/nOps/nOps-cost-analyzer-5b84f94b7f-9lxx5/cost-model": {
+                "name": "aws-dev-1-niko/ip-192-168-12-152.us-east-2.compute.internal/nOps/nOps-cost-analyzer-5b84f94b7f-9lxx5/cost-model",
                 "properties": {
                     "cluster": "aws-dev-1-niko",
                     "node": "ip-192-168-12-152.us-east-2.compute.internal",
                     "container": "cost-model",
-                    "controller": "kubecost-cost-analyzer",
+                    "controller": "nOps-cost-analyzer",
                     "controllerKind": "deployment",
-                    "namespace": "kubecost",
-                    "pod": "kubecost-cost-analyzer-5b84f94b7f-9lxx5",
+                    "namespace": "nOps",
+                    "pod": "nOps-cost-analyzer-5b84f94b7f-9lxx5",
                     "services": [
-                        "kubecost-frontend",
-                        "kubecost-cost-analyzer"
+                        "nOps-frontend",
+                        "nOps-cost-analyzer"
                     ],
                     "providerID": "i-0f227c52893c7957f",
                     "labels": {
                         "app": "cost-analyzer",
-                        "app_kubernetes_io_instance": "kubecost",
+                        "app_kubernetes_io_instance": "nOps",
                         "app_kubernetes_io_name": "cost-analyzer",
-                        "kubernetes_io_metadata_name": "kubecost",
+                        "kubernetes_io_metadata_name": "nOps",
                         "node_kubernetes_io_instance_type": "m5.large",
                         "pod_template_hash": "5b84f94b7f"
                     }
@@ -182,7 +182,7 @@ Determines how to split shared costs among non-idle, unshared allocations. By de
 
 ## Allocation schema
 
-<table><thead><tr><th width="270">Field</th><th>Description</th></tr></thead><tbody><tr><td>name</td><td>Name of each relevant Kubernetes concept described by the allocation, delimited by slashes, e.g. "cluster/node/namespace/pod/container"</td></tr><tr><td>properties</td><td>Map of name-to-value for all relevant property fields, including: <code>cluster</code>, <code>node</code>, <code>namespace</code>, <code>controller</code>, <code>controllerKind</code>, <code>pod</code>, <code>container</code>, <code>labels</code>, <code>annotation</code>, etc. Note: Prometheus only supports underscores (<code>_</code>) in label names. Dashes (<code>-</code>) and dots (<code>.</code>), while supported by Kubernetes, will be translated to underscores by Prometheus. This may cause the merging of labels, which could result in aggregated costs being charged to a single label.</td></tr><tr><td>window</td><td>Period of time over which the allocation is defined.</td></tr><tr><td>start</td><td>Precise starting time of the allocation. By definition must be within the window.</td></tr><tr><td>end</td><td>Precise ending time of the allocation. By definition must be within the window.</td></tr><tr><td>minutes</td><td>Number of minutes running; i.e. the minutes from <code>start</code> until <code>end</code>.</td></tr><tr><td>cpuCores</td><td>Average number of CPU cores allocated while running.</td></tr><tr><td>cpuCoreRequestAverage</td><td>Average number of CPU cores requested while running.</td></tr><tr><td>cpuCoreUsageAverage</td><td>Average number of CPU cores used while running.</td></tr><tr><td>cpuCoreHours</td><td>Cumulative CPU core-hours allocated.</td></tr><tr><td>cpuCost</td><td>Cumulative cost of allocated CPU core-hours.</td></tr><tr><td>cpuCostAdjustment</td><td>Change in cost after allocated CPUs have been reconciled with updated node cost</td></tr><tr><td>cpuEfficiency</td><td>Ratio of <code>cpuCoreUsageAverage</code>-to-<code>cpuCoreRequestAverage</code>, meant to represent the fraction of requested resources that were used.</td></tr><tr><td>gpuCount</td><td>Number of GPUs allocated to the workload.</td></tr><tr><td>gpuHours</td><td>Cumulative GPU-hours allocated.</td></tr><tr><td>gpuCost</td><td>Cumulative cost of allocated GPU-hours.</td></tr><tr><td>gpuCostAdjustment</td><td>Change in cost after allocated GPUs have been reconciled with updated node cost</td></tr><tr><td>networkTransferBytes</td><td>Total bytes sent from the workload</td></tr><tr><td>networkReceiveBytes</td><td>Total bytes received by the workload</td></tr><tr><td>networkCost</td><td>Cumulative cost of network usage.</td></tr><tr><td>networkCrossZoneCost</td><td>Cumulative cost of Cross-zone network egress usage.</td></tr><tr><td>networkCrossRegionCost</td><td>Cumulative cost of Cross-region network egress usage.</td></tr><tr><td>networkInternetCost</td><td>Cumulative cost of internet egress usage.</td></tr><tr><td>networkCostAdjustment</td><td>Updated network cost</td></tr><tr><td>loadBalancerCost</td><td>Cumulative cost of allocated load balancers.</td></tr><tr><td>loadBalancerCostAdjustment</td><td>Updated load balancer cost.</td></tr><tr><td>pvBytes</td><td>Average number of bytes of PersistentVolumes allocated while running.</td></tr><tr><td>pvByteHours</td><td>Cumulative PersistentVolume byte-hours allocated.</td></tr><tr><td>pvCost</td><td>Cumulative cost of allocated PersistentVolume byte-hours.</td></tr><tr><td>pvs</td><td>Map of PersistentVolumeClaim costs that have been allocated to the workload</td></tr><tr><td>pvCostAdjustment</td><td>Updated persistent volume cost.</td></tr><tr><td>ramBytes</td><td>Average number of RAM bytes allocated. An allocated resource is the source of cost, according to Kubecost - regardless of if a requested resource is used.</td></tr><tr><td>ramByteRequestAverage</td><td>Average of the RAM requested by the workload. Requests are a <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits">Kubernetes tool</a> for preallocating/reserving resources for a given container.</td></tr><tr><td>ramByteUsageAverage</td><td>Average of the RAM used by the workload. This comes from moment-to-moment measurements of live RAM byte usage of each container. This is roughly the number you see under RAM if you pull up Task Manager (Windows), top on Linux, or Activity Monitor (MacOS).</td></tr><tr><td>ramByteHours</td><td>Cumulative RAM byte-hours allocated.</td></tr><tr><td>ramCost</td><td>Cumulative cost of allocated RAM byte-hours.</td></tr><tr><td>ramEfficiency</td><td>Ratio of <code>ramByteUsageAverage</code>-to-<code>ramByteRequestAverage</code>, meant to represent the fraction of requested resources that were used.</td></tr><tr><td>sharedCost</td><td>Cumulative cost of shared resources, including shared namespaces, shared labels, shared overhead.</td></tr><tr><td>externalCost</td><td>Cumulative cost of external resources.</td></tr><tr><td>totalCost</td><td>Total cumulative cost</td></tr><tr><td>totalEfficiency</td><td>Cost-weighted average of <code>cpuEfficiency</code> and <code>ramEfficiency</code>. In equation form: <code>((cpuEfficiency * cpuCost) + (ramEfficiency * ramCost)) / (cpuCost + ramCost)</code></td></tr><tr><td>rawAllocationOnly</td><td>Object with fields <code>cpuCoreUsageMax</code> and <code>ramByteUsageMax</code>, which are the maximum usages in the <code>window</code> for the Allocation. If the Allocation query is aggregated or accumulated, this object will be null because the meaning of maximum is ambiguous in these situations.</td></tr></tbody></table>
+<table><thead><tr><th width="270">Field</th><th>Description</th></tr></thead><tbody><tr><td>name</td><td>Name of each relevant Kubernetes concept described by the allocation, delimited by slashes, e.g. "cluster/node/namespace/pod/container"</td></tr><tr><td>properties</td><td>Map of name-to-value for all relevant property fields, including: <code>cluster</code>, <code>node</code>, <code>namespace</code>, <code>controller</code>, <code>controllerKind</code>, <code>pod</code>, <code>container</code>, <code>labels</code>, <code>annotation</code>, etc. Note: Prometheus only supports underscores (<code>_</code>) in label names. Dashes (<code>-</code>) and dots (<code>.</code>), while supported by Kubernetes, will be translated to underscores by Prometheus. This may cause the merging of labels, which could result in aggregated costs being charged to a single label.</td></tr><tr><td>window</td><td>Period of time over which the allocation is defined.</td></tr><tr><td>start</td><td>Precise starting time of the allocation. By definition must be within the window.</td></tr><tr><td>end</td><td>Precise ending time of the allocation. By definition must be within the window.</td></tr><tr><td>minutes</td><td>Number of minutes running; i.e. the minutes from <code>start</code> until <code>end</code>.</td></tr><tr><td>cpuCores</td><td>Average number of CPU cores allocated while running.</td></tr><tr><td>cpuCoreRequestAverage</td><td>Average number of CPU cores requested while running.</td></tr><tr><td>cpuCoreUsageAverage</td><td>Average number of CPU cores used while running.</td></tr><tr><td>cpuCoreHours</td><td>Cumulative CPU core-hours allocated.</td></tr><tr><td>cpuCost</td><td>Cumulative cost of allocated CPU core-hours.</td></tr><tr><td>cpuCostAdjustment</td><td>Change in cost after allocated CPUs have been reconciled with updated node cost</td></tr><tr><td>cpuEfficiency</td><td>Ratio of <code>cpuCoreUsageAverage</code>-to-<code>cpuCoreRequestAverage</code>, meant to represent the fraction of requested resources that were used.</td></tr><tr><td>gpuCount</td><td>Number of GPUs allocated to the workload.</td></tr><tr><td>gpuHours</td><td>Cumulative GPU-hours allocated.</td></tr><tr><td>gpuCost</td><td>Cumulative cost of allocated GPU-hours.</td></tr><tr><td>gpuCostAdjustment</td><td>Change in cost after allocated GPUs have been reconciled with updated node cost</td></tr><tr><td>networkTransferBytes</td><td>Total bytes sent from the workload</td></tr><tr><td>networkReceiveBytes</td><td>Total bytes received by the workload</td></tr><tr><td>networkCost</td><td>Cumulative cost of network usage.</td></tr><tr><td>networkCrossZoneCost</td><td>Cumulative cost of Cross-zone network egress usage.</td></tr><tr><td>networkCrossRegionCost</td><td>Cumulative cost of Cross-region network egress usage.</td></tr><tr><td>networkInternetCost</td><td>Cumulative cost of internet egress usage.</td></tr><tr><td>networkCostAdjustment</td><td>Updated network cost</td></tr><tr><td>loadBalancerCost</td><td>Cumulative cost of allocated load balancers.</td></tr><tr><td>loadBalancerCostAdjustment</td><td>Updated load balancer cost.</td></tr><tr><td>pvBytes</td><td>Average number of bytes of PersistentVolumes allocated while running.</td></tr><tr><td>pvByteHours</td><td>Cumulative PersistentVolume byte-hours allocated.</td></tr><tr><td>pvCost</td><td>Cumulative cost of allocated PersistentVolume byte-hours.</td></tr><tr><td>pvs</td><td>Map of PersistentVolumeClaim costs that have been allocated to the workload</td></tr><tr><td>pvCostAdjustment</td><td>Updated persistent volume cost.</td></tr><tr><td>ramBytes</td><td>Average number of RAM bytes allocated. An allocated resource is the source of cost, according to nOps - regardless of if a requested resource is used.</td></tr><tr><td>ramByteRequestAverage</td><td>Average of the RAM requested by the workload. Requests are a <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits">Kubernetes tool</a> for preallocating/reserving resources for a given container.</td></tr><tr><td>ramByteUsageAverage</td><td>Average of the RAM used by the workload. This comes from moment-to-moment measurements of live RAM byte usage of each container. This is roughly the number you see under RAM if you pull up Task Manager (Windows), top on Linux, or Activity Monitor (MacOS).</td></tr><tr><td>ramByteHours</td><td>Cumulative RAM byte-hours allocated.</td></tr><tr><td>ramCost</td><td>Cumulative cost of allocated RAM byte-hours.</td></tr><tr><td>ramEfficiency</td><td>Ratio of <code>ramByteUsageAverage</code>-to-<code>ramByteRequestAverage</code>, meant to represent the fraction of requested resources that were used.</td></tr><tr><td>sharedCost</td><td>Cumulative cost of shared resources, including shared namespaces, shared labels, shared overhead.</td></tr><tr><td>externalCost</td><td>Cumulative cost of external resources.</td></tr><tr><td>totalCost</td><td>Total cumulative cost</td></tr><tr><td>totalEfficiency</td><td>Cost-weighted average of <code>cpuEfficiency</code> and <code>ramEfficiency</code>. In equation form: <code>((cpuEfficiency * cpuCost) + (ramEfficiency * ramCost)) / (cpuCost + ramCost)</code></td></tr><tr><td>rawAllocationOnly</td><td>Object with fields <code>cpuCoreUsageMax</code> and <code>ramByteUsageMax</code>, which are the maximum usages in the <code>window</code> for the Allocation. If the Allocation query is aggregated or accumulated, this object will be null because the meaning of maximum is ambiguous in these situations.</td></tr></tbody></table>
 
 ## Quick start
 
@@ -209,25 +209,25 @@ $ curl http://localhost:9090/model/allocation \
       "__idle__": { ... },
       "default": { ... },
       "kube-system": { ... },
-      "kubecost": { ... }
+      "nOps": { ... }
     },
     {
       "__idle__": { ... },
       "default": { ... },
       "kube-system": { ... },
-      "kubecost": { ... }
+      "nOps": { ... }
     },
     {
       "__idle__": { ... },
       "default": { ... },
       "kube-system": { ... },
-      "kubecost": { ... }
+      "nOps": { ... }
     },
     {
       "__idle__": { ... },
       "default": { ... },
       "kube-system": { ... },
-      "kubecost": { ... }
+      "nOps": { ... }
     }
   ]
 }
@@ -268,9 +268,9 @@ $ curl http://localhost:9090/model/allocation \
   "data": [
     {
       "__idle__": { ... },
-      "cluster-one/gke-niko-pool-2-9182dfa7-okb2/kubecost/kubecost-cost-analyzer-94dc86fc-lwvrm/cost-model": { ... },
-      "cluster-one/gke-niko-pool-2-9182dfa7-okb2/kubecost/kubecost-cost-analyzer-94dc86fc-lwvrm/cost-analyzer-frontend": { ... },
-      "cluster-one/gke-niko-pool-2-9182dfa7-okb2/kubecost/kubecost-grafana-6df5cc66b6-dzszt/grafana": { ... }
+      "cluster-one/gke-niko-pool-2-9182dfa7-okb2/nOps/nOps-cost-analyzer-94dc86fc-lwvrm/cost-model": { ... },
+      "cluster-one/gke-niko-pool-2-9182dfa7-okb2/nOps/nOps-cost-analyzer-94dc86fc-lwvrm/cost-analyzer-frontend": { ... },
+      "cluster-one/gke-niko-pool-2-9182dfa7-okb2/nOps/nOps-grafana-6df5cc66b6-dzszt/grafana": { ... }
     }
   ]
 }
@@ -346,7 +346,7 @@ $ curl http://localhost:9090/model/allocation \
   -d aggregate=label:app \
   -d accumulate=true \
   -d shareIdle=weighted \
-  -d shareNamespaces=kube-system,kubecost \
+  -d shareNamespaces=kube-system,nOps \
   -d shareCost=100 \
   -G
 ```
@@ -393,10 +393,10 @@ $ curl http://localhost:9090/model/allocation \
   "data": [
     {
       "default/app=redis": { ... },
-      "kubecost/app=cost-analyzer": { ... },
-      "kubecost/app=prometheus": { ... },
-      "kubecost/app=grafana": { ... },
-      "kubecost/app=prometheus": { ... },
+      "nOps/app=cost-analyzer": { ... },
+      "nOps/app=prometheus": { ... },
+      "nOps/app=grafana": { ... },
+      "nOps/app=prometheus": { ... },
       "kube-system/app=helm": { ... }
     }
   ]
@@ -520,7 +520,7 @@ Computing allocation data on-demand allows for greater flexibility with respect 
 
 Additionally, unlike the standard endpoint, querying on-demand will not use [reconciled asset costs](/install-and-configure/install/cloud-integration/README.md#reconciliation). Therefore, the results returned will show all adjustments (e.g. CPU, GPU, RAM) to be 0.
 
-{% swagger method="get" path="/allocation/compute" baseUrl="http://<kubecost>/model" summary="Allocation On-Demand API" %}
+{% swagger method="get" path="/allocation/compute" baseUrl="http://<nOps>/model" summary="Allocation On-Demand API" %}
 {% swagger-description %}
 
 {% endswagger-description %}
@@ -680,17 +680,17 @@ $ curl http://localhost:9090/model/allocation/compute \
   "data": [
     {
       "default": { ... },
-      "kubecost": { ... },
+      "nOps": { ... },
       "kube-system": { ... }
     },
     {
       "default": { ... },
-      "kubecost": { ... },
+      "nOps": { ... },
       "kube-system": { ... }
     },
     {
       "default": { ... },
-      "kubecost": { ... },
+      "nOps": { ... },
       "kube-system": { ... }
     }
   ]

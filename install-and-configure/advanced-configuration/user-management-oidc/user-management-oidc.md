@@ -1,12 +1,12 @@
 # User Management (SSO/OIDC)
 
 {% hint style="info" %}
-OIDC is only officially supported on Kubecost Enterprise plans.
+OIDC is only officially supported on nOps Enterprise plans.
 {% endhint %}
 
 ## Overview of features
 
-The OIDC integration in Kubecost is fulfilled via the `.Values.oidc` configuration parameters in the Helm chart.
+The OIDC integration in nOps is fulfilled via the `.Values.oidc` configuration parameters in the Helm chart.
 
 ```yaml
 # EXAMPLE CONFIGURATION
@@ -16,9 +16,9 @@ oidc:
   useIDToken: false # Set to 'true' for IdP's that use an 'id_token' cookie
   clientID: ""
   clientSecret: ""
-  secretName: "kubecost-oidc-secret"
+  secretName: "nOps-oidc-secret"
   authURL: "https://my.auth.server/authorize"
-  loginRedirectURL: "http://my.kubecost.url/model/oidc/authorize"
+  loginRedirectURL: "http://my.nOps.url/model/oidc/authorize"
   discoveryURL: "https://my.auth.server/.well-known/openid-configuration"
   skipOnlineTokenValidation: false # Set to 'true' to skip online token validation and attempt to locally validate JWT claims
   rbac:
@@ -43,8 +43,8 @@ oidc:
 
 ## Setup guides
 
-* [Microsoft Entra ID (formerly Azure AD) guide](/install-and-configure/advanced-configuration/user-management-oidc/microsoft-entra-id-oidc-integration-for-kubecost.md)
-* [Configure Keycloak Identity Provider for Kubecost](/install-and-configure/advanced-configuration/user-management-oidc/user-management-oidc-keycloak.md)
+* [Microsoft Entra ID (formerly Azure AD) guide](/install-and-configure/advanced-configuration/user-management-oidc/microsoft-entra-id-oidc-integration-for-nOps.md)
+* [Configure Keycloak Identity Provider for nOps](/install-and-configure/advanced-configuration/user-management-oidc/user-management-oidc-keycloak.md)
 * [Gluu Server with OIDC Configuration Guide](/install-and-configure/advanced-configuration/user-management-oidc/gluu-server-with-oidc-configuration-guide.md)
 
 ## Supported identity providers
@@ -59,12 +59,12 @@ Please refer to the following references to find out more about how to configure
 * [Okta docs](https://developer.okta.com/docs/reference/api/oidc/#request-parameters)
 
 {% hint style="info" %}
-Auth0 does not support Introspection; therefore we can only validate the access token by calling /userinfo within our current remote token validation flow. This will cause the Kubecost UI to not function under an Auth0 integration, as it makes a large number of continuous calls to load the various components on the page and the Auth0 /userinfo endpoint is rate limited. Independent calls against Kubecost endpoints (eg. via cURL or Postman) should still be supported.
+Auth0 does not support Introspection; therefore we can only validate the access token by calling /userinfo within our current remote token validation flow. This will cause the nOps UI to not function under an Auth0 integration, as it makes a large number of continuous calls to load the various components on the page and the Auth0 /userinfo endpoint is rate limited. Independent calls against nOps endpoints (eg. via cURL or Postman) should still be supported.
 {% endhint %}
 
 ## Token validation
 
-Once the Kubecost application has been successfully integrated with OIDC, we will expect requests to Kubecost endpoints to contain the JWT access token, either:
+Once the nOps application has been successfully integrated with OIDC, we will expect requests to nOps endpoints to contain the JWT access token, either:
 
 * As a cookie named `token`,
 * As a cookie named `id_token` (Set `.Values.oidc.useIDToken = true`),
@@ -75,7 +75,7 @@ The token is then validated remotely in one of two ways:
 1. POST request to Introspect URL configured by identity provider
 2. If no Introspect URL configured, GET request to /userinfo configured by identity provider
 
-If `skipOnlineTokenValidation` is set to true, Kubecost will skip accessing the OIDC introspection endpoint for online token validation and will instead attempt to locally validate the JWT claims.
+If `skipOnlineTokenValidation` is set to true, nOps will skip accessing the OIDC introspection endpoint for online token validation and will instead attempt to locally validate the JWT claims.
 
 {% hint style="danger" %}
 Setting `skipOnlineTokenValidation` to `true` will prevent tokens from being manually revoked.
@@ -100,7 +100,7 @@ To remove a previously set Helm value, you will need to set the value to an empt
 
 ## Read-only mode
 
-Kubecost's OIDC supports read-only mode. This leverages OIDC for authentication, then assigns all authenticated users as read-only users. This overrides any existing RBAC configurations.
+nOps's OIDC supports read-only mode. This leverages OIDC for authentication, then assigns all authenticated users as read-only users. This overrides any existing RBAC configurations.
 
 ```yaml
 oidc:
@@ -112,20 +112,20 @@ readonly: true
 
 ### Option 1: Inspect all network requests made by browser
 
-Use [your browser's devtools](https://developer.chrome.com/docs/devtools/network/) to observe network requests made between you, your Identity Provider, and your Kubecost. Pay close attention to cookies, and headers.
+Use [your browser's devtools](https://developer.chrome.com/docs/devtools/network/) to observe network requests made between you, your Identity Provider, and your nOps. Pay close attention to cookies, and headers.
 
 ### Option 2: Review logs, and decode your JWT tokens
 
-If `kubecostAggregator.enabled` is `true` or unspecified in `values.yaml`:
+If `nOpsAggregator.enabled` is `true` or unspecified in `values.yaml`:
 ```sh
-kubectl logs statefulsets/kubecost-aggregator
-kubectl logs deploy/kubecost-cost-analyzer
+kubectl logs statefulsets/nOps-aggregator
+kubectl logs deploy/nOps-cost-analyzer
 ```
 
-If `kubecostAggregator.enabled` is `false` in `values.yaml`:
+If `nOpsAggregator.enabled` is `false` in `values.yaml`:
 ```sh
-kubectl logs services/kubecost-aggregator
-kubectl logs deploy/kubecost-cost-analyzer
+kubectl logs services/nOps-aggregator
+kubectl logs deploy/nOps-cost-analyzer
 ```
 
 * Search for `oidc` in your logs to follow events
@@ -134,17 +134,17 @@ kubectl logs deploy/kubecost-cost-analyzer
 
 ### Option 3: Enable debug logs for more granularity on what is failing
 
-Code reference for the below example can be found [here](https://github.com/kubecost/cost-analyzer-helm-chart/blob/v1.103/README.md?plain=1#L63-L75).
+Code reference for the below example can be found [here](https://github.com/nOps/cost-analyzer-helm-chart/blob/v1.103/README.md?plain=1#L63-L75).
 
 ```yaml
-kubecostModel:
+nOpsModel:
   extraEnv:
     - name: LOG_LEVEL
       value: debug
-kubecostAggregator:
+nOpsAggregator:
   extraEnv:
     - name: LOG_LEVEL
       value: debug
 ```
 
-For further assistance, reach out to support@kubecost.com and provide both logs and a [HAR file](https://support.google.com/admanager/answer/10358597?hl=en).
+For further assistance, reach out to support@nOps.com and provide both logs and a [HAR file](https://support.google.com/admanager/answer/10358597?hl=en).

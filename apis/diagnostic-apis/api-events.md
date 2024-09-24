@@ -1,8 +1,8 @@
 # Events API
 
-Kubecost emits events when certain things happen. Those events are also recorded in an event log in the interest of diagnosing problems.
+nOps emits events when certain things happen. Those events are also recorded in an event log in the interest of diagnosing problems.
 
-{% swagger method="get" path="/log" baseUrl="http://<your-kubecost-address>/model/etl" summary="Events API" %}
+{% swagger method="get" path="/log" baseUrl="http://<your-nOps-address>/model/etl" summary="Events API" %}
 {% swagger-description %}
 Accesses the most recent events in the event log
 {% endswagger-description %}
@@ -111,13 +111,13 @@ Filter query by event kind (see below).
 All event kinds below will appear in the body of the output by default. You can filter for specific event kinds using the `kind` parameter. For example, to see only `AllocationSetSaved` in the output, your endpoint will look like:
 
 ```
-http://<your-kubecost-address>/model/etl/log?kind=AllocationSetSaved
+http://<your-nOps-address>/model/etl/log?kind=AllocationSetSaved
 ```
 
 You can also view all substrings between Allocations or Assets. For example, the following endpoint will retrieve all event kinds beginning with `AssetSet`:
 
 ```
-http://<your-kubecost-address>/model/etl/log?kind=AssetSet
+http://<your-nOps-address>/model/etl/log?kind=AssetSet
 ```
 
 Allocation outputs should be interpreted as:

@@ -1,5 +1,5 @@
 # Unclaimed Volumes
-Kubecost will display volumes unused by any pod. You can consider these volumes for deletion, or move them to a cheaper storage tier.
+nOps will display volumes unused by any pod. You can consider these volumes for deletion, or move them to a cheaper storage tier.
 
 You can access the Unclaimed Volumes page by selecting *Savings* in the left navigation, then selecting *Manage unclaimed volumes*.
 

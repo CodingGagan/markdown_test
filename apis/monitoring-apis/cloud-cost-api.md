@@ -2,7 +2,7 @@
 
 The Cloud Cost API provides multiple endpoints to obtain accurate cost information from your cloud service providers (CSPs), including data available from cloud billing reports (such as AWS' Cost and Usage Report (CUR)).
 
-{% swagger method="get" path="/model/cloudCost" baseUrl="http://<your-kubecost-address>" summary="Cloud Cost querying API" %}
+{% swagger method="get" path="/model/cloudCost" baseUrl="http://<your-nOps-address>" summary="Cloud Cost querying API" %}
 {% swagger-description %}
 Samples full granularity of cloud costs from cloud billing report (ex. AWS' Cost and Usage Report)
 {% endswagger-description %}
@@ -99,7 +99,7 @@ Cloud cost metric types values are based on and calculated following standard Fi
 | Invoiced Cost      | Pricing based on usage during billing period                                                |
 | Amortized Cost     | Effective/upfront cost across the billing period                                            |
 
-See our [Cloud Cost Metrics](/using-kubecost/navigating-the-kubecost-ui/cloud-costs-explorer/cloud-cost-metrics.md) doc to learn more about these cost metric types and how they are calculated.
+See our [Cloud Cost Metrics](/using-nOps/navigating-the-nOps-ui/cloud-costs-explorer/cloud-cost-metrics.md) doc to learn more about these cost metric types and how they are calculated.
 
 ### `kubernetesPercent`
 
@@ -112,7 +112,7 @@ Each cost metric also has a `kubernetesPercent` value. Unaggregated, this value 
 {% tabs %}
 {% tab title="Request" %}
 ```
-http:/<your-kubecost-address>/model/cloudCost?window=2d&aggregate=invoiceEntityID&filter=service:"AmazonEC2"
+http:/<your-nOps-address>/model/cloudCost?window=2d&aggregate=invoiceEntityID&filter=service:"AmazonEC2"
 ```
 {% endtab %}
 

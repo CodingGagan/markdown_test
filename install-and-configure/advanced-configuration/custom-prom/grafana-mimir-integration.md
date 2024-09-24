@@ -1,8 +1,8 @@
-# Grafana Mimir Integration for Kubecost
+# Grafana Mimir Integration for nOps
 
-In the standard deployment of [Kubecost](https://www.kubecost.com/), Kubecost is deployed with a bundled Prometheus instance to collect and store metrics of your Kubernetes cluster. Kubecost also provides the flexibility to connect with your time series database or storage. [Grafana Mimir](https://grafana.com/oss/mimir/) is an open-source, horizontally scalable, highly available, multi-tenant TSDB for long-term storage for Prometheus.
+In the standard deployment of [nOps](https://www.nOps.com/), nOps is deployed with a bundled Prometheus instance to collect and store metrics of your Kubernetes cluster. nOps also provides the flexibility to connect with your time series database or storage. [Grafana Mimir](https://grafana.com/oss/mimir/) is an open-source, horizontally scalable, highly available, multi-tenant TSDB for long-term storage for Prometheus.
 
-This document will show you how to integrate the Grafana Mimir with Kubecost for long-term metrics retention. In this setup, you need to use Grafana Agent to collect metrics from Kubecost and your Kubernetes cluster. The metrics will be re-written to your existing [Grafana Mimir setup without an authenticating reverse proxy](https://grafana.com/docs/mimir/latest/operators-guide/secure/authentication-and-authorization/#without-an-authenticating-reverse-proxy)
+This document will show you how to integrate the Grafana Mimir with nOps for long-term metrics retention. In this setup, you need to use Grafana Agent to collect metrics from nOps and your Kubernetes cluster. The metrics will be re-written to your existing [Grafana Mimir setup without an authenticating reverse proxy](https://grafana.com/docs/mimir/latest/operators-guide/secure/authentication-and-authorization/#without-an-authenticating-reverse-proxy)
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@ This document will show you how to integrate the Grafana Mimir with Kubecost for
 
 ## Step 1: Install the Grafana Agent on your cluster
 
-Install the Grafana Agent for Kubernetes on your cluster. On the existing K8s cluster that you intend to install Kubecost, run the following commands to install the Grafana Agent to scrape the metrics from Kubecost `/metrics` endpoint. The script below installs the Grafana Agent with the necessary scraping configuration for Kubecost, you may want to add additional scrape configuration for your setup.
+Install the Grafana Agent for Kubernetes on your cluster. On the existing K8s cluster that you intend to install nOps, run the following commands to install the Grafana Agent to scrape the metrics from nOps `/metrics` endpoint. The script below installs the Grafana Agent with the necessary scraping configuration for nOps, you may want to add additional scrape configuration for your setup.
 
 {% code overflow="wrap" %}
 ```
@@ -36,11 +36,11 @@ data:
       - name: integrations
         remote_write:
         - headers:
-            X-Scope-OrgID: kubecost_mimir
+            X-Scope-OrgID: nOps_mimir
           url: ${MIMIR_ENDPOINT}
         - url: ${MIMIR_ENDPOINT}
         scrape_configs: #Need further scrape config update
-        - job_name: kubecost
+        - job_name: nOps
           honor_labels: true
           scrape_interval: 1m
           scrape_timeout: 10s
@@ -48,17 +48,17 @@ data:
           scheme: http
           dns_sd_configs:
           - names:
-            - kubecost-cost-analyzer.kubecost
+            - nOps-cost-analyzer.nOps
             type: 'A'
             port: 9003
-        - job_name: kubecost-networking
+        - job_name: nOps-networking
           kubernetes_sd_configs:
             - role: pod
           relabel_configs:
           # Scrape only the the targets matching the following metadata
             - source_labels: [__meta_kubernetes_pod_label_app]
               action: keep
-              regex:  'kubecost-network-costs'
+              regex:  'nOps-network-costs'
         - job_name: prometheus
           static_configs:
             - targets:
@@ -82,7 +82,7 @@ data:
               replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
           metric_relabel_configs:
             - source_labels: [ __name__ ]
-              regex: (container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_network_receive_errors_total|container_network_transmit_errors_total|container_network_receive_packets_dropped_total|container_network_transmit_packets_dropped_total|container_memory_usage_bytes|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_periods_total|container_fs_usage_bytes|container_fs_limit_bytes|container_cpu_cfs_periods_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_usage_bytes|container_fs_limit_bytes|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_periods_total|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_usage_bytes|container_fs_limit_bytes|container_spec_cpu_shares|container_spec_memory_limit_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_fs_reads_bytes_total|container_network_receive_bytes_total|container_fs_writes_bytes_total|container_fs_reads_bytes_total|cadvisor_version_info|kubecost_pv_info)
+              regex: (container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_network_receive_errors_total|container_network_transmit_errors_total|container_network_receive_packets_dropped_total|container_network_transmit_packets_dropped_total|container_memory_usage_bytes|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_periods_total|container_fs_usage_bytes|container_fs_limit_bytes|container_cpu_cfs_periods_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_usage_bytes|container_fs_limit_bytes|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_periods_total|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_usage_bytes|container_fs_limit_bytes|container_spec_cpu_shares|container_spec_memory_limit_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_fs_reads_bytes_total|container_network_receive_bytes_total|container_fs_writes_bytes_total|container_fs_reads_bytes_total|cadvisor_version_info|nOps_pv_info)
               action: keep
             - source_labels: [ container ]
               target_label: container_name
@@ -127,7 +127,7 @@ data:
               regex: true
             - source_labels: [__meta_kubernetes_endpoints_name]
               action: keep
-              regex: (.*kube-state-metrics|.*prometheus-node-exporter|kubecost-network-costs)
+              regex: (.*kube-state-metrics|.*prometheus-node-exporter|nOps-network-costs)
             - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
               action: replace
               target_label: __scheme__
@@ -154,7 +154,7 @@ data:
               target_label: kubernetes_node
           metric_relabel_configs:
             - source_labels: [ __name__ ]
-              regex: (container_cpu_allocation|container_cpu_usage_seconds_total|container_fs_limit_bytes|container_fs_writes_bytes_total|container_gpu_allocation|container_memory_allocation_bytes|container_memory_usage_bytes|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|DCGM_FI_DEV_GPU_UTIL|deployment_match_labels|kube_daemonset_status_desired_number_scheduled|kube_daemonset_status_number_ready|kube_deployment_spec_replicas|kube_deployment_status_replicas|kube_deployment_status_replicas_available|kube_job_status_failed|kube_namespace_annotations|kube_namespace_labels|kube_node_info|kube_node_labels|kube_node_status_allocatable|kube_node_status_allocatable_cpu_cores|kube_node_status_allocatable_memory_bytes|kube_node_status_capacity|kube_node_status_capacity_cpu_cores|kube_node_status_capacity_memory_bytes|kube_node_status_condition|kube_persistentvolume_capacity_bytes|kube_persistentvolume_status_phase|kube_persistentvolumeclaim_info|kube_persistentvolumeclaim_resource_requests_storage_bytes|kube_pod_container_info|kube_pod_container_resource_limits|kube_pod_container_resource_limits_cpu_cores|kube_pod_container_resource_limits_memory_bytes|kube_pod_container_resource_requests|kube_pod_container_resource_requests_cpu_cores|kube_pod_container_resource_requests_memory_bytes|kube_pod_container_status_restarts_total|kube_pod_container_status_running|kube_pod_container_status_terminated_reason|kube_pod_labels|kube_pod_owner|kube_pod_status_phase|kube_replicaset_owner|kube_statefulset_replicas|kube_statefulset_status_replicas|kubecost_cluster_info|kubecost_cluster_management_cost|kubecost_cluster_memory_working_set_bytes|kubecost_load_balancer_cost|kubecost_network_internet_egress_cost|kubecost_network_region_egress_cost|kubecost_network_zone_egress_cost|kubecost_node_is_spot|kubecost_pod_network_egress_bytes_total|node_cpu_hourly_cost|node_cpu_seconds_total|node_disk_reads_completed|node_disk_reads_completed_total|node_disk_writes_completed|node_disk_writes_completed_total|node_filesystem_device_error|node_gpu_count|node_gpu_hourly_cost|node_memory_Buffers_bytes|node_memory_Cached_bytes|node_memory_MemAvailable_bytes|node_memory_MemFree_bytes|node_memory_MemTotal_bytes|node_network_transmit_bytes_total|node_ram_hourly_cost|node_total_hourly_cost|pod_pvc_allocation|pv_hourly_cost|service_selector_labels|statefulSet_match_labels|kubecost_pv_info|up)
+              regex: (container_cpu_allocation|container_cpu_usage_seconds_total|container_fs_limit_bytes|container_fs_writes_bytes_total|container_gpu_allocation|container_memory_allocation_bytes|container_memory_usage_bytes|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|DCGM_FI_DEV_GPU_UTIL|deployment_match_labels|kube_daemonset_status_desired_number_scheduled|kube_daemonset_status_number_ready|kube_deployment_spec_replicas|kube_deployment_status_replicas|kube_deployment_status_replicas_available|kube_job_status_failed|kube_namespace_annotations|kube_namespace_labels|kube_node_info|kube_node_labels|kube_node_status_allocatable|kube_node_status_allocatable_cpu_cores|kube_node_status_allocatable_memory_bytes|kube_node_status_capacity|kube_node_status_capacity_cpu_cores|kube_node_status_capacity_memory_bytes|kube_node_status_condition|kube_persistentvolume_capacity_bytes|kube_persistentvolume_status_phase|kube_persistentvolumeclaim_info|kube_persistentvolumeclaim_resource_requests_storage_bytes|kube_pod_container_info|kube_pod_container_resource_limits|kube_pod_container_resource_limits_cpu_cores|kube_pod_container_resource_limits_memory_bytes|kube_pod_container_resource_requests|kube_pod_container_resource_requests_cpu_cores|kube_pod_container_resource_requests_memory_bytes|kube_pod_container_status_restarts_total|kube_pod_container_status_running|kube_pod_container_status_terminated_reason|kube_pod_labels|kube_pod_owner|kube_pod_status_phase|kube_replicaset_owner|kube_statefulset_replicas|kube_statefulset_status_replicas|nOps_cluster_info|nOps_cluster_management_cost|nOps_cluster_memory_working_set_bytes|nOps_load_balancer_cost|nOps_network_internet_egress_cost|nOps_network_region_egress_cost|nOps_network_zone_egress_cost|nOps_node_is_spot|nOps_pod_network_egress_bytes_total|node_cpu_hourly_cost|node_cpu_seconds_total|node_disk_reads_completed|node_disk_reads_completed_total|node_disk_writes_completed|node_disk_writes_completed_total|node_filesystem_device_error|node_gpu_count|node_gpu_hourly_cost|node_memory_Buffers_bytes|node_memory_Cached_bytes|node_memory_MemAvailable_bytes|node_memory_MemFree_bytes|node_memory_MemTotal_bytes|node_network_transmit_bytes_total|node_ram_hourly_cost|node_total_hourly_cost|pod_pvc_allocation|pv_hourly_cost|service_selector_labels|statefulSet_match_labels|nOps_pv_info|up)
               action: keep
 
         - job_name: 'kubernetes-service-endpoints-slow'
@@ -232,35 +232,35 @@ data:
               target_label: kubernetes_name
   
 EOF
-(export NAMESPACE=kubecost && kubectl apply -n $NAMESPACE -f -)
+(export NAMESPACE=nOps && kubectl apply -n $NAMESPACE -f -)
 
-MANIFEST_URL=https://raw.githubusercontent.com/grafana/agent/v0.24.2/production/kubernetes/agent-bare.yaml NAMESPACE=kubecost /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/grafana/agent/v0.24.2/production/kubernetes/install-bare.sh)" | kubectl apply -f -
+MANIFEST_URL=https://raw.githubusercontent.com/grafana/agent/v0.24.2/production/kubernetes/agent-bare.yaml NAMESPACE=nOps /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/grafana/agent/v0.24.2/production/kubernetes/install-bare.sh)" | kubectl apply -f -
 ```
 {% endcode %}
 
 You can also verify if `grafana-agent` is scraping data with the following command (optional):
 
 ```
-kubectl -n kubecost logs grafana-agent-0
+kubectl -n nOps logs grafana-agent-0
 ```
 
-To learn more about how to install and configure the Grafana agent, as well as additional scrape configuration, please refer to [Grafana Agent](https://grafana.com/docs/tempo/latest/configuration/grafana-agent/) documentation, or you can view the Kubecost Prometheus scrape config at this [GitHub repository](https://github.com/kubecost/cost-analyzer-helm-chart/blob/ebe7e088debecd23f90e6dd75b425828901a246c/cost-analyzer/charts/prometheus/values.yaml#L1152).
+To learn more about how to install and configure the Grafana agent, as well as additional scrape configuration, please refer to [Grafana Agent](https://grafana.com/docs/tempo/latest/configuration/grafana-agent/) documentation, or you can view the nOps Prometheus scrape config at this [GitHub repository](https://github.com/nOps/cost-analyzer-helm-chart/blob/ebe7e088debecd23f90e6dd75b425828901a246c/cost-analyzer/charts/prometheus/values.yaml#L1152).
 
-## Step 2: Deploy Kubecost
+## Step 2: Deploy nOps
 
-Run the following command to deploy Kubecost. Please remember to update the environment variables values with your Mimir setup information.
+Run the following command to deploy nOps. Please remember to update the environment variables values with your Mimir setup information.
 
 {% code overflow="wrap" %}
 ```
 export MIMIR_ENDPOINT="http://example-mimir.com/"
 export MIMIR_ORG_ID="YOUR_MIMIR_ORG_ID"
-helm upgrade -i kubecost cost-analyzer/ -n kubecost --create-namespace \
+helm upgrade -i nOps cost-analyzer/ -n nOps --create-namespace \
 --set global.mimirProxy.enabled=true \
 --set global.prometheus.enabled=false \
---set global.prometheus.fqdn=http://kubecost-cost-analyzer-mimir-proxy.kubecost.svc:8085/prometheus \
+--set global.prometheus.fqdn=http://nOps-cost-analyzer-mimir-proxy.nOps.svc:8085/prometheus \
 --set global.mimirProxy.mimirEndpoint=http://${MIMIR_ENDPOINT} \
 --set global.mimirProxy.orgIdentifier=${MIMIR_ORG_ID}
 ```
 {% endcode %}
 
-The process is complete. By now, you should have successfully completed the Kubecost integration with your Grafana Mimir setup.
+The process is complete. By now, you should have successfully completed the nOps integration with your Grafana Mimir setup.

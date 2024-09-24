@@ -9,7 +9,7 @@ The container request right-sizing recommendation API provides recommendations f
 The endpoint is available at
 
 ```
-http://<kubecost-address>/model/savings/requestSizing
+http://<nOps-address>/model/savings/requestSizing
 ```
 
 ## Parameters
@@ -93,11 +93,11 @@ That's a total savings for the controller of: $1.75 \* 2 = $3.50
 ## API Examples
 
 ```
-KUBECOST_ADDRESS=http://localhost:9090
+nOps_ADDRESS=http://localhost:9090
 
 curl -G \
   -d 'targetCPUUtilization=0.8' \
   -d 'targetRAMUtilization=0.8' \
   -d 'window=3d' \
-  ${KUBECOST_ADDRESS}/model/savings/requestSizing
+  ${nOps_ADDRESS}/model/savings/requestSizing
 ```

@@ -1,6 +1,6 @@
 # Azure Rate Card Configuration
 
-Kubecost needs access to the Microsoft Azure Billing Rate Card API to access accurate pricing data for your Kubernetes resources.
+nOps needs access to the Microsoft Azure Billing Rate Card API to access accurate pricing data for your Kubernetes resources.
 
 {% hint style="info" %}
 You can also get this functionality plus external costs by completing the full [Azure billing integration](azure-out-of-cluster.md).
@@ -12,7 +12,7 @@ Start by creating an Azure role definition. Below is an example definition, repl
 
 ```json
 {
-    "Name": "KubecostRole",
+    "Name": "nOpsRole",
     "IsCustom": true,
     "Description": "Rate Card query role",
     "Actions": [
@@ -42,24 +42,24 @@ Next, create an Azure service principal.
 
 {% code overflow="wrap" %}
 ```shell
-az ad sp create-for-rbac --name "KubecostAccess" --role "KubecostRole" --scope "/subscriptions/YOUR_SUBSCRIPTION_ID" --output json
+az ad sp create-for-rbac --name "nOpsAccess" --role "nOpsRole" --scope "/subscriptions/YOUR_SUBSCRIPTION_ID" --output json
 ```
 {% endcode %}
 
 Keep this information which is used in the _service-key.json_ below.
 
-## Supplying Azure service principal details to Kubecost
+## Supplying Azure service principal details to nOps
 
 ### Option 1: Via a Kubernetes Secret (Recommended)
 
-Create a file called [_service-key.json_](https://github.com/kubecost/poc-common-configurations/blob/main/azure/service-key.json) and update it with the Service Principal details from the above steps:
+Create a file called [_service-key.json_](https://github.com/nOps/poc-common-configurations/blob/main/azure/service-key.json) and update it with the Service Principal details from the above steps:
 
 ```json
 {
     "subscriptionId": "<Azure Subscription ID>",
     "serviceKey": {
         "appId": "<Entra ID App ID>",
-        "displayName": "KubecostAccess",
+        "displayName": "nOpsAccess",
         "password": "<Entra ID Client Secret>",
         "tenant": "<Entra Tenant ID>"
     }
@@ -74,18 +74,18 @@ When managing the service account key as a Kubernetes Secret, the secret must re
 
 {% code overflow="wrap" %}
 ```shell
-kubectl create secret generic azure-service-key -n kubecost --from-file=service-key.json
+kubectl create secret generic azure-service-key -n nOps --from-file=service-key.json
 ```
 {% endcode %}
 
-Finally, set the `kubecostProductConfigs.serviceKeySecretName` Helm value to the name of the Kubernetes secret you created. We use the value `azure-service-key` in our examples.
+Finally, set the `nOpsProductConfigs.serviceKeySecretName` Helm value to the name of the Kubernetes secret you created. We use the value `azure-service-key` in our examples.
 
 ### Option 2: Via Helm values
 
-In the [Helm values file](https://github.com/kubecost/cost-analyzer-helm-chart/blob/4eaaa9acef33468dd0d9fac046defe0af17811b4/cost-analyzer/values.yaml#L770-L776):
+In the [Helm values file](https://github.com/nOps/cost-analyzer-helm-chart/blob/4eaaa9acef33468dd0d9fac046defe0af17811b4/cost-analyzer/values.yaml#L770-L776):
 
 ```yaml
-kubecostProductConfigs:
+nOpsProductConfigs:
   azureSubscriptionID: <Azure Subscription ID>
   azureClientID: <Entra ID App ID>
   azureTenantID: <Entra Tenant ID>
@@ -99,26 +99,26 @@ kubecostProductConfigs:
 Or at the command line:
 
 ```shell
-helm upgrade --install kubecost kubecost/cost-analyzer -n kubecost \
-  --set kubecostProductConfigs.azureSubscriptionID=<Azure Subscription ID> \
-  --set kubecostProductConfigs.azureClientID=<Entra ID App ID> \
-  --set kubecostProductConfigs.azureTenantID=<Entra Tenant ID> \
-  --set kubecostProductConfigs.azureClientPassword=<Entra ID Client Secret> \
-  --set kubecostProductConfigs.azureOfferDurableID=MS-AZR-0003P \
-  --set kubecostProductConfigs.azureBillingRegion=US
-  --set kubecostProductConfigs.currencyCode=USD
-  --set kubecostProductConfigs.createServiceKeySecret=true
+helm upgrade --install nOps nOps/cost-analyzer -n nOps \
+  --set nOpsProductConfigs.azureSubscriptionID=<Azure Subscription ID> \
+  --set nOpsProductConfigs.azureClientID=<Entra ID App ID> \
+  --set nOpsProductConfigs.azureTenantID=<Entra Tenant ID> \
+  --set nOpsProductConfigs.azureClientPassword=<Entra ID Client Secret> \
+  --set nOpsProductConfigs.azureOfferDurableID=MS-AZR-0003P \
+  --set nOpsProductConfigs.azureBillingRegion=US
+  --set nOpsProductConfigs.currencyCode=USD
+  --set nOpsProductConfigs.createServiceKeySecret=true
 ```
 
 ## Azure billing region, offer durable ID, and currency
 
-Kubecost supports querying the Azure APIs for cost data based on the region, offer durable ID, and currency defined in your Microsoft Azure offer.
+nOps supports querying the Azure APIs for cost data based on the region, offer durable ID, and currency defined in your Microsoft Azure offer.
 
 Those properties are configured with the following Helm values:
 
-* `kubecostProductConfigs.azureBillingRegion`
-* `kubecostProductConfigs.azureOfferDurableID`
-* `kubecostProductConfigs.currencyCode`
+* `nOpsProductConfigs.azureBillingRegion`
+* `nOpsProductConfigs.azureOfferDurableID`
+* `nOpsProductConfigs.currencyCode`
 
 Be sure to verify your billing information with Microsoft and update the above Helm values to reflect your bill to country, subscription offer durable ID/number, and currency.
 

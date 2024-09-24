@@ -1,6 +1,6 @@
 # Windows Node Support
 
-Kubecost can run on clusters with mixed Linux and Windows nodes. The Kubecost pods must run on a Linux node.
+nOps can run on clusters with mixed Linux and Windows nodes. The nOps pods must run on a Linux node.
 
 ## Deployment
 
@@ -8,18 +8,18 @@ When using a Helm install, this can be done simply with:
 
 {% code overflow="wrap" %}
 ```
-helm install kubecost \
---repo https://kubecost.github.io/cost-analyzer/ cost-analyzer \
---namespace kubecost --create-namespace \
--f https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/develop/cost-analyzer/values-windows-node-affinity.yaml
+helm install nOps \
+--repo https://nOps.github.io/cost-analyzer/ cost-analyzer \
+--namespace nOps --create-namespace \
+-f https://raw.githubusercontent.com/nOps/cost-analyzer-helm-chart/develop/cost-analyzer/values-windows-node-affinity.yaml
 ```
 {% endcode %}
 
 ## Detail
 
-The cluster must have at least one Linux node for the Kubecost pods to run on:
+The cluster must have at least one Linux node for the nOps pods to run on:
 
-Use a nodeSelector for all Kubecost deployments:
+Use a nodeSelector for all nOps deployments:
 
     ```
     spec:
@@ -41,10 +41,10 @@ For DaemonSets, set the affinity to only allow scheduling on Windows nodes:
                 - linux
     ```
 
-See the list of all deployments and DaemonSets in this [*values-windows-node-affinity.yaml*](https://github.com/kubecost/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values-windows-node-affinity.yaml) file:
+See the list of all deployments and DaemonSets in this [*values-windows-node-affinity.yaml*](https://github.com/nOps/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values-windows-node-affinity.yaml) file:
 
 ```
-kubecostMetrics:
+nOpsMetrics:
   exporter:
     nodeSelector:
       kubernetes.io/os: linux
@@ -78,7 +78,7 @@ grafana:
 
 ## Metrics
 
-* Collecting data about Windows nodes is supported by Kubecost
+* Collecting data about Windows nodes is supported by nOps
 * Accurate node and pod data exists by default, since they come from the Kubernetes API.
-* Kubecost requires cAdvisor for pod utilization data to determine costs at the container level.
+* nOps requires cAdvisor for pod utilization data to determine costs at the container level.
 * Currently, for pods on Windows nodes: pods will be billed based on request size.

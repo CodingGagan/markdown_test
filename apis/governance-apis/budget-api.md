@@ -2,7 +2,7 @@
 
 The Budget API allows you to create, update, and delete recurring budget rules to control your Kubernetes spending. Weekly and monthly budgets can be established on workloads to set limits on cost spend, with the option to configure alerts for reaching specified budget thresholds via email, Slack, or Microsoft Teams.
 
-{% swagger method="post" path="/model/budget" baseUrl="http://<your-kubecost-address>" summary="Budget API" %}
+{% swagger method="post" path="/model/budget" baseUrl="http://<your-nOps-address>" summary="Budget API" %}
 {% swagger-description %}
 Creates a recurring budget rule or updates a recurring budget rule when provided the ID of the existing rule.
 {% endswagger-description %}
@@ -77,7 +77,7 @@ Only should be used when updating a budget rule; ID of the budget rule being mod
 {% endswagger-response %}
 {% endswagger %}
 
-{% swagger method="get" path="/model/budgets" baseUrl="http://<your-kubecost-address>" summary="Get recurring budget rule(s)" %}
+{% swagger method="get" path="/model/budgets" baseUrl="http://<your-nOps-address>" summary="Get recurring budget rule(s)" %}
 {% swagger-description %}
 Lists all existing recurring budget rules
 {% endswagger-description %}
@@ -120,7 +120,7 @@ Lists all existing recurring budget rules
 {% endswagger-response %}
 {% endswagger %}
 
-{% swagger method="delete" path="/model/deleteBudget" baseUrl="https://<your-kubecost-address>" summary="Delete recurring budget rule" %}
+{% swagger method="delete" path="/model/deleteBudget" baseUrl="https://<your-nOps-address>" summary="Delete recurring budget rule" %}
 {% swagger-description %}
 Deletes a budget rule defined by `id`
 {% endswagger-description %}
@@ -165,8 +165,8 @@ When providing values for `actions`, `percentage` refers to the percentage of `s
                     "<example Slack webhook>"
                 ],
                 "emails": [
-                    "foo@kubecost.com",
-                    "bar@kubecost.com"
+                    "foo@nOps.com",
+                    "bar@nOps.com"
                 ],
                 "msTeamsWebhooks": [
                     "<example Teams webhook>"
@@ -177,12 +177,12 @@ When providing values for `actions`, `percentage` refers to the percentage of `s
 
 ## Configuring currency
 
-Kubecost supports configuration of the following currency types: USD, AUD, BRL, CAD, CHF, CNY, DKK, EUR, GBP, IDR, INR, JPY, NOK, PLN, and SEK. Kubecost does *not* perform any currency conversion when switching currency types; it is for display purposes, therefore you should ideally match your currency type to the type in your original cloud bill(s).
+nOps supports configuration of the following currency types: USD, AUD, BRL, CAD, CHF, CNY, DKK, EUR, GBP, IDR, INR, JPY, NOK, PLN, and SEK. nOps does *not* perform any currency conversion when switching currency types; it is for display purposes, therefore you should ideally match your currency type to the type in your original cloud bill(s).
 
-Currency type can only be changed via a [`helm` upgrade to your *values.yaml*](/install-and-configure/install/helm-install-params.md), using the flag `.Values.kubecostProductConfigs.currencyCode`. For example, if you needed to convert your currency type to EUR, you would modify the helm flag as:
+Currency type can only be changed via a [`helm` upgrade to your *values.yaml*](/install-and-configure/install/helm-install-params.md), using the flag `.Values.nOpsProductConfigs.currencyCode`. For example, if you needed to convert your currency type to EUR, you would modify the helm flag as:
 
 ```yaml
-kubecostProductConfigs:
+nOpsProductConfigs:
     currencyCode: EUR
 ```
 
@@ -191,7 +191,7 @@ kubecostProductConfigs:
 **Create a recurring budget rule for my test cluster which resets every Wednesday with a budget of $100.00 USD, and will send an alert via email when spending has exceeded 75% of the spend limit.**
 
 ```
-curl --location '<your-kubecost-address>/model/budget' \
+curl --location '<your-nOps-address>/model/budget' \
 --header 'Content-Type: application/json' \
 --data-raw '{
         "name": "budget-rule",
@@ -207,23 +207,23 @@ curl --location '<your-kubecost-address>/model/budget' \
             {
                 "percentage": 75,
                 "emails": [
-                    "foo@kubecost.com",
+                    "foo@nOps.com",
                 ]
             }
         ]
 }'
 ```
 
-**Create a recurring budget rule for my `kubecost` namespace which resets on the 1st of every month with a budget of $400.00 USD, and will send an alert via Slack and Microsoft Teams when spending has exceeded $100.00 of the spend limit.**
+**Create a recurring budget rule for my `nOps` namespace which resets on the 1st of every month with a budget of $400.00 USD, and will send an alert via Slack and Microsoft Teams when spending has exceeded $100.00 of the spend limit.**
 
 ```
-curl --location '<your-kubecost-address>/model/budget' \
+curl --location '<your-nOps-address>/model/budget' \
 --header 'Content-Type: application/json' \
 --data-raw '{
         "name": "budget-rule-2",
         "type": "allocations",
         "values": {
-            "namespace":["kubecost"]
+            "namespace":["nOps"]
         },
         "kind": "soft",
         "interval": "monthly",
@@ -245,4 +245,4 @@ curl --location '<your-kubecost-address>/model/budget' \
 
 ## Use cases
 
-For an example use case on how to use budgets to achieve proactive cost control, see [here](/using-kubecost/proactive-cost-controls.md).
+For an example use case on how to use budgets to achieve proactive cost control, see [here](/using-nOps/proactive-cost-controls.md).

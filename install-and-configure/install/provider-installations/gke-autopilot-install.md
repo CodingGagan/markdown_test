@@ -1,25 +1,25 @@
-# Installing Kubecost on GKE Autopilot Clusters
+# Installing nOps on GKE Autopilot Clusters
 
-## Installing Kubecost for GKE Autopilot via Helm
+## Installing nOps for GKE Autopilot via Helm
 
-Installing Kubecost on a GKE Autopilot cluster is similar to other cloud providers with Helm v3.1+, with a few changes. Autopilot requires the use of [Google Managed Prometheus](/install-and-configure/advanced-configuration/custom-prom/gcp-gmp-integration.md) service, which generates additional costs within your Google Cloud account.
+Installing nOps on a GKE Autopilot cluster is similar to other cloud providers with Helm v3.1+, with a few changes. Autopilot requires the use of [Google Managed Prometheus](/install-and-configure/advanced-configuration/custom-prom/gcp-gmp-integration.md) service, which generates additional costs within your Google Cloud account.
 
-`helm install kubecost/cost-analyzer -n kubecost -f values.yaml`
+`helm install nOps/cost-analyzer -n nOps -f values.yaml`
 
-Your _values.yaml_ files must contain the below parameters. Resources are specified for each section of the Kubecost deployment, and Pod Security Policies are disabled.
+Your _values.yaml_ files must contain the below parameters. Resources are specified for each section of the nOps deployment, and Pod Security Policies are disabled.
 
 ```
-kubecostProductConfigs:
-  clusterName: "<clusterName>" # used for display in Kubecost UI
+nOpsProductConfigs:
+  clusterName: "<clusterName>" # used for display in nOps UI
 
-kubecostModel:
+nOpsModel:
   promClusterIDLabel: cluster # warning: usage and efficiency will show as zero without this setting enabled
   resources:
     requests:
       cpu: 500m
       memory: 512Mi
 
-kubecostFrontend:
+nOpsFrontend:
   resources:
     requests:
       cpu: 250m
@@ -27,7 +27,7 @@ kubecostFrontend:
 
 global:
   gmp:
-    enabled: true # If true, kubecost will be configured to use GMP Prometheus image and query from Google Cloud Managed Service for Prometheus.
+    enabled: true # If true, nOps will be configured to use GMP Prometheus image and query from Google Cloud Managed Service for Prometheus.
     gmpProxy:
       projectId: <GCP Project ID>
 
@@ -42,7 +42,7 @@ prometheus:
       tag: v2.41.0-gmp.4-gke.1
     global:
       external_labels:
-        cluster_id: <GKE Autopilot Cluster Name>  # cluster_id should be unique for all clusters and the same value as .kubecostProductConfigs.clusterName
+        cluster_id: <GKE Autopilot Cluster Name>  # cluster_id should be unique for all clusters and the same value as .nOpsProductConfigs.clusterName
   podSecurityPolicy:
     enabled: false
   configmapReload:

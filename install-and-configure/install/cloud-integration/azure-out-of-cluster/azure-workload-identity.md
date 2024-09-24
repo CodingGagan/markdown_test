@@ -1,6 +1,6 @@
 # Azure Cloud Integration using Azure Workload Identity
 
-Kubecost supports cloud integration via Azure Workload Identity. Refer to the [Microsoft documentation](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster) to learn more about how to set up Azure Workload Identity in AKS.
+nOps supports cloud integration via Azure Workload Identity. Refer to the [Microsoft documentation](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster) to learn more about how to set up Azure Workload Identity in AKS.
 
 For this tutorial, you will need the cluster name, resource group, federated identity credential name, and the Managed Identity Object ID.
 
@@ -19,10 +19,10 @@ https://westus.oic.<redacted>.azure.com/<redacted>
 az role assignment create --assignee "55555555-5555-5555-5555-555555555555" --role "Storage Blob Data Contributor" --scope "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/Example-Storage-rg/providers/Microsoft.Storage/storageAccounts/storage12345"
 ```
 
-3. Create the federated credential between the Managed Identity and kubecost-cost-analyzer service account:
+3. Create the federated credential between the Managed Identity and nOps-cost-analyzer service account:
 
 ```bash
-az identity federated-credential create --name ${FEDERATED_IDENTITY_CREDENTIAL_NAME} --identity-name ${USER_ASSIGNED_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --issuer ${AKS_OIDC_ISSUER} --subject system:serviceaccount:${KUBECOST_NAMESPACE}:kubecost-cost-analyzer
+az identity federated-credential create --name ${FEDERATED_IDENTITY_CREDENTIAL_NAME} --identity-name ${USER_ASSIGNED_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --issuer ${AKS_OIDC_ISSUER} --subject system:serviceaccount:${nOps_NAMESPACE}:nOps-cost-analyzer
 ```
 
 4. Create a JSON file which **must** be named _cloud-integration.json_ with the following format:
@@ -49,15 +49,15 @@ az identity federated-credential create --name ${FEDERATED_IDENTITY_CREDENTIAL_N
 5. Create the secret.
 
 ```bash
-$ kubectl create secret generic <SECRET_NAME> --from-file=cloud-integration.json -n kubecost
+$ kubectl create secret generic <SECRET_NAME> --from-file=cloud-integration.json -n nOps
 ```
 
 6. Update the Helm *values.yaml* with the following and apply changes:
 
 ```yaml
-kubecostProductConfigs:
+nOpsProductConfigs:
   cloudIntegrationSecret: <SECRET_NAME>
-kubecostDeployment:
+nOpsDeployment:
   labels:
     azure.workload.identity/use: "true"
 serviceAccount:
@@ -66,5 +66,5 @@ serviceAccount:
 ```
 
 ```bash
-helm upgrade --install kubecost --repo https://kubecost.github.io/cost-analyzer cost-analyzer --namespace kubecost -f values.yaml
+helm upgrade --install nOps --repo https://nOps.github.io/cost-analyzer cost-analyzer --namespace nOps -f values.yaml
 ```

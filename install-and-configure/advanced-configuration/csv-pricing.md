@@ -1,14 +1,14 @@
 # CSV Pricing
 
 {% hint style="info" %}
-This feature is only officially supported on Kubecost Enterprise plans.
+This feature is only officially supported on nOps Enterprise plans.
 {% endhint %}
 
-Kubecost allows users to apply custom prices to individual assets (e.g. nodes) via a CSV pipeline. Common uses are for on-premise clusters, service-providers, or for external enterprise discounts. This feature allows for greater resource specification than is provided by [Custom Pricing](/architecture/pricing-sources-matrix.md#custom-pricing). This doc shows how to create and configure a CSV pricing file.
+nOps allows users to apply custom prices to individual assets (e.g. nodes) via a CSV pipeline. Common uses are for on-premise clusters, service-providers, or for external enterprise discounts. This feature allows for greater resource specification than is provided by [Custom Pricing](/architecture/pricing-sources-matrix.md#custom-pricing). This doc shows how to create and configure a CSV pricing file.
 
 ## Creating a pricing file
 
-1.  Create a CSV file in this [format](https://github.com/kubecost/cost-analyzer-helm-chart/blob/develop/cost-analyzer/custom-pricing.csv) (also in the below table). CSV changes are picked up hourly by default.
+1.  Create a CSV file in this [format](https://github.com/nOps/cost-analyzer-helm-chart/blob/develop/cost-analyzer/custom-pricing.csv) (also in the below table). CSV changes are picked up hourly by default.
 
     1. `EndTimeStamp`: currently unused
     2. `InstanceID`: identifier used to match asset
@@ -34,13 +34,13 @@ This section is only required for nodes with GPUs.
    * gpu.nvidia.com/class
    * nvidia.com/gpu\_type
 3. Verification:
-   1. Connect to the Kubecost Prometheus: `kubectl port-forward --namespace kubecost services/kubecost-cost-analyzer 9090:9090`
+   1. Connect to the nOps Prometheus: `kubectl port-forward --namespace nOps services/nOps-cost-analyzer 9090:9090`
    2. Run the following query: `curl localhost:9090/model/prometheusQuery?query=node_gpu_hourly_cost`
       1. You should see output similar to this: `{instance="ip-192-168-34-166.us-east-2.compute.internal",instance_type="test.xlarge",node="ip-192-168-34-166.us-east-2.compute.internal",provider_id="aws:///us-east-2b/i-055274d3576800444",region="us-east-2"} 10 | YOUR_HOURLY_COST`
 
-## Kubecost configuration
+## nOps configuration
 
-Provide a file path for your CSV pricing data in your [*values.yaml*](https://github.com/kubecost/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values-custom-pricing.yaml). This path can reference a local PV or an S3 bucket.
+Provide a file path for your CSV pricing data in your [*values.yaml*](https://github.com/nOps/cost-analyzer-helm-chart/blob/develop/cost-analyzer/values-custom-pricing.yaml). This path can reference a local PV or an S3 bucket.
 
 ```yaml
 pricingCsv:
@@ -64,17 +64,17 @@ Then set the following Helm values:
 pricingCsv:
   enabled: true
   location:
-    URI: /var/kubecost-csv/custom-pricing.csv
+    URI: /var/nOps-csv/custom-pricing.csv
     csvAccessCredentials: ""
 
 extraVolumes:
-- name: kubecost-csv
+- name: nOps-csv
   configMap:
     name: csv-pricing
 
 extraVolumeMounts:
-- name: kubecost-csv
-  mountPath: /var/kubecost-csv
+- name: nOps-csv
+  mountPath: /var/nOps-csv
 ```
 
 For S3 locations, provide file access. Required IAM permissions:
@@ -98,10 +98,10 @@ For S3 locations, provide file access. Required IAM permissions:
 }
 ```
 
-There are two options for adding the credentials to the Kubecost pod:
+There are two options for adding the credentials to the nOps pod:
 
 1. Service key: Create an S3 service key with the permissions above, then add its ID and access key as a K8s secret:
-   1. `kubectl create secret generic pricing-schema-access-secret -n kubecost --from-literal=AWS_ACCESS_KEY_ID=id --from-literal=AWS_SECRET_ACCESS_KEY=key`
+   1. `kubectl create secret generic pricing-schema-access-secret -n nOps --from-literal=AWS_ACCESS_KEY_ID=id --from-literal=AWS_SECRET_ACCESS_KEY=key`
    2. The name of this secret should be the same as `csvAccessCredentials` in _values.yaml_ above
 2. AWS IAM (IRSA) [service account annotation](https://docs.aws.amazon.com/eks/latest/userguide/adot-iam.html)
 

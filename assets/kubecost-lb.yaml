@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kubecost-frontend
-  namespace: kubecost
+  name: nOps-frontend
+  namespace: nOps
   labels:
     app: cost-analyzer
 spec:

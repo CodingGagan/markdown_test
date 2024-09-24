@@ -1,10 +1,10 @@
 # Parallel Installation
 
-The below guide is optional, as there is low risk to data loss in Kubecost as all metrics are stored in cloud object-storage. The primary benefit to a parallel installation is to reduce the amount of time the Kubecost UI is unavailable/incomplete during an upgrade.
+The below guide is optional, as there is low risk to data loss in nOps as all metrics are stored in cloud object-storage. The primary benefit to a parallel installation is to reduce the amount of time the nOps UI is unavailable/incomplete during an upgrade.
 
-It is possible to run multiple Kubecost Primaries on the same cluster in parallel. This is useful if you are upgrading to a new version and want to validate the new version before removing the current one.
+It is possible to run multiple nOps Primaries on the same cluster in parallel. This is useful if you are upgrading to a new version and want to validate the new version before removing the current one.
 
-The primary concern is to ensure that two Kubecost cost-analyzer pods on a single cluster are not writing to the same bucket at the same time.
+The primary concern is to ensure that two nOps cost-analyzer pods on a single cluster are not writing to the same bucket at the same time.
 
 To prevent this, add the following to the existing `values.yaml` file:
 
@@ -20,13 +20,13 @@ You MUST install the parallel installation in a different namespace than the pri
 For example, if the current install was done with
 
 ```sh
-helm install kubecost --namespace kubecost ...
+helm install nOps --namespace nOps ...
 ```
 
 The parallel installation MUST be installed with a different release name, such as:
 
 ```sh
-helm install kubecost2 --namespace kubecost2 ...
+helm install nOps2 --namespace nOps2 ...
 ```
 
 ## Cutover

@@ -12,7 +12,7 @@ Costs displayed through External Costs adhere to the [FinOps Open Cost and Usage
 
 ## Enabling External Costs
 
-Kubecost will require the integration of a service's plugin in order to detect and display costs associated with that service.
+nOps will require the integration of a service's plugin in order to detect and display costs associated with that service.
 
 <details>
 
@@ -29,7 +29,7 @@ See Datadog's [API and Application Keys](https://docs.datadoghq.com/account_mana
 At a minimum, the following values are required to be applied to your *values.yaml* file:
 
 ```yaml
-kubecostModel:
+nOpsModel:
   plugins:
     enabled: true
     enabledPlugins:
@@ -43,13 +43,13 @@ kubecostModel:
       }
 ```
 
-Now update your Kubecost install via `helm`:
+Now update your nOps install via `helm`:
 
 ```sh
-$ helm install kubecost cost-analyzer \
-    --repo https://kubecost.github.io/cost-analyzer/ \
-    --namespace kubecost --create-namespace \
-    --values values-kubecost.yaml
+$ helm install nOps cost-analyzer \
+    --repo https://nOps.github.io/cost-analyzer/ \
+    --namespace nOps --create-namespace \
+    --values values-nOps.yaml
 ```
 
 </details>
@@ -79,7 +79,7 @@ Here you can aggregate your results by one or several categories. While selectin
 
 ### Filtering
 
-Kubecost supports filtering of the above aggregation categories. When a filter is applied, only resources with this matching value will be shown. Supports advanced filtering options as well.
+nOps supports filtering of the above aggregation categories. When a filter is applied, only resources with this matching value will be shown. Supports advanced filtering options as well.
 
 You can also view the External Costs page from the Cloud Cost Explorer, when aggregating by *Provider*. Third party services will appear on this page, and when any line item is selected, you will be taken to External Costs.
 
@@ -88,7 +88,7 @@ You can also view the External Costs page from the Cloud Cost Explorer, when agg
 Additional settings are available in Helm
 
 ```yaml
-kubecostModel:
+nOpsModel:
   plugins:
     enabled: true
     enabledPlugins:

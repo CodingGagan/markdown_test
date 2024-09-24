@@ -1,6 +1,6 @@
 # Collections APIs
 
-Kubecost's Collections APIs allow users to manage their collections and query various kinds of costs for collections and categories of collections.
+nOps's Collections APIs allow users to manage their collections and query various kinds of costs for collections and categories of collections.
 
 ## Table of Contents
 
@@ -26,7 +26,7 @@ Kubecost's Collections APIs allow users to manage their collections and query va
 
 ## Introduction to collections
 
-Kubecost collections offer organizations a way to build flexible and composite structures for tracking all infrastructure costs belonging to various teams, departments, or other groups within any organization, particularly when those costs come from a variety of sources like Kubernetes clusters, Amazon S3 buckets, GCP Cloud Run jobs, etc. In short, collections allow every organization to bring together and accurately allocate all of their infrastructure costs, in a way that fits the organization's own structure.
+nOps collections offer organizations a way to build flexible and composite structures for tracking all infrastructure costs belonging to various teams, departments, or other groups within any organization, particularly when those costs come from a variety of sources like Kubernetes clusters, Amazon S3 buckets, GCP Cloud Run jobs, etc. In short, collections allow every organization to bring together and accurately allocate all of their infrastructure costs, in a way that fits the organization's own structure.
 
 ### How a collection is defined
 

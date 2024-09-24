@@ -1,8 +1,8 @@
 # Container Request Right Sizing Recommendation API
 
-{% swagger method="get" path="savings/requestSizingV2" baseUrl="http://<kubecost-address>/model/" summary="Container Request Right Sizing Recommendation API (V2)" %}
+{% swagger method="get" path="savings/requestSizingV2" baseUrl="http://<nOps-address>/model/" summary="Container Request Right Sizing Recommendation API (V2)" %}
 {% swagger-description %}
-The container request right sizing recommendation API provides recommendations for [container resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) based on configurable parameters and estimates the savings from implementing those recommendations on a per-container, per-controller level. If the cluster-level resources stay static, then there may not be significant savings from applying Kubecost's recommendations until you reduce your cluster resources. Instead, your idle allocation will increase.
+The container request right sizing recommendation API provides recommendations for [container resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) based on configurable parameters and estimates the savings from implementing those recommendations on a per-container, per-controller level. If the cluster-level resources stay static, then there may not be significant savings from applying nOps's recommendations until you reduce your cluster resources. Instead, your idle allocation will increase.
 {% endswagger-description %}
 
 {% swagger-parameter in="query" name="window" required="true" type="string" %}
@@ -92,7 +92,7 @@ Displays all labels and annotations associated with each container request when 
 ## API examples
 
 ```bash
-KUBECOST_ADDRESS='http://localhost:9090/model'
+nOps_ADDRESS='http://localhost:9090/model'
 
 curl -G \
   -d 'algorithmCPU=quantile' \
@@ -101,8 +101,8 @@ curl -G \
   -d 'targetCPUUtilization=0.8' \
   -d 'targetRAMUtilization=0.8' \
   -d 'window=3d' \
-  --data-urlencode 'filter=namespace:"kubecost"+container:"cost-model"' \
-  ${KUBECOST_ADDRESS}/savings/requestSizingV2
+  --data-urlencode 'filter=namespace:"nOps"+container:"cost-model"' \
+  ${nOps_ADDRESS}/savings/requestSizingV2
 ```
 
 ## Querying with `/topline` endpoint to view cost totals across query
@@ -130,7 +130,7 @@ The max algorithm recommendation for the deployment's container will be 800 mCPU
 
 ## Applying your request sizing recommendations
 
-After providing you with right sizing recommendations, Kubecost can additionally directly implement these recommendations into your environment. For more information, see the [Container Request Recommendation Apply/Plan APIs](api-request-recommendation-apply.md) doc.
+After providing you with right sizing recommendations, nOps can additionally directly implement these recommendations into your environment. For more information, see the [Container Request Recommendation Apply/Plan APIs](api-request-recommendation-apply.md) doc.
 
 ## Savings projection methodology
 

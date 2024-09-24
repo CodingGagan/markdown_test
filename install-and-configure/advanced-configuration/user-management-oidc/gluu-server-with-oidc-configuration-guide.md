@@ -16,12 +16,12 @@ To configure a Gluu server with OIDC, you will need to install and set up the Gl
 
     > **Note**: Later versions of Gluu Server also support deployment to Kubernetes environments. You can read more about their Kubernetes support [here](https://gluu.org/docs/gluu-server/installation-guide/install-kubernetes/).
 
-    Once the Gluu server is up and running, you can connect it to a Kubecost cluster by performing the following steps:
+    Once the Gluu server is up and running, you can connect it to a nOps cluster by performing the following steps:
 6.  Obtain the OIDC client ID and client secret for the Gluu server. These can be found in the `/etc/gluu/conf/gluu.properties` file under the `oxAuthClientId` and `oxAuthClientPassword` properties, respectively.
 
     ![Gluu properties](/.gitbook/assets/gluu-screenshot.png)
 
-7.  In the Kubecost cluster, create a new OIDC identity provider by running `kubectl apply -f oidc-provider.yaml` command, where _oidc-provider.yaml_ is a configuration file that specifies the OIDC client ID and client secret, as well as the issuer URL and authorization and token endpoints for the Gluu server.
+7.  In the nOps cluster, create a new OIDC identity provider by running `kubectl apply -f oidc-provider.yaml` command, where _oidc-provider.yaml_ is a configuration file that specifies the OIDC client ID and client secret, as well as the issuer URL and authorization and token endpoints for the Gluu server.
 
     ![Gluu OIDC provider manifest](/images/gluu-oidc.png)
 
@@ -44,4 +44,4 @@ To configure a Gluu server with OIDC, you will need to install and set up the Gl
 
     > **Note**: You should also ensure that the `kubernetes.io/oidc-issuer-url`, `kubernetes.io/oidc-client-id`, `kubernetes.io/oidc-username-claim`, and `kubernetes.io/oidc-groups-claim` annotations are set to the correct values for your Gluu server and configuration. These annotations specify the issuer URL and client ID for the OIDC identity provider, as well as the claims to use for the username and group membership of authenticated users.
 
-Once these steps are completed, the Gluu server should be configured to use OIDC and connected to the Kubecost cluster, allowing users to authenticate and authorize themselves using their Gluu credentials.
+Once these steps are completed, the Gluu server should be configured to use OIDC and connected to the nOps cluster, allowing users to authenticate and authorize themselves using their Gluu credentials.

@@ -1,10 +1,10 @@
-# Kubecost Cloud: Assets Dashboard
+# nOps Cloud: Assets Dashboard
 
 {% hint style="info" %}
-This documentation should only be consulted when using Kubecost Cloud! For information about the Assets dashboard for self-hosted Kubecost, see [here](/using-kubecost/navigating-the-kubecost-ui/assets.md).
+This documentation should only be consulted when using nOps Cloud! For information about the Assets dashboard for self-hosted nOps, see [here](/using-nOps/navigating-the-nOps-ui/assets.md).
 {% endhint %}
 
-The Kubecost Assets dashboard shows Kubernetes cluster costs broken down by the individual backing assets in your cluster (e.g. cost by node, disk, and other assets). It’s used to identify spend drivers over time and to audit Allocation data. This view can also optionally show out-of-cluster assets by service, tag/label, etc.
+The nOps Assets dashboard shows Kubernetes cluster costs broken down by the individual backing assets in your cluster (e.g. cost by node, disk, and other assets). It’s used to identify spend drivers over time and to audit Allocation data. This view can also optionally show out-of-cluster assets by service, tag/label, etc.
 
 ## UI overview <a href="#ui-overview" id="ui-overview"></a>
 
@@ -31,12 +31,12 @@ Choose one of the following ways to display your query data on the dashboard:
 
 View either cumulative or run rate costs measured over the selected time window based on the resources allocated.
 
-* Cumulative Cost: represents the actual/historical spend captured by the Kubecost agent over the selected time window
+* Cumulative Cost: represents the actual/historical spend captured by the nOps agent over the selected time window
 * Rate metrics: Monthly, daily, or hourly "run rate" cost, also used for projected cost figures, based on samples in the selected time window
 
 **Filters**
 
-Filter resources by namespace, cluster, and/or Kubernetes label to more closely investigate a rise in spend or key cost drivers at different aggregations such as deployments or pods. When a filter is applied, only resources with this matching value will be shown.Comma-separated lists are supported to filter by multiple values, e.g. label filter equals `kube-system,kubecost`. Wild card filters are also supported, indicated by a `*` following the filter, e.g. `label=kube*` to return any namespace beginning with `kube`.
+Filter resources by namespace, cluster, and/or Kubernetes label to more closely investigate a rise in spend or key cost drivers at different aggregations such as deployments or pods. When a filter is applied, only resources with this matching value will be shown.Comma-separated lists are supported to filter by multiple values, e.g. label filter equals `kube-system,nOps`. Wild card filters are also supported, indicated by a `*` following the filter, e.g. `label=kube*` to return any namespace beginning with `kube`.
 
 ### Additional options <a href="#additional-options" id="additional-options"></a>
 

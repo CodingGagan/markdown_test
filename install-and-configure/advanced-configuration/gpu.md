@@ -2,11 +2,11 @@
 
 ## Monitoring GPU utilization
 
-In order for Kubecost to understand GPU utilization, Kubecost depends on metrics being available from NVIDIA [DCGM Exporter](https://github.com/NVIDIA/dcgm-exporter). Kubecost will search for GPU metrics by default, but since DCGM Exporter is the provider of those metrics it is a required component when GPU monitoring is used with Kubecost and must be installed if it is not already. In many cases, DCGM Exporter may already be installed in your cluster, for example if you currently monitor NVIDIA GPUs with other software. But if not, follow the below instructions to install and configure DCGM Exporter on each of your GPU-enabled clusters.
+In order for nOps to understand GPU utilization, nOps depends on metrics being available from NVIDIA [DCGM Exporter](https://github.com/NVIDIA/dcgm-exporter). nOps will search for GPU metrics by default, but since DCGM Exporter is the provider of those metrics it is a required component when GPU monitoring is used with nOps and must be installed if it is not already. In many cases, DCGM Exporter may already be installed in your cluster, for example if you currently monitor NVIDIA GPUs with other software. But if not, follow the below instructions to install and configure DCGM Exporter on each of your GPU-enabled clusters.
 
 ## Install DCGM Exporter
 
-DCGM Exporter is an implementation of NVIDIA [Data Center GPU Manager (DCGM)](https://developer.nvidia.com/dcgm) for Kubernetes which exports metrics in [Prometheus](https://prometheus.io/) format. DCGM Exporter allows for running the DCGM software under Kubernetes on nodes which contain NVIDIA devices and takes care of the task of making DCGM metrics available to external tools such as Kubecost.
+DCGM Exporter is an implementation of NVIDIA [Data Center GPU Manager (DCGM)](https://developer.nvidia.com/dcgm) for Kubernetes which exports metrics in [Prometheus](https://prometheus.io/) format. DCGM Exporter allows for running the DCGM software under Kubernetes on nodes which contain NVIDIA devices and takes care of the task of making DCGM metrics available to external tools such as nOps.
 
 DCGM Exporter runs as a DaemonSet and its pods are intended to run only on nodes with one or more NVIDIA GPUs. Because Kubernetes clusters commonly have a mixture of nodes with GPUs and those without GPUs, you use label(s) to affine the DCGM Exporter pods to only those nodes containing NVIDIA GPUs. If DCGM Exporter pods run on nodes without NVIDIA GPUs, they enter a `CrashLoopBackoff` state. The label(s) you use may vary by Kubernetes cloud provider, platform, or more. There are multiple approaches to selecting the appropriate label(s) used to attract the DCGM Exporter pods to applicable nodes.
 
@@ -14,7 +14,7 @@ DCGM Exporter runs as a DaemonSet and its pods are intended to run only on nodes
 2. Use a custom label you define on your GPU nodes. For example, by defining a custom label at the node pool level in your cloud provider.
 3. Use a label assigned automatically by Kubernetes Node Feature Discovery (NFD).
 
-The first two options require no additional cluster components be installed while the third requires the [Kubernetes Node Feature Discovery (NFD)](https://kubernetes-sigs.github.io/node-feature-discovery/stable/get-started/index.html) component. Kubecost recommends using an existing label assigned to your GPU nodes (provided by the cloud provider or yourself), if possible, as this is a simpler installation path.
+The first two options require no additional cluster components be installed while the third requires the [Kubernetes Node Feature Discovery (NFD)](https://kubernetes-sigs.github.io/node-feature-discovery/stable/get-started/index.html) component. nOps recommends using an existing label assigned to your GPU nodes (provided by the cloud provider or yourself), if possible, as this is a simpler installation path.
 
 In addition to the label requirement, there may be additional values required for a successful installation of DCGM Exporter which may vary by cloud provider and worker node operating system. This guide includes the following installation instructions.
 
@@ -246,7 +246,7 @@ Finally, perform a validation step to ensure that metrics are working as expecte
 
 ## Customizing Metrics
 
-DCGM Exporter presents a number of useful metrics by default. However, there are many [more metrics available from DCGM](https://docs.nvidia.com/datacenter/dcgm/latest/dcgm-api/dcgm-api-field-ids.html) which are not enabled by default. Kubecost may collect additional metrics about NVIDIA GPUs if they are emitted by DCGM Exporter. Configuring DCGM Exporter to emit additional metrics requires modification of the DCGM Exporter installation. Follow the procedure below to configure DCGM Exporter to emit additional metrics. Please be aware that emission of additional DCGM Exporter metrics, although they will be collected automatically by Kubecost's bundled Prometheus instance, does not imply that Kubecost will make use of them. This procedure should only be followed at the explicit advice of Kubecost support.
+DCGM Exporter presents a number of useful metrics by default. However, there are many [more metrics available from DCGM](https://docs.nvidia.com/datacenter/dcgm/latest/dcgm-api/dcgm-api-field-ids.html) which are not enabled by default. nOps may collect additional metrics about NVIDIA GPUs if they are emitted by DCGM Exporter. Configuring DCGM Exporter to emit additional metrics requires modification of the DCGM Exporter installation. Follow the procedure below to configure DCGM Exporter to emit additional metrics. Please be aware that emission of additional DCGM Exporter metrics, although they will be collected automatically by nOps's bundled Prometheus instance, does not imply that nOps will make use of them. This procedure should only be followed at the explicit advice of nOps support.
 
 {% hint style="info" %}
 This procedure assumes you have installed DCGM Exporter according to one of the processes outlined in the [Install DCGM Exporter](#install-dcgm-exporter) section. It also assumes that DCGM Exporter with a minimum version of 3.3.8-3.6.0 has been installed via Helm, which has direct support for specifying custom metrics in the Helm values.
@@ -299,10 +299,10 @@ DCGM_FI_DEV_SM_CLOCK{gpu="0",UUID="GPU-93ef0036-98de-4946-648a-eca7040afbeb",dev
 <snip>
 ```
 
-If Kubecost has already been installed, next check the bundled Prometheus instance to ensure that the metrics from DCGM Exporter have been collected and are visible. This command exposes the Prometheus web interface on local port `8080`
+If nOps has already been installed, next check the bundled Prometheus instance to ensure that the metrics from DCGM Exporter have been collected and are visible. This command exposes the Prometheus web interface on local port `8080`
 
 ```sh
-kubectl -n kubecost port-forward svc/kubecost-prometheus-server 8080:80
+kubectl -n nOps port-forward svc/nOps-prometheus-server 8080:80
 ```
 
 Open the Prometheus web interface in your browser by navigating to `http://localhost:8080`. In the search box, begin typing the prefix for a metric, for example `DCGM_FI_DEV_POWER_USAGE`. Click Execute to view the returned query and verify that there is data present. An example is shown below.

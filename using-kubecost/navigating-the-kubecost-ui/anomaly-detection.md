@@ -6,7 +6,7 @@ Anomaly Detection is currently in beta. Please read the documentation carefully.
 
 ![Anomaly Detection Dashboard](/images/anomalydetection-dashboard.png)
 
-The Anomaly Detection Dashboard (under the ‘Govern’ menu) in Kubecost highlights any significant changes in your Kubernetes or cloud spend - helping you detect unexpected cost increases faster. Detecting and remediating unexpected costs quickly helps teams save money, and is a key part of an effective cost governance strategy. This feature is available on all tiers of Kubecost and (along with the Forecasting feature) requires the Kubecost forecasting container (enabled by default).
+The Anomaly Detection Dashboard (under the ‘Govern’ menu) in nOps highlights any significant changes in your Kubernetes or cloud spend - helping you detect unexpected cost increases faster. Detecting and remediating unexpected costs quickly helps teams save money, and is a key part of an effective cost governance strategy. This feature is available on all tiers of nOps and (along with the Forecasting feature) requires the nOps forecasting container (enabled by default).
 
 If you aren’t interested in the Anomaly Detection or Forecasting features, the Forecasting container can be disabled by setting the Helm flag:
 
@@ -17,9 +17,9 @@ forecasting:
 
 ## Analyzing Anomalies
 
-Kubecost is able to provide users anomaly detection for both their Kubernetes workloads and cloud spend. Simply toggle between the ‘Cloud Costs’ and the ‘Allocations’ tabs to see your cloud spend or Kubernetes workload anomalies, respectively. Users are able to aggregate and filter the anomalies however they like (including custom labels) to analyze their spend changes for a given business unit (application, team, etc.).
+nOps is able to provide users anomaly detection for both their Kubernetes workloads and cloud spend. Simply toggle between the ‘Cloud Costs’ and the ‘Allocations’ tabs to see your cloud spend or Kubernetes workload anomalies, respectively. Users are able to aggregate and filter the anomalies however they like (including custom labels) to analyze their spend changes for a given business unit (application, team, etc.).
 
-Today, Kubecost defines an anomaly as an increase or decrease in cost greater than some threshold (*outlier threshold*) as compared to the mean of the cost over the previous X days (*lookback window*). The outlier threshold and lookback window can be configured in the ‘edit’ menu.
+Today, nOps defines an anomaly as an increase or decrease in cost greater than some threshold (*outlier threshold*) as compared to the mean of the cost over the previous X days (*lookback window*). The outlier threshold and lookback window can be configured in the ‘edit’ menu.
 
 Clicking ‘edit’ in the upper right corner of the anomaly detection page will allow users to configure what constitutes an anomaly for their team. The configurations available are:
 

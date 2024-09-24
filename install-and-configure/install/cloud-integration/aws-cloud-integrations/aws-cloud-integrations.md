@@ -1,26 +1,26 @@
 # AWS Cloud Billing Integration
 
-By default, Kubecost pulls on-demand asset prices from the public AWS pricing API. For more accurate pricing, this integration will allow Kubecost to reconcile your current measured Kubernetes spend with your actual AWS bill. This integration also properly accounts for Enterprise Discount Programs, Reserved Instance usage, Savings Plans, Spot usage, and more.
+By default, nOps pulls on-demand asset prices from the public AWS pricing API. For more accurate pricing, this integration will allow nOps to reconcile your current measured Kubernetes spend with your actual AWS bill. This integration also properly accounts for Enterprise Discount Programs, Reserved Instance usage, Savings Plans, Spot usage, and more.
 
-You will need permissions to create the Cost and Usage Report (CUR), and add IAM credentials for Athena and S3. Optional permission is the ability to add and execute CloudFormation templates. Kubecost does not require root access in the AWS account.
+You will need permissions to create the Cost and Usage Report (CUR), and add IAM credentials for Athena and S3. Optional permission is the ability to add and execute CloudFormation templates. nOps does not require root access in the AWS account.
 
 ## Quick Start for IRSA
 
-This guide contains multiple possible methods for connecting Kubecost to AWS billing, based on user environment and preference. Because of this, there may not be a straightforward approach for new users. To address this, a streamlined guide containing best practices can be found [here](aws-cloud-integration-using-irsa.md) for IRSA environments. This quick start guide has some assumptions to carefully consider, and may not be applicable for all users. See prerequisites in the linked article.
+This guide contains multiple possible methods for connecting nOps to AWS billing, based on user environment and preference. Because of this, there may not be a straightforward approach for new users. To address this, a streamlined guide containing best practices can be found [here](aws-cloud-integration-using-irsa.md) for IRSA environments. This quick start guide has some assumptions to carefully consider, and may not be applicable for all users. See prerequisites in the linked article.
 
 ## Key AWS terminology
 
-Integrating your AWS account with Kubecost may be a complicated process if you aren’t deeply familiar with the AWS platform and how it interacts with Kubecost. This section provides an overview of some of the key terminology and AWS services that are involved in the process of integration.
+Integrating your AWS account with nOps may be a complicated process if you aren’t deeply familiar with the AWS platform and how it interacts with nOps. This section provides an overview of some of the key terminology and AWS services that are involved in the process of integration.
 
 **Cost and Usage Report**: AWS report which tracks cloud spending and writes to an Amazon Simple Storage Service (Amazon S3) bucket for ingestion and long term historical data. The CUR is originally formatted as a CSV, but when integrated with Athena, is converted to Parquet format.
 
-**Amazon Athena:** Analytics service which queries the CUR S3 bucket for your AWS cloud spending, then outputs data to a separate S3 bucket. Kubecost uses Athena to query for the bill data to perform [reconciliation](/install-and-configure/install/cloud-integration/README.md#reconciliation). Athena is technically optional for AWS cloud integration, but as a result, Kubecost will only provide unreconciled costs (on-demand public rates).
+**Amazon Athena:** Analytics service which queries the CUR S3 bucket for your AWS cloud spending, then outputs data to a separate S3 bucket. nOps uses Athena to query for the bill data to perform [reconciliation](/install-and-configure/install/cloud-integration/README.md#reconciliation). Athena is technically optional for AWS cloud integration, but as a result, nOps will only provide unreconciled costs (on-demand public rates).
 
-**S3 bucket:** Cloud object storage tool which both CURs and Athena output cost data to. Kubecost needs access to these buckets in order to read that data.
+**S3 bucket:** Cloud object storage tool which both CURs and Athena output cost data to. nOps needs access to these buckets in order to read that data.
 
 ## Cost and Usage Report integration
 
-For the below guide, a GitHub repository with sample files can be found [here](https://github.com/kubecost/poc-common-configurations/tree/main/aws).
+For the below guide, a GitHub repository with sample files can be found [here](https://github.com/nOps/poc-common-configurations/tree/main/aws).
 
 ### Step 1: Setting up a CUR
 
@@ -62,23 +62,23 @@ Once Athena is set up with the CUR, you will need to create a new S3 bucket for 
 7. Set _Location of query result_ to the S3 bucket you just created, which will look like _s3://aws-athena-query-results..._, then select _Save._
 
 {% hint style="info" %}
-For Athena query results written to an S3 bucket only accessed by Kubecost, it is safe to expire or delete the objects after 1 day of retention.
+For Athena query results written to an S3 bucket only accessed by nOps, it is safe to expire or delete the objects after 1 day of retention.
 {% endhint %}
 
 ### Step 3: Setting up IAM permissions
 
 #### Add via CloudFormation:
 
-Kubecost offers a set of CloudFormation templates to help set your IAM roles up.
+nOps offers a set of CloudFormation templates to help set your IAM roles up.
 
 {% hint style="info" %}
 If you’re new to provisioning IAM roles, we suggest downloading our templates and using the CloudFormation wizard to set these up. You can learn how to do this in AWS' [Creating a stack on the AWS CloudFormation console](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-create-stack.html) doc. Open the step below which represents your CUR and management account arrangement, download the .yaml file listed, and upload them as the stack template in the 'Creating a stack' > 'Selecting a stack template' step.
 
 <details>
 
-<summary>My CUR exists in the same account as Kubecost or the management account</summary>
+<summary>My CUR exists in the same account as nOps or the management account</summary>
 
-* Download [this .yaml file](https://raw.githubusercontent.com/kubecost/cloudformation/master/kubecost-single-account-permissions.yaml).
+* Download [this .yaml file](https://raw.githubusercontent.com/nOps/cloudformation/master/nOps-single-account-permissions.yaml).
 * Navigate to the [AWS Console Cloud Formation page](https://console.aws.amazon.com/cloudformation).
 * Select _Create Stack_, then select _With new resources (standard)_ from the dropdown.
 * On the 'Create stack' page, under 'Prerequisite - Prepare Template', make sure *Template is ready* has been preselected. Under 'Specify Template', select *Upload a template file*. Select *Choose file*, then select your downloaded .yaml file from your file explorer. Select *Next*.
@@ -94,11 +94,11 @@ If you’re new to provisioning IAM roles, we suggest downloading our templates 
 
 <details>
 
-<summary>My CUR exists in a member account different from Kubecost or the management account</summary>
+<summary>My CUR exists in a member account different from nOps or the management account</summary>
 
-**On each sub-account running Kubecost:**
+**On each sub-account running nOps:**
 
-* Download [this .yaml file](https://raw.githubusercontent.com/kubecost/cloudformation/master/kubecost-sub-account-permissions.yaml).
+* Download [this .yaml file](https://raw.githubusercontent.com/nOps/cloudformation/master/nOps-sub-account-permissions.yaml).
   * Navigate to the [AWS Console Cloud Formation page](https://console.aws.amazon.com/cloudformation).
   * Select _Create Stack_, then select _With existing resources (import resources)_ from the dropdown. On the 'Identify resources' page, select _Next._
   * Under Template source, choose _Upload a template file_.
@@ -115,9 +115,9 @@ If you’re new to provisioning IAM roles, we suggest downloading our templates 
 
 **On the management account:**
 
-* Follow the same steps to create a CloudFormation stack as above, but using [this .yaml file](https://raw.githubusercontent.com/kubecost/cloudformation/master/kubecost-management-account-permissions.yaml) instead, and with these parameters:
+* Follow the same steps to create a CloudFormation stack as above, but using [this .yaml file](https://raw.githubusercontent.com/nOps/cloudformation/master/nOps-management-account-permissions.yaml) instead, and with these parameters:
   * S3CURBucket: The bucket where the CUR is set from Step 1
-  * KubecostClusterID: An account that Kubecost is running on that requires access to the Athena CUR.
+  * nOpsClusterID: An account that nOps is running on that requires access to the Athena CUR.
 
 </details>
 
@@ -125,7 +125,7 @@ If you’re new to provisioning IAM roles, we suggest downloading our templates 
 
 <details>
 
-<summary>My CUR exists in the same account as Kubecost or the management account</summary>
+<summary>My CUR exists in the same account as nOps or the management account</summary>
 
 Attach the following policy to the same role or user. Use a user if you intend to integrate via ServiceKey, and a role if via IAM annotation (see more below under Via Pod Annotation by EKS). The SpotDataAccess policy statement is optional if the Spot data feed is configured (see “Setting up the Spot Data feed” step below).
 
@@ -197,13 +197,13 @@ Attach the following policy to the same role or user. Use a user if you intend t
 
 <details>
 
-<summary>My CUR exists in a member account different from Kubecost or the management account</summary>
+<summary>My CUR exists in a member account different from nOps or the management account</summary>
 
-**In the AWS account where Kubecost primary installation runs:**
+**In the AWS account where nOps primary installation runs:**
 
-* Create an IAM User or Role in the AWS account where your primary Kubecost is running.
-* This Role or User links to the Kubernetes service account for Kubecost via IAM annotation (see more below under Via Pod Annotation by EKS), or via User with an Access/Secret Key.
-* This Role/User will assume a role cross-account to the account where the CUR and Athena are created (the payer account), allowing Kubecost primary in a sub-account to get data from AWS Athena in the other top-level billing account.
+* Create an IAM User or Role in the AWS account where your primary nOps is running.
+* This Role or User links to the Kubernetes service account for nOps via IAM annotation (see more below under Via Pod Annotation by EKS), or via User with an Access/Secret Key.
+* This Role/User will assume a role cross-account to the account where the CUR and Athena are created (the payer account), allowing nOps primary in a sub-account to get data from AWS Athena in the other top-level billing account.
 
 **In the account where the AWS CUR is generated:**
 
@@ -211,9 +211,9 @@ Attach the following policy to the same role or user. Use a user if you intend t
 
 Now that you have the Sub-account User or Role plus the payer account Role, you will need to add policies to both.
 
-#### Attach AssumeRole policy to IAM Role/User in Kubecost primary sub-account
+#### Attach AssumeRole policy to IAM Role/User in nOps primary sub-account
 
-Add the IAM Policy below to the IAM Role/User in the AWS sub-account with Kubecost primary. This policy allows the sub-account role to use sts:AssumeRole and assume the IAM Role created in the payer account.
+Add the IAM Policy below to the IAM Role/User in the AWS sub-account with nOps primary. This policy allows the sub-account role to use sts:AssumeRole and assume the IAM Role created in the payer account.
 
 The SpotDataAccess policy statement is optional, and only needed if the Spot data feed is configured (see “Setting up the Spot Data feed” step below).
 
@@ -226,7 +226,7 @@ The SpotDataAccess policy statement is optional, and only needed if the Spot dat
       "Sid": "AssumeRoleInMasterPayer",
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
-      "Resource": "arn:aws:iam::${PayerAccountID}:role/<Kubecost IAM Role in payer account>"
+      "Resource": "arn:aws:iam::${PayerAccountID}:role/<nOps IAM Role in payer account>"
     },
     {
       "Sid": "SpotDataAccess",
@@ -303,7 +303,7 @@ Attach the following policy to the IAM Role created in the payer account. Replac
 
 #### Attach trust statement to IAM Role in payer account
 
-We now need to make sure the payer account role trusts the sub-account User/Role.  Add the following trust statement to the Role in the payer account. (replace the `${kubecost-primary-subaccount-id}` variable with the account number of the sub-account running Kubecost primary):
+We now need to make sure the payer account role trusts the sub-account User/Role.  Add the following trust statement to the Role in the payer account. (replace the `${nOps-primary-subaccount-id}` variable with the account number of the sub-account running nOps primary):
 
 ```json
 {
@@ -312,7 +312,7 @@ We now need to make sure the payer account role trusts the sub-account User/Role
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::${kubecost-primary-subaccount-id}:root"
+        "AWS": "arn:aws:iam::${nOps-primary-subaccount-id}:root"
       },
       "Action": ["sts:AssumeRole"]
     }
@@ -322,26 +322,26 @@ We now need to make sure the payer account role trusts the sub-account User/Role
 
 </details>
 
-### Step 4: Attaching IAM permissions to Kubecost
+### Step 4: Attaching IAM permissions to nOps
 
 {% hint style="warning" %}
 If you are using the alternative [multi-cloud integration](/install-and-configure/install/cloud-integration/multi-cloud.md) method, steps 4 and 5 are not required.
 {% endhint %}
 
-Now that the policies have been created, attach those policies to Kubecost. We support the following methods:
+Now that the policies have been created, attach those policies to nOps. We support the following methods:
 
 <details>
 
 <summary>Attach via Service Key and Kubernetes Secret</summary>
 
-Navigate to the [AWS IAM Console](https://console.aws.amazon.com/iam), then select _Access Management_ > _Users_ from the left navigation. Find the Kubecost User and select _Security credentials_ > _Create access key_. Follow along to receive the Access Key ID and Secret Access Key (AWS will not provide you the Secret Access Key in the future, so make sure you save this value). Then, follow the steps from either Option 1 or Option 2 below, but **not both.**
+Navigate to the [AWS IAM Console](https://console.aws.amazon.com/iam), then select _Access Management_ > _Users_ from the left navigation. Find the nOps User and select _Security credentials_ > _Create access key_. Follow along to receive the Access Key ID and Secret Access Key (AWS will not provide you the Secret Access Key in the future, so make sure you save this value). Then, follow the steps from either Option 1 or Option 2 below, but **not both.**
 
 **Option 1: Generate a secret from Helm values:**
 
 Note that this will leave your AWS keys unencrypted in your `values.yaml.` Set the following Helm values:
 
 ```yaml
-kubecostProductConfigs:
+nOpsProductConfigs:
   createServiceKeySecret: true
   awsServiceKeyName: <ACCESS_KEY_ID>
   awsServiceKeyPassword: <SECRET_ACCESS_KEY>
@@ -364,14 +364,14 @@ This may be the preferred method if your Helm values are in version control and 
 
 {% code overflow="wrap" %}
 ```bash
-$ kubectl create secret generic <SECRET_NAME> --from-file=service-key.json --namespace <kubecost>
+$ kubectl create secret generic <SECRET_NAME> --from-file=service-key.json --namespace <nOps>
 ```
 {% endcode %}
 
 3. Set the Helm value:
 
 ```yaml
-kubecostProductConfigs:
+nOpsProductConfigs:
   serviceKeySecretName: <SECRET_NAME>
 ```
 
@@ -390,8 +390,8 @@ kubecostProductConfigs:
 
 Download the following configuration files:
 
-* [_cloud-integration.json_](https://github.com/kubecost/poc-common-configurations/blob/main/aws/cloud-integration.json)
-* [_iam-payer-account-cur-athena-glue-s3-access.json_](https://github.com/kubecost/poc-common-configurations/blob/main/aws/iam-policies/cur/iam-payer-account-cur-athena-glue-s3-access.json)
+* [_cloud-integration.json_](https://github.com/nOps/poc-common-configurations/blob/main/aws/cloud-integration.json)
+* [_iam-payer-account-cur-athena-glue-s3-access.json_](https://github.com/nOps/poc-common-configurations/blob/main/aws/iam-policies/cur/iam-payer-account-cur-athena-glue-s3-access.json)
 
 Update the following variables in the files you downloaded:
 
@@ -406,7 +406,7 @@ Update the following variables in the files you downloaded:
 ```
 
 {% hint style="info" %}
-In your *cloud-integration.json*, you only need to provide a value for `masterPayerARN` when Kubecost is running in an AWS account different than the payer account Kubecost is querying (otherwise this value can be omitted from the config). `masterPayerARN` is the Amazon Resource Number of the role in the management account.
+In your *cloud-integration.json*, you only need to provide a value for `masterPayerARN` when nOps is running in an AWS account different than the payer account nOps is querying (otherwise this value can be omitted from the config). `masterPayerARN` is the Amazon Resource Number of the role in the management account.
 {% endhint %}
 
 * In _iam-payer-account-cur-athena-glue-s3-access.json_, replace `ATHENA_RESULTS_BUCKET_NAME` with your Athena S3 bucket name (configured in Step 2: Setting up Athena).
@@ -424,7 +424,7 @@ aws iam create-policy --policy-name iam-payer-account-cur-athena-glue-s3-access 
 **Step 3: Create OIDC provider for your cluster**
 
 ```
-kubectl create ns kubecost
+kubectl create ns nOps
 export YOUR_CLUSTER_NAME=<ENTER_YOUR_ACTUAL_CLUSTER_NAME>
 export AWS_REGION=<ENTER_YOUR_AWS_REGION>
 eksctl utils associate-iam-oidc-provider \
@@ -441,8 +441,8 @@ Remember to replace `1234567890` with your AWS account ID number.
 {% code overflow="wrap" %}
 ```
 eksctl create iamserviceaccount \
-    --name kubecost-serviceaccount-cur-athena-thanos \
-    --namespace kubecost \
+    --name nOps-serviceaccount-cur-athena-thanos \
+    --namespace nOps \
     --cluster ${YOUR_CLUSTER_NAME} --region ${AWS_REGION} \
     --attach-policy-arn arn:aws:iam::1234567890:policy/iam-payer-account-cur-athena-glue-s3-access \
     --override-existing-serviceaccounts \
@@ -454,32 +454,32 @@ eksctl create iamserviceaccount \
 
 {% code overflow="wrap" %}
 ```
-kubectl create secret generic cloud-integration -n kubecost --from-file=cloud-integration.json
+kubectl create secret generic cloud-integration -n nOps --from-file=cloud-integration.json
 ```
 {% endcode %}
 
-**Step 6. Install Kubecost via Helm**
+**Step 6. Install nOps via Helm**
 
 {% code overflow="wrap" %}
 ```
-helm upgrade --install kubecost --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer \
---namespace kubecost \
--f https://raw.githubusercontent.com/kubecost/poc-common-configurations/main/aws/values-amazon-primary.yaml
+helm upgrade --install nOps --repo https://nOps.github.io/cost-analyzer/ cost-analyzer \
+--namespace nOps \
+-f https://raw.githubusercontent.com/nOps/poc-common-configurations/main/aws/values-amazon-primary.yaml
 ```
 {% endcode %}
 
 </details>
 
-### Step 5: Provide CUR config values to Kubecost
+### Step 5: Provide CUR config values to nOps
 
-These values must be set via `.Values.kubecostProductConfigs` in the Helm chart. Values for all fields must be provided.
+These values must be set via `.Values.nOpsProductConfigs` in the Helm chart. Values for all fields must be provided.
 
 {% hint style="warning" %}
-If you set any `kubecostProductConfigs` from the Helm chart, all changes via the front end will be overridden on pod restart.
+If you set any `nOpsProductConfigs` from the Helm chart, all changes via the front end will be overridden on pod restart.
 {% endhint %}
 
 * `athenaProjectID`: The AWS AccountID where the Athena CUR is, likely your management account.
-* `athenaBucketName`: An S3 bucket to store Athena query results that you’ve created that Kubecost has permission to access
+* `athenaBucketName`: An S3 bucket to store Athena query results that you’ve created that nOps has permission to access
   * The name of the bucket should match `s3://aws-athena-query-results-*`, so the IAM roles defined above will automatically allow access to it
   * The bucket can have a Canned ACL of `Private` or other permissions as you see fit.
 * `athenaRegion`: The AWS region Athena is running in
@@ -493,15 +493,15 @@ If you set any `kubecostProductConfigs` from the Helm chart, all changes via the
 Make sure to use only underscore as a delimiter if needed for tables and views. Using a hyphen/dash will not work even though you might be able to create it. See the [AWS docs](https://docs.aws.amazon.com/athena/latest/ug/tables-databases-columns-names.html) for more info.
 {% endhint %}
 
-If you are using a multi-account setup, you will also need to set `.Values.kubecostProductConfigs.masterPayerARN` to the Amazon Resource Number (ARN) of the role in the management account, e.g. `arn:aws:iam::530337586275:role/KubecostRole`.
+If you are using a multi-account setup, you will also need to set `.Values.nOpsProductConfigs.masterPayerARN` to the Amazon Resource Number (ARN) of the role in the management account, e.g. `arn:aws:iam::530337586275:role/nOpsRole`.
 
 ## Troubleshooting
 
-### Diagnostics through Kubecost UI
+### Diagnostics through nOps UI
 
 Once you've integrated with the CUR, you can visit _Settings_ > _Cloud Integrations_ in the UI to view if your integration was successful (indicated by a green checkmark). For more information, you can select *View Additional Details* to be taken to the Cloud Integrations page.
 
-You can check pod logs for authentication errors by running: `kubectl get pods -n <namespace>` `kubectl logs <kubecost-pod-name> -n <namespace> -c cost-model`
+You can check pod logs for authentication errors by running: `kubectl get pods -n <namespace>` `kubectl logs <nOps-pod-name> -n <namespace> -c cost-model`
 
 If you do not see any authentication errors, log in to your AWS console and visit the Athena dashboard. Find your CUR and ensure that the database with the CUR matches the `athenaTable` entered in Step 5. It likely has a prefix with `athenacurcfn_` :
 
@@ -526,7 +526,7 @@ QueryAthenaPaginated: query execution error: no query results available for quer
 {% endcode %}
 
 ```
-And/or the following error will be found in the Kubecost `cost-model` container logs.
+And/or the following error will be found in the nOps `cost-model` container logs.
 
 ```
 
@@ -540,7 +540,7 @@ This query ran against the "athenacurcfn_test" database, unless qualified by the
 ````
 {% endcode %}
 
-* **Resolution:** This error is typically caused by the incorrect (Athena results) s3 bucket being specified in the CloudFormation template of Step 3 from above. To resolve the issue, ensure the bucket used for storing the AWS CUR report (Step 1) is specified in the `S3ReadAccessToAwsBillingData` SID of the IAM policy (default: kubecost-athena-access) attached to the user or role used by Kubecost (Default: KubecostUser / KubecostRole). See the following example.
+* **Resolution:** This error is typically caused by the incorrect (Athena results) s3 bucket being specified in the CloudFormation template of Step 3 from above. To resolve the issue, ensure the bucket used for storing the AWS CUR report (Step 1) is specified in the `S3ReadAccessToAwsBillingData` SID of the IAM policy (default: nOps-athena-access) attached to the user or role used by nOps (Default: nOpsUser / nOpsRole). See the following example.
 
 {% hint style="info" %}
 This error can also occur when the management account cross-account permissions are incorrect, however, the solution may differ.
@@ -565,7 +565,7 @@ Connection test failed for cloud integration config: Fetch error: cloud billing 
 ```
 {% endcode %}
 
-* **Resolution:** Please verify that the prefix `s3://` was used when setting the `athenaBucketName` Helm value or when configuring the bucket name in the Kubecost UI.
+* **Resolution:** Please verify that the prefix `s3://` was used when setting the `athenaBucketName` Helm value or when configuring the bucket name in the nOps UI.
 
 #### Query not supported
 
@@ -589,11 +589,11 @@ QueryAthenaPaginated: start query error: operation error Athena: StartQueryExecu
 ```
 {% endcode %}
 
-* **Resolution:** Previously, if you ran a query without specifying a value for query result location, and the query result location setting was not overridden by a workgroup, Athena created a default location for you. Now, before you can run an Athena query in a region in which your account hasn't used Athena previously, you must specify a query result location, or use a workgroup that overrides the query result location setting. While Athena no longer creates a default query results location for you, previously created default `aws-athena-query-results-MyAcctID-MyRegion` locations remain valid and you can continue to use them. The bucket should be in the format of: `aws-athena-query-results-MyAcctID-MyRegion` It may also be required to remove and reinstall Kubecost. If doing this please remeber to backup ETL files prior or contact support for additional assistance. See also this AWS doc on [specifying a query result location](https://docs.aws.amazon.com/athena/latest/ug/querying.html#query-results-specify-location).
+* **Resolution:** Previously, if you ran a query without specifying a value for query result location, and the query result location setting was not overridden by a workgroup, Athena created a default location for you. Now, before you can run an Athena query in a region in which your account hasn't used Athena previously, you must specify a query result location, or use a workgroup that overrides the query result location setting. While Athena no longer creates a default query results location for you, previously created default `aws-athena-query-results-MyAcctID-MyRegion` locations remain valid and you can continue to use them. The bucket should be in the format of: `aws-athena-query-results-MyAcctID-MyRegion` It may also be required to remove and reinstall nOps. If doing this please remeber to backup ETL files prior or contact support for additional assistance. See also this AWS doc on [specifying a query result location](https://docs.aws.amazon.com/athena/latest/ug/querying.html#query-results-specify-location).
 
 #### Missing Athena column
 
-* **Symptom:** A similar error to this will be shown on the Diagnostics page under Pricing Sources or in the Kubecost `cost-model` container logs.
+* **Symptom:** A similar error to this will be shown on the Diagnostics page under Pricing Sources or in the nOps `cost-model` container logs.
 
 {% code overflow="wrap" %}
 ```
@@ -611,7 +611,7 @@ This query ran against the "<DB Name>" database, unless qualified by the query
 
 #### Not a valid S3 path
 
-* **Symptom:** A similar error to this will be shown on the Diagnostics page under Pricing Sources or in the Kubecost `cost-model` container logs.
+* **Symptom:** A similar error to this will be shown on the Diagnostics page under Pricing Sources or in the nOps `cost-model` container logs.
 
 {% code overflow="wrap" %}
 ```
@@ -619,7 +619,7 @@ QueryAthenaPaginated: start query error: operation error Athena: StartQueryExecu
 ```
 {% endcode %}
 
-* **Resolution:** Verify that `s3://` was included in the bucket name when setting the `.Values.kubecostProductConfigs.athenaBucketName` Helm value.
+* **Resolution:** Verify that `s3://` was included in the bucket name when setting the `.Values.nOpsProductConfigs.athenaBucketName` Helm value.
 
 ### Failure when running the CloudFormation template in my AWS account due to low Lambda concurrent execution values
 
@@ -629,11 +629,11 @@ For AWS Lambda users, you may experience errors running the CloudFormation templ
 
 ## Viewing account-level tags
 
-Account-level tags are applied (as labels) to all the Assets built from resources defined under a given AWS account. You can filter AWS resources in the Kubecost Assets View (or API) by account-level tags by adding them ('tag:value') in the Label/Tag filter.
+Account-level tags are applied (as labels) to all the Assets built from resources defined under a given AWS account. You can filter AWS resources in the nOps Assets View (or API) by account-level tags by adding them ('tag:value') in the Label/Tag filter.
 
 If a resource has a label with the same name as an account-level tag, the resource label value will take precedence.
 
-Modifications incurred on account-level tags may take several hours to update on Kubecost.
+Modifications incurred on account-level tags may take several hours to update on nOps.
 
 Your AWS account will need to support the `organizations:ListAccounts` and `organizations:ListTagsForResource` policies to benefit from this feature.
 
@@ -645,11 +645,11 @@ AWS services used here are:
 * [S3](https://aws.amazon.com/s3/pricing/)
 * [EC2](https://aws.amazon.com/ec2/pricing/)
 
-Kubecost's `cost-model` requires roughly 2 CPU and 10 GB of RAM per 50,000 pods monitored. The backing Prometheus database requires roughly 2 CPU and 25 GB per million metrics ingested per minute. You can pick the EC2 instances necessary to run Kubecost accordingly.
+nOps's `cost-model` requires roughly 2 CPU and 10 GB of RAM per 50,000 pods monitored. The backing Prometheus database requires roughly 2 CPU and 25 GB per million metrics ingested per minute. You can pick the EC2 instances necessary to run nOps accordingly.
 
 * [EBS](https://aws.amazon.com/ebs/pricing/)
 
-Kubecost can write its cache to disk. Roughly 32 GB per 100,000 pods monitored is sufficient. (Optional: our cache can exist in memory)
+nOps can write its cache to disk. Roughly 32 GB per 100,000 pods monitored is sufficient. (Optional: our cache can exist in memory)
 
 * [Cloudformation](https://aws.amazon.com/cloudformation/pricing/) (Optional: manual IAM configuration or via Terraform is fine)
 * [EKS](https://aws.amazon.com/eks/pricing/) (Optional: all K8s flavors are supported)

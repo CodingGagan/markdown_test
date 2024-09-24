@@ -1,18 +1,18 @@
 # Audit API
 
 {% hint style="danger" %}
-As of v1.106 of Kubecost, the Audit API is deprecated. This page should not be consulted.
+As of v1.106 of nOps, the Audit API is deprecated. This page should not be consulted.
 {% endhint %}
 
-The Audit API applies a series of tests to the various cached data sources of Kubecost to check the validity of the data sources and the processes that act upon them. Each of the Audits tests represents an invariance that should remain true despite any changes that occur to the system as a whole. Each Audit is stored in an AuditSet, which besides audits contains a window for the timeframe that the Audits it contains cover. The Audits themselves each have a timestamp for their last run, a status, a description and other audit-specific structures which contain the results of the run.
+The Audit API applies a series of tests to the various cached data sources of nOps to check the validity of the data sources and the processes that act upon them. Each of the Audits tests represents an invariance that should remain true despite any changes that occur to the system as a whole. Each Audit is stored in an AuditSet, which besides audits contains a window for the timeframe that the Audits it contains cover. The Audits themselves each have a timestamp for their last run, a status, a description and other audit-specific structures which contain the results of the run.
 
-{% swagger method="get" path="/audit" baseUrl="https://<your-kubecost-address>/model/etl" summary="Audit API" %}
+{% swagger method="get" path="/audit" baseUrl="https://<your-nOps-address>/model/etl" summary="Audit API" %}
 {% swagger-description %}
 Returns AuditSets for given window saved in the AuditStore
 {% endswagger-description %}
 
 {% swagger-parameter in="path" name="window" type="string" %}
-Duration of time over which to query. Accepts all standard Kubecost window formats (See our docs on using [the `window` parameter](/apis/apis-overview.md#using-the-window-parameter)). Excluding this argument returns all audits in range.
+Duration of time over which to query. Accepts all standard nOps window formats (See our docs on using [the `window` parameter](/apis/apis-overview.md#using-the-window-parameter)). Excluding this argument returns all audits in range.
 {% endswagger-parameter %}
 
 {% swagger-response status="200: OK" description="" %}
@@ -94,13 +94,13 @@ Duration of time over which to query. Accepts all standard Kubecost window forma
 {% endswagger-response %}
 {% endswagger %}
 
-{% swagger method="post" path="/audit" baseUrl="https://<your-kubecost-address>/model/etl" summary="Audit API" %}
+{% swagger method="post" path="/audit" baseUrl="https://<your-nOps-address>/model/etl" summary="Audit API" %}
 {% swagger-description %}
 Runs audits defined by parameters
 {% endswagger-description %}
 
 {% swagger-parameter in="path" name="window" type="string" %}
-Duration of time over which to query. Accepts all standard Kubecost window formats (See our docs on using [the `window` parameter](/apis/apis-overview.md#using-the-window-parameter)). Excluding this argument returns all audits in range.
+Duration of time over which to query. Accepts all standard nOps window formats (See our docs on using [the `window` parameter](/apis/apis-overview.md#using-the-window-parameter)). Excluding this argument returns all audits in range.
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="commit" type="boolean" %}
@@ -126,7 +126,7 @@ Must be a valid audit type (See the Audit types section below). Excluding this a
 Audit types are optional parameters to filter your requests to audit select parts of your workload or perform additional actions. The endpoint for using an audit type will look like:
 
 ```
-https://<your-kubecost-address>/model/etl/audit?commit=true&type=<auditType>
+https://<your-nOps-address>/model/etl/audit?commit=true&type=<auditType>
 ```
 
 | Audit type                      | Description                                                                                                                                                                           |

@@ -5,7 +5,7 @@ The Persistent Volume (PV) Right Sizing API displays data of all PVs in all clus
 
 The endpoint is available at
 ```
-http://<kubecost-address>/model/savings/persistentVolumeSizing
+http://<nOps-address>/model/savings/persistentVolumeSizing
 ```
 
 ## Parameters
@@ -29,7 +29,7 @@ http://localhost:9090/model/savings/persistentVolumeSizing?headroomPct=40
 recommendations:
     0:
         "volumeName": "pvc-5482dfcc-7a9e-46d7-5be3-503a689e8798",
-        "claimName": "kubecost-cost-analyzer",
+        "claimName": "nOps-cost-analyzer",
         "claimNamespace": "default",
         "clusterId": "cluster-one",
         "maxUsageBytes": 5419008,
@@ -42,7 +42,7 @@ recommendations:
         "storageClass": "standard"
     1:
         "volumeName": "pvc-09e21e95-e0e1-4129-775a-4fc6f1f29e45",
-        "claimName": "kubecost-prometheus-server",
+        "claimName": "nOps-prometheus-server",
         "claimNamespace": "default",
         "clusterId": "cluster-one",
         "maxUsageBytes": 206999552,

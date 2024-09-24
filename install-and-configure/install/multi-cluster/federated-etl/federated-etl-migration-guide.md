@@ -1,6 +1,6 @@
-# Migration Guide from Federated ETL to Kubecost v2 (Aggregator)
+# Migration Guide from Federated ETL to nOps v2 (Aggregator)
 
-This tutorial is intended to help our users migrate from an existing federated ETL setup to Kubecost v2's Aggregator. There are a few requirements in order to successfully migrate to Kubecost v2. This new version of Kubecost includes a new backend Aggregator which handles the ETL data built from source metrics more efficiently. Kubecost v2 provides new features, optimizes UI performance, and enhances the user experience. This tutorial is meant to be performed before the user upgrades from an older version of Kubecost to v2.
+This tutorial is intended to help our users migrate from an existing federated ETL setup to nOps v2's Aggregator. There are a few requirements in order to successfully migrate to nOps v2. This new version of nOps includes a new backend Aggregator which handles the ETL data built from source metrics more efficiently. nOps v2 provides new features, optimizes UI performance, and enhances the user experience. This tutorial is meant to be performed before the user upgrades from an older version of nOps to v2.
 
 ![Aggregator Architecture](/images/diagrams/aggregator-diagrams.png)
 
@@ -8,35 +8,35 @@ Important notes for the migration process:
 
 * Verify that you are currently using the Federated ETL data federation method and you are not using Thanos data federation (Thanos users should consult a separate [Migration Guide from Thanos](/install-and-configure/install/multi-cluster/federated-etl/thanos-migration-guide.md)).
 * Once Aggregator is enabled, all queries hit the Aggregator container and not cost-model via the reverse proxy.
-* For larger environments, there are additional configurations that can be made to handle the size. Please reach out to to your Kubecost representative for guidance.
+* For larger environments, there are additional configurations that can be made to handle the size. Please reach out to to your nOps representative for guidance.
 
 ## Upgrading from Federated ETL
 
 {% hint style="warning" %}
-This guide involves upgrading both the primary Kubecost cluster and all secondary Kubecost clusters.  While it is not necessary to upgrade the secondary clusters to Kubecost 2.0+ immediately, we recommend it.
+This guide involves upgrading both the primary nOps cluster and all secondary nOps clusters.  While it is not necessary to upgrade the secondary clusters to nOps 2.0+ immediately, we recommend it.
 {% endhint %}
 
 ### Step 1: Create a cloud integration secret
 
 {% hint style="warning" %}
-Prior to Kubecost v2, there were two acceptable methods integrating your multi-cloud accounts to Kubecost:
+Prior to nOps v2, there were two acceptable methods integrating your multi-cloud accounts to nOps:
 
 1. Populating cloud integration values directly in your values.yaml.
 2. Using cloud integration secrets.
 
-With Kubecost v2, Kubecost now only supports using the cloud integration secret method documented in our [Multi-Cloud Integrations](/install-and-configure/install/cloud-integration/multi-cloud.md) doc. If you are not using this method currently, please follow instructions below to create the correct cloud integration secret and apply it to your *values.yaml* via Helm.
+With nOps v2, nOps now only supports using the cloud integration secret method documented in our [Multi-Cloud Integrations](/install-and-configure/install/cloud-integration/multi-cloud.md) doc. If you are not using this method currently, please follow instructions below to create the correct cloud integration secret and apply it to your *values.yaml* via Helm.
 {% endhint %}
 
 After successfully creating your cloud integration secret, run the following command. Make sure the name of your file containing your secret is *cloud-integration.json*.
 
 ```
-kubectl create secret generic cloud-integration -n kubecost --from-file=cloud-integration.json
+kubectl create secret generic cloud-integration -n nOps --from-file=cloud-integration.json
 ```
 
 Next, apply the cloud integration secret to your *values.yaml*, replacing `CLOUD_INTEGRATION_SECRET` with the value of the secret:
 
 ```
-kubecostProductConfigs:
+nOpsProductConfigs:
     cloudIntegrationSecret: CLOUD_INTEGRATION_SECRET
 ```
 
@@ -54,7 +54,7 @@ athenaDatabase: athenacurcfn_athena_test1
 athenaTable: "athena_test1"
 athenaWorkgroup: "primary" # The default workgroup in AWS is 'primary'
 masterPayerARN: ""
-projectID: "123456789"  # Also known as AccountID on AWS -- the current account/project that this instance of Kubecost is deployed on.
+projectID: "123456789"  # Also known as AccountID on AWS -- the current account/project that this instance of nOps is deployed on.
 ```
 
 </details>
@@ -66,7 +66,7 @@ projectID: "123456789"  # Also known as AccountID on AWS -- the current account/
 ```
 projectID: "123456789"
 gcpSecretName: gcp-secret # Name of a secret representing the GCP service key
-gcpSecretKeyName: compute-viewer-kubecost-key.json # Name of the secret's key containing the gcp service key
+gcpSecretKeyName: compute-viewer-nOps-key.json # Name of the secret's key containing the gcp service key
 bigQueryBillingDataDataset: billing_data.gcp_billing_export_v1_01AC9F_74CF1D_5565A2
 ```
 
@@ -98,7 +98,7 @@ federatedETL:
   federator:
     enabled: true
     # primaryClusterID: CLUSTER_NAME # Add after initial setup. This will break the combined folder setup if included at deployment.
-kubecostModel:
+nOpsModel:
   cloudCost:
     enabled: true # Set to true to enable CloudCost view that gives you visibility of your Cloud provider resources cost
   etlCloudAsset: false # Set etlCloudAsset to false when cloudCost.enabled=true
@@ -107,20 +107,20 @@ kubecostModel:
 Add the following values to your primary cluster Helm values:
 
 ```
-kubecostAggregator:
+nOpsAggregator:
   replicas: 1
   deployMethod: statefulset
 ```
-See this [example .yaml](https://github.com/kubecost/poc-common-configurations/blob/main/etl-federation-aggregator/primary-aggregator.yaml#L1-L14) for what your primary cluster configuration should look like.
+See this [example .yaml](https://github.com/nOps/poc-common-configurations/blob/main/etl-federation-aggregator/primary-aggregator.yaml#L1-L14) for what your primary cluster configuration should look like.
 
 
-Upgrade Kubecost on the primary cluster via Helm:
+Upgrade nOps on the primary cluster via Helm:
 
 ```
-helm upgrade --install "kubecost" --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer --namespace kubecost -f values.yaml
+helm upgrade --install "nOps" --repo https://nOps.github.io/cost-analyzer/ cost-analyzer --namespace nOps -f values.yaml
 ```
 
-Once the Helm upgrade is complete, Aggregator will start processing data. This process can take as long as 24 hours depending on the size of the ETL dataset being processed. As the data is processed, it will generate in the Kubecost UI.
+Once the Helm upgrade is complete, Aggregator will start processing data. This process can take as long as 24 hours depending on the size of the ETL dataset being processed. As the data is processed, it will generate in the nOps UI.
 
 ### Step 3: Update secondary clusters
 
@@ -130,7 +130,7 @@ Delete the following values from your secondary cluster Helm values:
 federatedETL:
   useExistingS3Config: false
   primaryCluster: false
-kubecostModel:
+nOpsModel:
   warmCache: false
   warmSavingsCache: false
 ```
@@ -142,10 +142,10 @@ federatedETL:
   agentOnly: true
 ```
 
-See this [example .yaml](https://github.com/kubecost/poc-common-configurations/blob/main/etl-federation-aggregator/secondary-federated.yaml#L8-L15) for what your secondary cluster configuration should look like.
+See this [example .yaml](https://github.com/nOps/poc-common-configurations/blob/main/etl-federation-aggregator/secondary-federated.yaml#L8-L15) for what your secondary cluster configuration should look like.
 
-Finally, upgrade Kubecost on the secondary cluster(s) via Helm:
+Finally, upgrade nOps on the secondary cluster(s) via Helm:
 
 ```
-helm upgrade --install "kubecost" --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer --namespace kubecost -f values.yaml
+helm upgrade --install "nOps" --repo https://nOps.github.io/cost-analyzer/ cost-analyzer --namespace nOps -f values.yaml
 ```

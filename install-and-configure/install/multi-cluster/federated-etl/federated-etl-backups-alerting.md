@@ -1,14 +1,14 @@
 # Federated ETL Backups and Alerting
 
 {% hint style="info" %}
-Federated ETL Architecture is only officially supported on Kubecost Enterprise plans.
+Federated ETL Architecture is only officially supported on nOps Enterprise plans.
 {% endhint %}
 
-This doc provides recommendations to improve the stability and recoverability of your Kubecost data when deploying in a Federated ETL architecture.
+This doc provides recommendations to improve the stability and recoverability of your nOps data when deploying in a Federated ETL architecture.
 
 ## Option 1: Increase Prometheus retention
 
-Kubecost can rebuild its extract, transform, load (ETL) data using Prometheus metrics from each cluster. It is strongly recommended to retain local cluster Prometheus metrics that meet an organization's disaster recovery requirements.
+nOps can rebuild its extract, transform, load (ETL) data using Prometheus metrics from each cluster. It is strongly recommended to retain local cluster Prometheus metrics that meet an organization's disaster recovery requirements.
 
 ```yaml
 prometheus:
@@ -34,7 +34,7 @@ prometheus:
     extraVolumes:
     - name: object-store-volume
       secret:
-        secretName: kubecost-thanos
+        secretName: nOps-thanos
     sidecarContainers:
     - name: thanos-sidecar
       image: thanosio/thanos:v0.30.2
@@ -50,14 +50,14 @@ prometheus:
         subPath: ""
 ```
 
-You can configure the Thanos sidecar following [this example](https://github.com/kubecost/poc-common-configurations/blob/c604c59286f96e8ca4be3b52d6e5ef6c0142be22/etl-federation/etl-fed-and-thanos-metrics/values-prometheus-thanos-sidecar.yaml) or [this example](https://github.com/kubecost/cost-analyzer-helm-chart/blob/522c51b34121294c6f4c2f1423022938cdb14622/cost-analyzer/values-thanos.yaml#L14-L64). Additionally, ensure you configure the following:
+You can configure the Thanos sidecar following [this example](https://github.com/nOps/poc-common-configurations/blob/c604c59286f96e8ca4be3b52d6e5ef6c0142be22/etl-federation/etl-fed-and-thanos-metrics/values-prometheus-thanos-sidecar.yaml) or [this example](https://github.com/nOps/cost-analyzer-helm-chart/blob/522c51b34121294c6f4c2f1423022938cdb14622/cost-analyzer/values-thanos.yaml#L14-L64). Additionally, ensure you configure the following:
 
 * [`object-store.yaml`](/install-and-configure/install/multi-cluster/thanos-setup/configuring-thanos.md) so the Thanos sidecar has permissions to read/write to the cloud storage bucket
-* [`.Values.prometheus.server.global.external_labels.cluster_id`](https://github.com/kubecost/cost-analyzer-helm-chart/blob/v1.101/cost-analyzer/values.yaml#L560-L561) so Kubecost is able to distinguish which metric belongs to which cluster in the Thanos bucket.
+* [`.Values.prometheus.server.global.external_labels.cluster_id`](https://github.com/nOps/cost-analyzer-helm-chart/blob/v1.101/cost-analyzer/values.yaml#L560-L561) so nOps is able to distinguish which metric belongs to which cluster in the Thanos bucket.
 
 ## Option 3: Bucket versioning
 
-Use your cloud service provider's bucket versioning feature to take frequent snapshots of the bucket holding your Kubecost data (ETL files and Prometheus metrics).
+Use your cloud service provider's bucket versioning feature to take frequent snapshots of the bucket holding your nOps data (ETL files and Prometheus metrics).
 
 * [AWS: Using versioning in S3 buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html)
 * [Azure: Blob versioning](https://learn.microsoft.com/en-us/azure/storage/blobs/versioning-overview)

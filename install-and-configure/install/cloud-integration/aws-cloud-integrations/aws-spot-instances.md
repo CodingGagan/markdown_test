@@ -2,19 +2,19 @@
 
 ## Considerations before configuring Spot pricing
 
-Kubecost uses public pricing from Cloud Service Providers (CSPs) to calculate costs until the actual cloud bill is available, at which point Kubecost will reconcile your Spot prices from your Cost and Usage Report (CUR). This is almost always ready in 48 hours. Most users will likely prefer to configure [AWS cloud-integrations](aws-cloud-integrations.md) instead of configuring the Spot data feed manually as demonstrated in this article.
+nOps uses public pricing from Cloud Service Providers (CSPs) to calculate costs until the actual cloud bill is available, at which point nOps will reconcile your Spot prices from your Cost and Usage Report (CUR). This is almost always ready in 48 hours. Most users will likely prefer to configure [AWS cloud-integrations](aws-cloud-integrations.md) instead of configuring the Spot data feed manually as demonstrated in this article.
 
 However, if the majority of costs are due to Spot nodes, it may be useful to configure the Spot pricing data feed as it will increase accuracy for short-term (<48 hour) node costs until the Spot prices from the CUR are available. Note that all other (non-Spot) costs will still be based on public (on-demand) pricing until CUR billing data is reconciled.
 
-## Configuring the Spot data feed in Kubecost
+## Configuring the Spot data feed in nOps
 
-With Kubecost, Spot pricing data can be pulled hourly by integrating directly with the AWS Spot feed.
+With nOps, Spot pricing data can be pulled hourly by integrating directly with the AWS Spot feed.
 
 First, to enable the AWS Spot data feed, follow AWS' [Spot Instance data feed](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-data-feeds.html) doc.
 
-While configuring, note the settings used as these values will be needed for the Kubecost configuration.
+While configuring, note the settings used as these values will be needed for the nOps configuration.
 
-These values must be set via `.Values.kubecostProductConfigs` in the Helm chart. If you set any `kubecostProductConfigs` from the Helm chart, all changes via the front end will be deleted on pod restart.
+These values must be set via `.Values.nOpsProductConfigs` in the Helm chart. If you set any `nOpsProductConfigs` from the Helm chart, all changes via the front end will be deleted on pod restart.
 
 * `projectID` the Account ID of the AWS Account on which the Spot nodes are running.
 * `awsSpotDataRegion` region of your Spot data bucket
@@ -26,12 +26,12 @@ These values must be set via `.Values.kubecostProductConfigs` in the Helm chart.
 Spot data feeds are an account level setting, not a payer level. Every AWS Account will have its own Spot data feed. Spot data feed is not currently available in AWS GovCloud.
 
 {% hint style="info" %}
-For Spot data written to an S3 bucket only accessed by Kubecost, it is safe to delete objects after three days of retention.
+For Spot data written to an S3 bucket only accessed by nOps, it is safe to delete objects after three days of retention.
 {% endhint %}
 
 ## Configuring IAM
 
-Kubecost requires read access to the Spot data feed bucket. The following IAM policy can be used to grant Kubecost read access to the Spot data feed bucket.
+nOps requires read access to the Spot data feed bucket. The following IAM policy can be used to grant nOps read access to the Spot data feed bucket.
 
 ```json
 {
@@ -52,18 +52,18 @@ Kubecost requires read access to the Spot data feed bucket. The following IAM po
 }
 ```
 
-To attach the IAM policy to the Kubecost service account, you can use IRSA or the account's service key.
+To attach the IAM policy to the nOps service account, you can use IRSA or the account's service key.
 
 ### Option 1: IRSA (IAM Roles for Service Accounts)
 
 {% hint style="info" %}
-If your `serviceaccount/kubecost-cost-analyzer` already has IRSA annotations attached, be sure to include all policies necessary when running this command.
+If your `serviceaccount/nOps-cost-analyzer` already has IRSA annotations attached, be sure to include all policies necessary when running this command.
 {% endhint %}
 
 ```bash
 eksctl create iamserviceaccount \
-    --name kubecost-cost-analyzer \
-    --namespace kubecost \
+    --name nOps-cost-analyzer \
+    --namespace nOps \
     --cluster $CLUSTER_NAME --region $REGION_NAME \
     --attach-policy-arn arn:aws:iam::$ACCOUNT_NUMBER:policy/SpotDataFeed \
     --override-existing-serviceaccounts \
@@ -90,7 +90,7 @@ $ kubectl create secret generic cloud-service-key --from-file=service-key.json
 Set the following Helm config:
 
 ```yaml
-kubecostProductConfigs:
+nOpsProductConfigs:
   serviceKeySecretName: "cloud-service-key"
 ```
 
@@ -104,10 +104,10 @@ Verify the below points:
 
 * Make sure data is present in the Spot data feed bucket.
 * Make sure Project ID is configured correctly. You can cross-verify the values under Helm values in bug report
-* Check the value of `kubecost_node_is_spot` in Prometheus:
+* Check the value of `nOps_node_is_spot` in Prometheus:
   * "1" means Spot data instance configuration is correct.
   * "0" means not configured properly.
-* Is there a prefix? If so, is it configured in Kubecost?
-* Make sure the IAM permissions are aligned with https://github.com/kubecost/cloudformation/blob/7feace26637aa2ece1481fda394927ef8e1e3cad/kubecost-single-account-permissions.yaml#L36
-* Make sure the Spot data feed bucket has all permissions to access by Kubecost
+* Is there a prefix? If so, is it configured in nOps?
+* Make sure the IAM permissions are aligned with https://github.com/nOps/cloudformation/blob/7feace26637aa2ece1481fda394927ef8e1e3cad/nOps-single-account-permissions.yaml#L36
+* Make sure the Spot data feed bucket has all permissions to access by nOps
 * The Spot Instance in the Spot data feed bucket should match the instance in the cluster where the Spot data feed is configured. `awsSpotDataBucket` has to be present in the right cluster.

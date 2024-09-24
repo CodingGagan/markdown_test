@@ -209,7 +209,7 @@ GET /model/collection/query/complement/kubernetes?id=8a939ba1-ff15-4600-b711-2cb
         "items": [
             {
                 "cost": 20.0,
-                "name": "kubecost"
+                "name": "nOps"
             },
             {
                 "cost": 10.0,
@@ -226,7 +226,7 @@ GET /model/collection/query/complement/kubernetes?id=8a939ba1-ff15-4600-b711-2cb
 ```
 
 ```
-GET /model/collection/query/complement/kubernetes?id=8a939ba1-ff15-4600-b711-2cb109114914&window=30d&aggregate=controller&filter=namespace:"kubecost"
+GET /model/collection/query/complement/kubernetes?id=8a939ba1-ff15-4600-b711-2cb109114914&window=30d&aggregate=controller&filter=namespace:"nOps"
 ```
 
 ```json

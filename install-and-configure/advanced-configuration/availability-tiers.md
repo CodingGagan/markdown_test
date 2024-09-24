@@ -1,6 +1,6 @@
 # Availability Tiers
 
-Availability Tiers impact capacity recommendations, health ratings and more in the Kubecost product. As an example, production jobs receive higher resource request recommendations than dev workloads. Another example is health scores for high availability workloads are heavily penalized for not having multiple replicas available.
+Availability Tiers impact capacity recommendations, health ratings and more in the nOps product. As an example, production jobs receive higher resource request recommendations than dev workloads. Another example is health scores for high availability workloads are heavily penalized for not having multiple replicas available.
 
 Today our product supports the following tiers:
 

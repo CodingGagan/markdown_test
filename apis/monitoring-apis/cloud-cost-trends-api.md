@@ -1,6 +1,6 @@
 # Cloud Cost Trends API
 
-{% swagger method="get" path="/cloudCost/view/trends" baseUrl="http://<your-kubecost-address>/model" summary="Cloud Cost Trends API" %} {% swagger-description %} Analyzes change in cloud costs relative to a previous window of the same size {% endswagger-description %}
+{% swagger method="get" path="/cloudCost/view/trends" baseUrl="http://<your-nOps-address>/model" summary="Cloud Cost Trends API" %} {% swagger-description %} Analyzes change in cloud costs relative to a previous window of the same size {% endswagger-description %}
 
 {% swagger-parameter in="path" name="window" required="true" type="string" %}
 Duration of time over which to query. Compares cost usage of window to cost usage window of equal size directly preceding it. Accepts multiple different formats of time (see this [Using the `window` parameter](/apis/apis-overview.md#using-the-window-parameter) section for more info)).
@@ -23,7 +23,7 @@ Determines which cloud cost metric type will be returned. Acceptable values are 
 {% endswagger-parameter %}
 
 {% swagger-parameter in="path" name="filter" type="string" required="false" %}
-Filter your results by a particular category or value. For example, when to only see trends in AWS spend, set this parameter to `filter=provider:"AWS"`. Supports Kubecost's [advanced filtering](/apis/filters-api.md) language.
+Filter your results by a particular category or value. For example, when to only see trends in AWS spend, set this parameter to `filter=provider:"AWS"`. Supports nOps's [advanced filtering](/apis/filters-api.md) language.
 {% endswagger-parameter %}
 
 {% swagger-response status="200: OK" description="" %}
@@ -53,7 +53,7 @@ Filter your results by a particular category or value. For example, when to only
 
 ## Calculating trend value
 
-The Trends API determines changes in resource cost usage over time based on the interval set `window` parameter and provides that information via the schema field `value`. Cost usage for the current `window` sampled will be compared with `comparisonWindow`, the window directly before the current window of the same size interval. For example, for `window=3d`, Kubecost will output cost usage for the past three days compared to cost usage of the three days before the start of the window. This means a total of six days of cloud cost data are sampled in order to provide an accurate value.
+The Trends API determines changes in resource cost usage over time based on the interval set `window` parameter and provides that information via the schema field `value`. Cost usage for the current `window` sampled will be compared with `comparisonWindow`, the window directly before the current window of the same size interval. For example, for `window=3d`, nOps will output cost usage for the past three days compared to cost usage of the three days before the start of the window. This means a total of six days of cloud cost data are sampled in order to provide an accurate value.
 
 The equation for calculating `value` is: `value=window/comparisonWindow - 1`
 
@@ -82,7 +82,7 @@ In the example output below, `value` is expressed as `-0.147`, meaning spending 
         }
 ```
 
-Trend values are converted into percentages in the Kubecost Cloud Costs Explorer page, calculated based on your current query. Trends will be presented in the rightmost column, next to your Total cost. The `window` parameter is determined by your selected date range in the top right of the page. The default is Last 7 days (`window=7d`). The equation `value*100` is used to provide percentages.
+Trend values are converted into percentages in the nOps Cloud Costs Explorer page, calculated based on your current query. Trends will be presented in the rightmost column, next to your Total cost. The `window` parameter is determined by your selected date range in the top right of the page. The default is Last 7 days (`window=7d`). The equation `value*100` is used to provide percentages.
 
 ## Using the `names` parameter
 

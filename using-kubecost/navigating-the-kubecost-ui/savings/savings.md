@@ -58,4 +58,4 @@ The different cluster profile types and their corresponding CPU/RAM utilizations
 | Production | 65% |
 | Development | 80% |
 
-Cluster profile can be configured for your *values.yaml* as well, via the flag `kubecostProductConfigs.clusterProfile`, which can be set at to any of the following values: `development`, `production` or `high-availability`.
+Cluster profile can be configured for your *values.yaml* as well, via the flag `nOpsProductConfigs.clusterProfile`, which can be set at to any of the following values: `development`, `production` or `high-availability`.

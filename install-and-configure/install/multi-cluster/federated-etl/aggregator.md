@@ -1,14 +1,14 @@
-# Kubecost Aggregator
+# nOps Aggregator
 
-Aggregator is the primary query backend for Kubecost. It is enabled in all
-configurations of Kubecost. In a default installation, it runs within the
-cost-analyzer pod, but in a multi-cluster installation of Kubecost, some settings
-must be changed. Multi-cluster Kubecost uses the [Federated
+Aggregator is the primary query backend for nOps. It is enabled in all
+configurations of nOps. In a default installation, it runs within the
+cost-analyzer pod, but in a multi-cluster installation of nOps, some settings
+must be changed. Multi-cluster nOps uses the [Federated
 ETL](federated-etl.md) configuration without Thanos (replacing the
 [Federator](federated-etl.md#other-components) component).
 
 {% hint style="info" %}
-Existing documentation for Kubecost APIs will use endpoints for non-Aggregator environments unless otherwise specified, but will still be compatible after configuring Aggregator.
+Existing documentation for nOps APIs will use endpoints for non-Aggregator environments unless otherwise specified, but will still be compatible after configuring Aggregator.
 {% endhint %}
 
 ## Configuring Aggregator
@@ -16,11 +16,11 @@ Existing documentation for Kubecost APIs will use endpoints for non-Aggregator e
 ### Prerequisites
 
 * Multi-cluster Aggregator can only be configured in a Federated ETL environment
-* All clusters in your Federated ETL environment must be configured to build & push ETL files to the object store via `.Values.federatedETL.federatedCluster` and `.Values.kubecostModel.federatedStorageConfigSecret`. See our [Federated ETL](federated-etl.md) doc for more details.
+* All clusters in your Federated ETL environment must be configured to build & push ETL files to the object store via `.Values.federatedETL.federatedCluster` and `.Values.nOpsModel.federatedStorageConfigSecret`. See our [Federated ETL](federated-etl.md) doc for more details.
 * If you've enabled Cloud Integration, it _must_ be configured via the cloud integration secret. Other methods are now deprecated. See our [Multi-Cloud Integrations](/install-and-configure/install/cloud-integration/multi-cloud.md) doc for more details.
-* This documentation is for Kubecost v2 and higher.
+* This documentation is for nOps v2 and higher.
 
-If you are upgrading to Kubecost v2 from the following environments, see our specialized migration guides instead:
+If you are upgrading to nOps v2 from the following environments, see our specialized migration guides instead:
 
 * [Federated ETL](/install-and-configure/install/multi-cluster/federated-etl/federated-etl-migration-guide.md)
 * [Thanos](/install-and-configure/install/multi-cluster/federated-etl/thanos-migration-guide.md)
@@ -32,15 +32,15 @@ This configuration is estimated to be sufficient for environments monitoring < 2
 {% endhint %}
 
 ```yaml
-kubecostAggregator:
+nOpsAggregator:
   deployMethod: statefulset
   cloudCost:
     enabled: true
 federatedETL:
   federatedCluster: true
-kubecostModel:
+nOpsModel:
   federatedStorageConfigSecret: federated-store
-kubecostProductConfigs:
+nOpsProductConfigs:
   clusterName: YOUR_CLUSTER_NAME
   cloudIntegrationSecret: cloud-integration
   productKey:
@@ -55,7 +55,7 @@ prometheus:
 
 ### Aggregator Optimizations
 
-For larger deployments of Kubecost, Aggregator can be tuned. The settings below are in addition to the basic configuration above.
+For larger deployments of nOps, Aggregator can be tuned. The settings below are in addition to the basic configuration above.
 
 {% hint style="info" %}
 This configuration is estimated to be sufficient for environments monitoring < 60k unique containers per day. You can check this metric on the `/diagnostics` page.
@@ -68,7 +68,7 @@ Because the Aggregator PV is relatively small, the least expensive performance g
 {% endhint %}
 
 ```yaml
-kubecostAggregator:
+nOpsAggregator:
   logLevel: info
 
   # How much data to ingest from the federated store bucket, and how much data
@@ -82,7 +82,7 @@ kubecostAggregator:
   # default: 91
   etlDailyStoreDurationDays: 91
 
-  # How many threads the read database is configured with (i.e. Kubecost API /
+  # How many threads the read database is configured with (i.e. nOps API /
   # UI queries). If increasing this value, it is recommended to increase the
   # aggregator's memory requests & limits.
   # default: 1
@@ -116,7 +116,7 @@ kubecostAggregator:
 
   # The number of partitions the datastore is split into for copying. The higher
   # this number, the lower the RAM usage but the longer it takes for new data to
-  # show in the Kubecost UI.
+  # show in the nOps UI.
   # default: 1
   numDBCopyPartitions: 1
 
@@ -152,26 +152,26 @@ If you have not already, create the required Kubernetes secrets. Refer to the [F
 
 {% code overflow="wrap" %}
 ```sh
-kubectl create secret generic federated-store -n kubecost --from-file=federated-store.yaml
+kubectl create secret generic federated-store -n nOps --from-file=federated-store.yaml
 ```
 {% endcode %}
 
 {% code overflow="wrap" %}
 ```sh
-kubectl create secret generic cloud-integration -n kubecost --from-file=cloud-integration.json
+kubectl create secret generic cloud-integration -n nOps --from-file=cloud-integration.json
 ```
 {% endcode %}
 
-Finally, upgrade your existing Kubecost installation. This command will install Kubecost if it does not already exist.
+Finally, upgrade your existing nOps installation. This command will install nOps if it does not already exist.
 
 {% hint style="warning" %}
 If you are upgrading from an existing installation, make sure to append your existing `values.yaml` configurations to the ones described above.
 {% endhint %}
 
 ```sh
-helm upgrade --install "kubecost" \
-  --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer \
-  --namespace kubecost \
+helm upgrade --install "nOps" \
+  --repo https://nOps.github.io/cost-analyzer/ cost-analyzer \
+  --namespace nOps \
   -f aggregator.yaml
 ```
 
@@ -190,7 +190,7 @@ data to be ingested.
 ### Understanding the state of the Aggregator
 
 ```txt
-https://kubecost.myorganization.com/model/debug/orchestrator
+https://nOps.myorganization.com/model/debug/orchestrator
 ```
 
 This is a common endpoint for debugging the state of the Aggregator. It returns a JSON response with details such as:
@@ -207,14 +207,14 @@ When deploying the Aggregator as a StatefulSet, it is possible to perform a rese
 1. Scale down the Aggregator StatefulSet to 0
 2. When the Aggregator pod is gone, delete the `aggregator-db-storage-xxx-0` PVC
 3. Scale the Aggregator StatefulSet back to 1. This will re-create the PVC, empty.
-4. Wait for Kubecost to re-ingest data from the object store. This could take from several minutes to several hours, depending on your data size and retention settings.
+4. Wait for nOps to re-ingest data from the object store. This could take from several minutes to several hours, depending on your data size and retention settings.
 
 ### Checking the database for node metadata
 
 Confirming whether node metadata exists in your database can be useful when troubleshooting missing data. Run the following command which will open a shell into the Aggregator pod:
 
 ```sh
-kubectl exec -it KUBECOST-AGGREGATOR-POD-NAME sh
+kubectl exec -it nOps-AGGREGATOR-POD-NAME sh
 ```
 
 Point to the path where your database exists
@@ -227,13 +227,13 @@ ls -lah
 Copy the database to a new file for testing to avoid modifications to the original data
 
 ```sh
-cp kubecost-example.duckdb.read kubecost-example.duckdb.read.kubecost.copy
+cp nOps-example.duckdb.read nOps-example.duckdb.read.nOps.copy
 ```
 
 Open a DuckDB REPL pointed at the copied database
 
 ```sh
-duckdb kubecost-example.duckdb.read.kubecost.copy
+duckdb nOps-example.duckdb.read.nOps.copy
 ```
 
 Run the following debugging queries to check if node data is available:

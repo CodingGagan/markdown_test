@@ -1,6 +1,6 @@
 # Assets API
 
-{% swagger method="get" path="/assets" baseUrl="http://<your-kubecost-address>/model" summary="Assets API" %}
+{% swagger method="get" path="/assets" baseUrl="http://<your-nOps-address>/model" summary="Assets API" %}
 {% swagger-description %}
 The Assets API retrieves backing cost data broken down by individual assets in your cluster but also provides various aggregations of this data.
 {% endswagger-description %}
@@ -95,7 +95,7 @@ http://localhost:9090/model/assets?window=1w&aggregate=type&accumulate=true
                 "labels": {
                     "cost-center": "engineering",
                     "firebase": "enabled",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -119,7 +119,7 @@ http://localhost:9090/model/assets?window=1w&aggregate=type&accumulate=true
                 "labels": {
                     "cost-center": "engineering",
                     "firebase": "enabled",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -160,7 +160,7 @@ http://localhost:9090/model/assets?window=1w&aggregate=type&accumulate=true
                 "labels": {
                     "cost-center": "engineering",
                     "firebase": "enabled",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -187,7 +187,7 @@ http://localhost:9090/model/assets?window=1w&aggregate=type&accumulate=true
                     "firebase": "enabled",
                     "goog-k8s-cluster-location": "us-central1-a",
                     "goog-k8s-cluster-name": "kc-integration-test",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -213,7 +213,7 @@ http://localhost:9090/model/assets?window=1w&aggregate=type&accumulate=true
                     "cost-center": "engineering",
                     "firebase": "enabled",
                     "instance": "10.95.11.109:9003",
-                    "job": "kubecost",
+                    "job": "nOps",
                     "label_app": "integration",
                     "label_beta_kubernetes_io_arch": "amd64",
                     "label_beta_kubernetes_io_os": "linux",
@@ -229,12 +229,12 @@ http://localhost:9090/model/assets?window=1w&aggregate=type&accumulate=true
                     "label_failure_domain_beta_kubernetes_io_zone": "us-central1-a",
                     "label_kubernetes_io_arch": "amd64",
                     "label_kubernetes_io_os": "linux",
-                    "label_owner": "kubecost",
+                    "label_owner": "nOps",
                     "label_product": "integration",
-                    "label_team": "kubecost",
+                    "label_team": "nOps",
                     "label_topology_kubernetes_io_region": "us-central1",
                     "label_topology_kubernetes_io_zone": "us-central1-a",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -307,7 +307,7 @@ http://localhost:9090/model/assets?window=5d&aggregate=type&filterProviders=GCP
                 "labels": {
                     "cost-center": "engineering",
                     "firebase": "enabled",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -331,7 +331,7 @@ http://localhost:9090/model/assets?window=5d&aggregate=type&filterProviders=GCP
                 "labels": {
                     "cost-center": "engineering",
                     "firebase": "enabled",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -372,7 +372,7 @@ http://localhost:9090/model/assets?window=5d&aggregate=type&filterProviders=GCP
                 "labels": {
                     "cost-center": "engineering",
                     "firebase": "enabled",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -399,7 +399,7 @@ http://localhost:9090/model/assets?window=5d&aggregate=type&filterProviders=GCP
                     "firebase": "enabled",
                     "goog-k8s-cluster-location": "us-central1-a",
                     "goog-k8s-cluster-name": "kc-integration-test",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -427,7 +427,7 @@ http://localhost:9090/model/assets?window=5d&aggregate=type&filterProviders=GCP
                     "goog-k8s-cluster-location": "us-central1-a",
                     "goog-k8s-cluster-name": "kc-integration-test",
                     "instance": "10.95.11.109:9003",
-                    "job": "kubecost",
+                    "job": "nOps",
                     "label_app": "integration",
                     "label_beta_kubernetes_io_arch": "amd64",
                     "label_beta_kubernetes_io_os": "linux",
@@ -443,12 +443,12 @@ http://localhost:9090/model/assets?window=5d&aggregate=type&filterProviders=GCP
                     "label_failure_domain_beta_kubernetes_io_zone": "us-central1-a",
                     "label_kubernetes_io_arch": "amd64",
                     "label_kubernetes_io_os": "linux",
-                    "label_owner": "kubecost",
+                    "label_owner": "nOps",
                     "label_product": "integration",
-                    "label_team": "kubecost",
+                    "label_team": "nOps",
                     "label_topology_kubernetes_io_region": "us-central1",
                     "label_topology_kubernetes_io_zone": "us-central1-a",
-                    "namespace": "kubecost",
+                    "namespace": "nOps",
                     "test_gcp_label": "test_gcp_value"
                 },
                 "window": {
@@ -511,7 +511,7 @@ http://localhost:9090/model/assets?window=5d&aggregate=type&filterProviders=GCP
 Prometheus queries for CPU and RAM mode breakdown are disabled by default. To receive these metrics, you must manually enable them.
 
 ```yaml
-kubecostModel:
+nOpsModel:
   assetModeBreakdownEnabled: true
 ```
 

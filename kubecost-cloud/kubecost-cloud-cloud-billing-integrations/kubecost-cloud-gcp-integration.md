@@ -1,16 +1,16 @@
-# Kubecost Cloud GCP Integration
+# nOps Cloud GCP Integration
 
 {% hint style="info" %}
-This documentation should only be consulted when using Kubecost Cloud. For information about the configuring a GCP integration with self-hosted Kubecost, see [here](/install-and-configure/install/cloud-integration/gcp-out-of-cluster/README.md).
+This documentation should only be consulted when using nOps Cloud. For information about the configuring a GCP integration with self-hosted nOps, see [here](/install-and-configure/install/cloud-integration/gcp-out-of-cluster/README.md).
 {% endhint %}
 
-Kubecost Cloud provides the ability to allocate out of cluster (OOC) costs back to Kubernetes concepts like namespaces and deployments. The following guide provides the steps required for allocating OOC costs in GCP.
+nOps Cloud provides the ability to allocate out of cluster (OOC) costs back to Kubernetes concepts like namespaces and deployments. The following guide provides the steps required for allocating OOC costs in GCP.
 
 ## Prerequisites
 
-Before you interact with Kubecost Cloud, you will need to export your cloud billing data in GCP to BigQuery. For help, consult [Google's documentation](https://cloud.google.com/billing/docs/how-to/export-data-bigquery) on the subject.
+Before you interact with nOps Cloud, you will need to export your cloud billing data in GCP to BigQuery. For help, consult [Google's documentation](https://cloud.google.com/billing/docs/how-to/export-data-bigquery) on the subject.
 
-After this, it is also recommend to use a [detailed billing export](https://cloud.google.com/billing/docs/how-to/export-data-bigquery-tables#detailed-usage-cost-data-schema) in order to gain access to Kubecost's cloud integration functionality such as reconciliation for the most accurate spend data.
+After this, it is also recommend to use a [detailed billing export](https://cloud.google.com/billing/docs/how-to/export-data-bigquery-tables#detailed-usage-cost-data-schema) in order to gain access to nOps's cloud integration functionality such as reconciliation for the most accurate spend data.
 
 You will need to prepare the following fields:
 
@@ -26,7 +26,7 @@ If you are having trouble determining these values, consider this example. A dat
 
 ## Adding an integration
 
-In the Kubecost Cloud UI, begin by selecting _Settings_ in the left navigation. Scroll down to Cloud Integrations, then select _View Additional Details_. The Cloud Integrations dashboard opens. Select _+ Add Integration_. Then, select _GCP Integration_ from the slide panel.
+In the nOps Cloud UI, begin by selecting _Settings_ in the left navigation. Scroll down to Cloud Integrations, then select _View Additional Details_. The Cloud Integrations dashboard opens. Select _+ Add Integration_. Then, select _GCP Integration_ from the slide panel.
 
 ### Step 1: Enable billing data export
 
@@ -34,11 +34,11 @@ After completing the Prerequisites section, you will fill out the three fields i
 
 ### Step 2: Create a GCP service account
 
-You will need to give your Kubecost GCP service account certain permissions in your project `roles/bigquery.jobUser`. This can be performed either through the [gcloud CLI](https://cloud.google.com/sdk/gcloud) or the GCP Console. Follow the instructions as they appear directly in the UI. Then, select Continue.
+You will need to give your nOps GCP service account certain permissions in your project `roles/bigquery.jobUser`. This can be performed either through the [gcloud CLI](https://cloud.google.com/sdk/gcloud) or the GCP Console. Follow the instructions as they appear directly in the UI. Then, select Continue.
 
-### Step 3: Assign Kubecost service account access to BigQuery dataset
+### Step 3: Assign nOps service account access to BigQuery dataset
 
-Finally, you must give the Kubecost service account direct access to your BigQuery dataset via the BigQuery Data Viewer role. Like Step 2, this can be performed either through the gcloud CLI or the GCP Console. Follow the instructions as they appear directly in the UI. Then, select Continue.
+Finally, you must give the nOps service account direct access to your BigQuery dataset via the BigQuery Data Viewer role. Like Step 2, this can be performed either through the gcloud CLI or the GCP Console. Follow the instructions as they appear directly in the UI. Then, select Continue.
 
 ### Finalizing your integration
 

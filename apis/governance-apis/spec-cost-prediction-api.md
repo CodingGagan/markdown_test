@@ -1,12 +1,12 @@
 # Spec Cost Prediction API
 
-{% swagger method="post" path="/model/prediction/speccost" baseUrl="http://<your-kubecost-address>" summary="Predict API" %}
+{% swagger method="post" path="/model/prediction/speccost" baseUrl="http://<your-nOps-address>" summary="Predict API" %}
 {% swagger-description %}
 The Predict API takes Kubernetes API objects ("workloads") as input and produces a cost impact prediction for them, including a diff if a matching existing workload can be found in the cluster.
 {% endswagger-description %}
 
 {% swagger-parameter in="query" name="clusterID" type="string" required="true" %}
-The Kubecost cluster ID of the cluster in which the workloads will be deployed. Currently, this must be the same as the cluster ID of the Kubecost installation which is serving the `/speccost` endpoint. Support for multi-cluster is planned.
+The nOps cluster ID of the cluster in which the workloads will be deployed. Currently, this must be the same as the cluster ID of the nOps installation which is serving the `/speccost` endpoint. Support for multi-cluster is planned.
 {% endswagger-parameter %}
 
 {% swagger-parameter in="query" required="true" name="defaultNamespace" type="string" %}
@@ -27,9 +27,9 @@ Set to `true` to ignore historical usage data (if it exists) when making the pre
     "code": 200,
     "data": [
     {
-      "namespace": "kubecost",
+      "namespace": "nOps",
       "controllerKind": "deployment",
-      "controllerName": "kubecost-cost-analyzer",
+      "controllerName": "nOps-cost-analyzer",
       "costBefore": {
         "totalMonthlyRate": 3.5397661399108418,
         "cpuMonthlyRate": 2.3273929838395513,
@@ -81,19 +81,19 @@ read -r -d '' WL << EndOfMessage
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kubecost-cost-analyzer
-  namespace: kubecost
+  name: nOps-cost-analyzer
+  namespace: nOps
   labels:
-    app: kubecost-cost-analyzer
+    app: nOps-cost-analyzer
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: kubecost-cost-analyzer
+      app: nOps-cost-analyzer
   template:
     metadata:
       labels:
-        app: kubecost-cost-analyzer
+        app: nOps-cost-analyzer
     spec:
       containers:
       - name: cost-model
@@ -154,9 +154,9 @@ Call the endpoint with cURL, passing the file in the request body:
 ```
 [
   {
-    "namespace": "kubecost",
+    "namespace": "nOps",
     "controllerKind": "deployment",
-    "controllerName": "kubecost-cost-analyzer",
+    "controllerName": "nOps-cost-analyzer",
     "costBefore": {
       "totalMonthlyRate": 3.5397661399108418,
       "cpuMonthlyRate": 2.3273929838395513,
@@ -230,10 +230,10 @@ The output will be broken down into three primary categories:
 
 Observe how `defaultNamespace` impacts the `default-deployment` workload.
 
-From that output, `costChange`notices the existing `kubecost-cost-analyzer` deployment in the `kubecost` namespace and is producing an estimated _negative_ cost difference because the request is being reduced. However, because historical usage is also factored in, there is no drastic cost reduction that might be initially expected from a `1m` CPU and `1Mi` memory request.
+From that output, `costChange`notices the existing `nOps-cost-analyzer` deployment in the `nOps` namespace and is producing an estimated _negative_ cost difference because the request is being reduced. However, because historical usage is also factored in, there is no drastic cost reduction that might be initially expected from a `1m` CPU and `1Mi` memory request.
 
-For how to use the predictions API in a use case preventing cost overruns before they occur, see the guide [here](/using-kubecost/proactive-cost-controls.md).
+For how to use the predictions API in a use case preventing cost overruns before they occur, see the guide [here](/using-nOps/proactive-cost-controls.md).
 
 ## Use cases
 
-For an example use case on how to use predictions to achieve proactive cost control, see [here](/using-kubecost/proactive-cost-controls.md).
+For an example use case on how to use predictions to achieve proactive cost control, see [here](/using-nOps/proactive-cost-controls.md).

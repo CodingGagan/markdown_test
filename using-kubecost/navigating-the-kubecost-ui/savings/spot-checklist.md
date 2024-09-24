@@ -13,7 +13,7 @@ The Spot Checklist performs a series of checks that use your own workload config
 * Rolling update strategy (Deployment-only)
 * Manual annotation overrides
 
-You can access the Spot Checklist in the Kubecost UI by selecting _Settings_ > _Spot Instances_ > _Spot Checklist_.
+You can access the Spot Checklist in the nOps UI by selecting _Settings_ > _Spot Instances_ > _Spot Checklist_.
 
 ## How to interpret Spot Checklist results
 
@@ -47,13 +47,13 @@ Deployments have multiple options for update strategies and by default they are 
 
 ### Manual annotation overrides
 
-We also support manually overriding the Spot readiness of a controller by annotating the controller itself or the namespace it is running in with `spot.kubecost.com/spot-ready=true`.
+We also support manually overriding the Spot readiness of a controller by annotating the controller itself or the namespace it is running in with `spot.nOps.com/spot-ready=true`.
 
 ## Implementing Spot nodes in your cluster
 
-The Checklist is now deployed alongside a [recommended cluster configuration](/using-kubecost/navigating-the-kubecost-ui/savings/spot-commander.md) which automatically suggests a set of Spot and on-demand nodes to use in your cluster based on the Checklist. If you do not want to use that, read the following for some important information:
+The Checklist is now deployed alongside a [recommended cluster configuration](/using-nOps/navigating-the-nOps-ui/savings/spot-commander.md) which automatically suggests a set of Spot and on-demand nodes to use in your cluster based on the Checklist. If you do not want to use that, read the following for some important information:
 
-Kubecost marking a workload as Spot ready is not a guarantee. A domain expert should always carefully consider the workload before approving it to run on Spot nodes.
+nOps marking a workload as Spot ready is not a guarantee. A domain expert should always carefully consider the workload before approving it to run on Spot nodes.
 
 Most cloud providers support a mix of Spot and non-Spot nodes in the cluster and they have guides:
 

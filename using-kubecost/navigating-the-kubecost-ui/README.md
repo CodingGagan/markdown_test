@@ -1,13 +1,13 @@
-# Navigating the Kubecost UI
+# Navigating the nOps UI
 
-This grouping of docs explains how to navigate the Kubecost UI. The UI is composed of several primary dashboards which provide cost visualization, as well as multiple savings and governance tools. Below is the main Overview page, which contains several helpful panels for observing workload stats and trends. Individual pages have their own dedicated documentation for explaining all features which can be interacted with, as well as how they work.
+This grouping of docs explains how to navigate the nOps UI. The UI is composed of several primary dashboards which provide cost visualization, as well as multiple savings and governance tools. Below is the main Overview page, which contains several helpful panels for observing workload stats and trends. Individual pages have their own dedicated documentation for explaining all features which can be interacted with, as well as how they work.
 
-![Kubecost overview](/images/overview.png)
+![nOps overview](/images/overview.png)
 
-To obtain access to the Kubecost UI following a successful installation, enable port-forwarding with the following command:
+To obtain access to the nOps UI following a successful installation, enable port-forwarding with the following command:
 
 ```
-kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
+kubectl port-forward --namespace nOps deployment/nOps-cost-analyzer 9090
 ```
 
 You can now access the UI by visiting `http://localhost:9090` in your web browser.
@@ -62,10 +62,10 @@ The Govern section contains multiple pages which can provide proactive means of 
 ## Teams
 
 {% hint style="info" %}
-Features in the Teams section are only officially supported on Kubecost Enterprise plans.
+Features in the Teams section are only officially supported on nOps Enterprise plans.
 {% endhint %}
 
 The Teams section allows for configuration of user roles and service accounts in your environment:
 
 * [Teams](teams.md) allows you to configure RBAC within the UI.
-* [Service Accounts](service-accounts.md) allows you to configure access to the Kubecost API while having SAML or OIDC enabled.
+* [Service Accounts](service-accounts.md) allows you to configure access to the nOps API while having SAML or OIDC enabled.

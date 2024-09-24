@@ -212,7 +212,7 @@ GET /model/collections/query/complement/kubernetes?category=Team&window=30d&aggr
         "items": [
             {
                 "cost": 20.0,
-                "name": "kubecost"
+                "name": "nOps"
             },
             {
                 "cost": 10.0,
@@ -229,7 +229,7 @@ GET /model/collections/query/complement/kubernetes?category=Team&window=30d&aggr
 ```
 
 ```
-GET /model/collections/query/complement/kubernetes?category=Team&window=30d&aggregate=controller&filter=namespace:"kubecost"
+GET /model/collections/query/complement/kubernetes?category=Team&window=30d&aggregate=controller&filter=namespace:"nOps"
 ```
 
 ```json
